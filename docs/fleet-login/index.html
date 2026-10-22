@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fleet Client Login</title>
+<meta name="description" content="Fleet clients sign in with a Fleet ID and PIN to see the board and request a window, including one sooner than the public line.">
+<link rel="canonical" href="https://thomasg42.github.io/birdies-fleet-service/fleet-login/">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F0D0B">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/big-shoulders-display-latin-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css?v=20261022-v0">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Birdies Fleet Service &amp; Backcountry Repair">
+<meta property="og:title" content="Fleet Client Login">
+<meta property="og:description" content="Fleet clients sign in with a Fleet ID and PIN to see the board and request a window, including one sooner than the public line.">
+<meta property="og:url" content="https://thomasg42.github.io/birdies-fleet-service/fleet-login/">
+<meta property="og:image" content="https://thomasg42.github.io/birdies-fleet-service/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Birdies wordmark over a dark pine treeline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fleet Client Login">
+<meta name="twitter:description" content="Fleet clients sign in with a Fleet ID and PIN to see the board and request a window, including one sooner than the public line.">
+<meta name="twitter:image" content="https://thomasg42.github.io/birdies-fleet-service/assets/og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://thomasg42.github.io/birdies-fleet-service/"},{"@type":"ListItem","position":2,"name":"Fleet login","item":"https://thomasg42.github.io/birdies-fleet-service/fleet-login/"}]}</script>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var motion = false, save = false;
+  try { motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches; } catch (e) {}
+  try { save = !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
+  if (motion && !save) document.documentElement.classList.add('js-motion');
+  setTimeout(function(){ if (!window.__birdiesReady) document.documentElement.classList.remove('js'); }, 3000);
+})();
+</script>
+</head>
+<body class="page-tool">
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="wrap header-row">
+    <a class="brand" href="../" aria-label="Birdies Fleet Service &amp; Backcountry Repair, home"><span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+    <nav id="nav-menu" class="nav-menu" aria-label="Main">
+      <details class="nav-services">
+        <summary>Services</summary>
+        <ul><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/">Backcountry</a></li></ul>
+      </details>
+      <a href="../service-area/">Service Area</a>
+      <a href="../faq/">FAQ</a>
+      <a href="../about/">About</a>
+      <a href="../contact/">Contact</a>
+      <a class="header-phone" href="tel:+14355314127">435-531-4127</a>
+      <a class="btn btn-blaze" href="../schedule/">Book a time</a>
+      <a class="fleet-link" href="../fleet-login/">Fleet login</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<nav class="crumbs wrap" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Fleet login</li></ol></nav>
+    <section class="page-hero"><div class="wrap">
+      <h1 id="fleet-title">Fleet client login</h1>
+      <p>Sign in to see the board. The PIN is checked by the desk, not saved in this page.</p>
+    </div></section>
+    <section class="section"><div class="wrap"><p id="fleet-msg" class="form-msg" role="status"></p>
+  <form id="fleet-login" class="stack panel">
+    <label>Fleet ID <input name="fleetId" required autocomplete="username"></label>
+    <label>PIN <input name="pin" required inputmode="numeric" autocomplete="current-password"></label>
+    <button class="btn btn-blaze" type="submit">Sign in</button>
+    <p><a class="btn btn-ghost" href="tel:+14355314127">Emergency right now? Call J</a></p>
+  </form>
+  <div id="fleet-board" hidden>
+    <p><button id="fleet-signout" class="btn btn-ghost" type="button">Sign out</button></p>
+    <div id="fleet-windows"></div>
+    <form id="fleet-book" class="stack">
+      <label>What needs work
+        <select name="service" required>
+          <option value="">Select a service</option>
+          <option value="fleet-maintenance">Fleet maintenance</option><option value="dot-inspections">DOT inspections</option><option value="mobile-repair">Mobile repair</option><option value="diesel-repair">Diesel repair</option><option value="heavy-equipment-repair">Heavy equipment repair</option><option value="backcountry-repair">Backcountry repair</option>
+        </select>
+      </label>
+      <label>Unit <input name="unit" required></label>
+      <label>Where it is parked <input name="location" required></label>
+      <p><button class="btn btn-ghost" type="button" data-use-location>Use my location</button> <a id="fleet-map" hidden>Map pin</a></p>
+      <input type="hidden" name="lat"><input type="hidden" name="lng">
+      <label>Details <textarea name="details"></textarea></label>
+      <label>On-site contact <input name="contactName" required autocomplete="name"></label>
+      <label>Contact phone <input name="contactPhone" type="tel" required pattern="[0-9\(\)+\.\s\-]{10,}"></label>
+      <button class="btn btn-blaze" type="submit">Book this window</button>
+    </form>
+    <p id="fleet-done" hidden></p>
+  </div>
+  <dialog id="bump-dialog" aria-labelledby="bump-title">
+    <h2 id="bump-title">Are you sure?</h2>
+    <p id="bump-copy"></p>
+    <div class="btn-row">
+      <button id="bump-yes" class="btn btn-blaze" type="button">Yes, take this time</button>
+      <button id="bump-no" class="btn btn-ghost" type="button">No, pick another time</button>
+    </div>
+  </dialog></div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div>
+      <p class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></p>
+      <p>Keep Exploring</p>
+      <p><a href="tel:+14355314127">435-531-4127</a></p>
+    </div>
+    <div>
+      <p class="foot-title">Services</p>
+      <ul class="link-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment repair</a></li><li><a href="../backcountry-repair/">Backcountry repair</a></li></ul>
+    </div>
+    <div>
+      <p class="foot-title">Towns</p>
+      <ul class="link-list"><li><a href="../service-area/bozeman/">Bozeman</a></li><li><a href="../service-area/belgrade/">Belgrade</a></li><li><a href="../service-area/big-sky/">Big Sky</a></li><li><a href="../service-area/livingston/">Livingston</a></li><li><a href="../service-area/manhattan/">Manhattan</a></li><li><a href="../service-area/three-forks/">Three Forks</a></li><li><a href="../service-area/ennis/">Ennis</a></li><li><a href="../service-area/west-yellowstone/">West Yellowstone</a></li><li><a href="../service-area/gardiner/">Gardiner</a></li><li><a href="../service-area/big-timber/">Big Timber</a></li></ul>
+      <p><a href="../fleet-login/">Fleet login</a></p>
+      <p><a href="../privacy/">Privacy</a></p>
+    </div>
+  </div>
+</footer>
+<nav class="tap-bar" aria-label="Call, text, or book">
+  <a href="tel:+14355314127">Call</a>
+  <a href="sms:+14355314127?&body=Birdies%2C%20I%20need%20help.">Text</a>
+  <a class="tap-book" href="../schedule/">Book</a>
+</nav>
+<script src="../assets/config.js"></script>
+<script type="module" src="../assets/site.js?v=20261022-v0"></script>
+</body>
+</html>
