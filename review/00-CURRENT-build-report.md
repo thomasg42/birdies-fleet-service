@@ -16,9 +16,10 @@ git push -u origin main:
 remote: Repository not found.
 fatal: repository 'https://github.com/thomasg42/birdies-fleet-service.git/' not found
 
-Local commits exist. git status --short printed nothing after 83a5501. This corrected list is the child of that commit. Status is empty again after the child.
+Local commits exist. git status --short printed nothing after 253f04f. The commit that inserts this list is the child of 253f04f and only updates this report. Status is empty after that child.
 
 git log --oneline -8
+253f04f Record the report commit in the build report.
 83a5501 Add the Lane 3 build report.
 9310be5 Soften the DOT description so it asks J to confirm scope.
 74d78c7 Add the contract, hero brief, QA server, and review captures.
