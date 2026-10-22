@@ -61,7 +61,7 @@ const SERVICES = {
   },
   'dot-inspections': {
     title: 'DOT Inspections in Southwest Montana',
-    description: 'DOT inspections for fleets in Southwest Montana, done where the unit is parked. Scope is confirmed with J. Call or text 435-531-4127.',
+    description: 'DOT inspections for fleets in Southwest Montana, done where the unit is parked. Confirm the scope with J. Call or text 435-531-4127.',
     html: `<p>DOT inspections are on the Birdies card next to preventive maintenance, diagnosis, and emergency fleet repair. This page uses that name and stops there. Vehicle classes, inspection reports, decals, and qualifications are questions for J, not claims this website is allowed to invent.</p>
 <p>What you can do today is book the visit. Tell J which unit, where it will be parked, and what you need him to look at. He will tell you whether that request matches the inspection he can do. If it does not, he will say so before anyone treats a web page like a certificate.</p>
 <p>Fleets usually want the inspection where the truck already sits. A yard, a shop apron, a job site, or a ranch lot all work as the meeting place when you write them into the note. You do not have to line up a trailer first. That is the same idea as the rest of the card: we come to you.</p>
