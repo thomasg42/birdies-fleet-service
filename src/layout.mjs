@@ -33,6 +33,18 @@ const treelines = `<div class="hero-media" aria-hidden="true">
   <svg class="treeline treeline-back" viewBox="0 0 1440 160" preserveAspectRatio="none"><path fill="currentColor" d="M0 160 0 90 70 70 120 100 180 48 250 92 330 40 420 88 520 36 640 96 760 44 900 100 1040 50 1180 92 1320 42 1440 80 1440 160Z"/></svg>
   <svg class="treeline treeline-mid" viewBox="0 0 1440 160" preserveAspectRatio="none"><path fill="currentColor" d="M0 160 0 110 60 78 130 112 200 60 280 104 360 54 470 108 580 48 700 112 830 58 960 116 1100 62 1240 108 1360 70 1440 100 1440 160Z"/></svg>
   <svg class="treeline treeline-front" viewBox="0 0 1440 120" preserveAspectRatio="none"><path fill="currentColor" d="M0 120 0 70 80 48 150 78 230 36 320 74 430 40 540 82 670 34 800 78 940 42 1080 86 1220 46 1440 72 1440 120Z"/></svg>
+  <svg class="hero-dog" viewBox="0 0 220 150">
+    <path fill="currentColor" d="M22 72c16 0 30 14 36 30-12 2-26-8-32-20-4-8-6-12-4-10z"/>
+    <path fill="currentColor" d="M54 112c2-30 24-50 54-50 26 0 46 14 52 36 4 16-2 34-20 42-24 10-70 8-82-8-4-6-6-14-4-20z"/>
+    <path fill="currentColor" d="M70 118c6 6 4 16 0 26H56c0-10 4-20 14-26z"/>
+    <path fill="currentColor" d="M112 108h16v36h-16zM132 110h16v34h-16z"/>
+    <path fill="currentColor" d="M126 74c12-10 28-12 40-2l-8 24c-14 4-28-2-34-16-2-4-2-4 2-6z"/>
+    <ellipse cx="168" cy="58" rx="26" ry="22" fill="currentColor"/>
+    <path fill="currentColor" d="M184 54h28c8 0 12 8 10 14s-8 12-18 12h-24c-2-8 0-18 4-26z"/>
+    <path fill="#6B4A2F" d="M150 48c-8 0-18 12-16 30 1 12 8 18 14 16 10-4 14-18 12-32-1-8-6-14-10-14z"/>
+    <circle cx="176" cy="54" r="3" fill="#0F0D0B"/>
+    <ellipse cx="214" cy="68" rx="4" ry="3" fill="#0F0D0B"/>
+  </svg>
 </div>`;
 
 export function homeHero(ctx) {

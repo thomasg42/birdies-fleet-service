@@ -1,6 +1,6 @@
 # Hero slot — for Lane 2 (Codex)
 
-The home hero is v0 on purpose. `data-hero-slot="v0-placeholder"` is a pine-to-char gradient, three layered SVG treelines, a faint topo line, and the wordmark. There is no video, canvas, pin, or animation.
+The home hero is v0 on purpose. `data-hero-slot="v0-placeholder"` is a pine-to-char gradient, three layered SVG treelines, a drawn dog mark (`.hero-dog`, not a photo), a faint topo line, and the wordmark. There is no video, canvas, pin, or animation.
 
 Codex replaces the media inside `.hero-media` and leaves the generator markup around it.
 
@@ -15,7 +15,7 @@ Start above a dense pine forest. Move down through the trees onto a back road. A
 - Reduced motion, no JavaScript, or Save-Data: one static end still. No motion.
 - The only `h1` stays visible. Never set it to `display: none`.
 - No Ford badges, no F-350 badges, no invented livery text.
-- Never caption a generated scene as J's truck or J's dog. The dog is not mentioned anywhere on the site until a real logo or a real photo exists. Both are null today.
+- Never caption a generated scene as J's truck or J's dog. The drawn `.hero-dog` mark is a placeholder inside `.hero-media`. Page copy does not call it J's dog. There is no logo file and no photo.
 - Do not edit copy, booking logic, town essays, or SEO fields.
 
 `bootHeroScrub` in `src/assets/chrome.js` already no-ops unless `[data-hero-video]` exists. When a video is added, it primes with `play()` and then pauses, the same pattern as Montana Movers. Keep that hook. Do not add a second player.

@@ -105,6 +105,10 @@ main { padding-bottom: 5.5rem; }
 .treeline-back { bottom: 18%; opacity: .45; color: var(--pine-600); }
 .treeline-mid { bottom: 8%; opacity: .75; color: var(--pine-800); }
 .treeline-front { bottom: 0; height: 22%; color: var(--char-950); }
+.hero-dog { position: absolute; right: 4%; bottom: 12%; width: min(16vw, 148px); height: auto; color: var(--tan-300); z-index: 1; }
+@media (max-width: 700px) {
+  .hero-dog { width: 72px; right: 8%; bottom: auto; top: 10%; }
+}
 .hero-inner { position: relative; z-index: 1; padding: 2.5rem 0 3rem; }
 .hero .tag { font-size: 1.25rem; color: var(--bone-200); }
 .help-line { color: var(--tan-300); }

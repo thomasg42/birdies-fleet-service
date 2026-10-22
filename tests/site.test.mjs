@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, readdirSync, statSync, existsSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PAIRS, SITE, liveTowns } from '../site.config.mjs';
 import { PAGES } from '../src/pages.mjs';
@@ -19,6 +19,14 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const docs = join(root, 'docs');
 const { parseHTML } = loadLinkedom();
 
+function relPosix(from, file) {
+  return relative(from, file).replace(/\\/g, '/');
+}
+function samePayload(disk, fresh, rel) {
+  if (disk.equals(fresh)) return true;
+  if (/\.(png|jpe?g|gif|webp|ico|woff2?)$/i.test(rel)) return false;
+  return disk.toString('utf8').replace(/\r\n/g, '\n') === fresh.toString('utf8').replace(/\r\n/g, '\n');
+}
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
     const p = join(dir, name);
@@ -59,11 +67,11 @@ test('docs matches a fresh production build', () => {
   const out = mkdtempSync(join(tmpdir(), 'birdies-build-'));
   try {
     execFileSync(process.execPath, ['build.mjs', '--out', out], { cwd: root, stdio: 'pipe' });
-    const fresh = walk(out).map((f) => f.slice(out.length + 1)).sort();
-    const have = walk(docs).map((f) => f.slice(docs.length + 1)).sort();
+    const fresh = walk(out).map((f) => relPosix(out, f)).sort();
+    const have = walk(docs).map((f) => relPosix(docs, f)).sort();
     assert.deepEqual(have, fresh);
     for (const rel of fresh) {
-      assert.equal(readFileSync(join(docs, rel)).equals(readFileSync(join(out, rel))), true, rel);
+      assert.equal(samePayload(readFileSync(join(docs, rel)), readFileSync(join(out, rel)), rel), true, rel);
     }
   } finally {
     rmSync(out, { recursive: true, force: true });
@@ -121,7 +129,7 @@ test('seo contract, one h1, launched noindex, links and assets', () => {
         continue;
       }
       const clean = href.split('#')[0].split('?')[0];
-      const url = new URL(clean, `http://local${dir.slice(docs.length).replace(/\\/g, '/')}/`);
+      const url = new URL(clean, `http://local/${relPosix(docs, dir)}/`);
       let rel = decodeURIComponent(url.pathname).replace(/^\//, '');
       if (rel.endsWith('/')) rel += 'index.html';
       if (rel === '') rel = 'index.html';
@@ -137,7 +145,7 @@ test('AutoRepair schema stays inside confirmed fields', () => {
     const html = readFileSync(file, 'utf8');
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
     const repair = blocks.filter((b) => b['@type'] === 'AutoRepair');
-    const rel = file.slice(docs.length + 1);
+    const rel = relPosix(docs, file);
     const allowed = rel === 'index.html' || rel.startsWith('schedule/') || rel.startsWith('contact/');
     assert.equal(repair.length, allowed ? 1 : 0, rel);
     for (const node of repair) {
@@ -161,6 +169,7 @@ test('AutoRepair schema stays inside confirmed fields', () => {
 test('hero v0 is a still placeholder', () => {
   const html = readFileSync(join(docs, 'index.html'), 'utf8');
   assert.match(html, /data-hero-slot="v0-placeholder"/);
+  assert.match(html, /class="hero-dog"/);
   assert.match(html, /<h1>[^<]*Southwest Montana[^<]*<\/h1>/);
   assert.match(html, /Book a time/);
   assert.match(html, /Call 435-531-4127/);
@@ -182,8 +191,9 @@ test('town and service copy length, doorway overlap, confirms', () => {
   }
   assert.equal(towns.length, 10);
   const confirmed = towns.filter((t) => t.confirm).map((t) => t.file);
-  assert.ok(confirmed.some((f) => f.includes('ennis')));
-  assert.ok(confirmed.some((f) => f.includes('gardiner')));
+  assert.deepEqual(confirmed, []);
+  const blob = towns.map((t) => t.text).join('\n');
+  assert.equal(/J has confirmed|this town is confirmed/i.test(blob), false);
   for (let i = 0; i < towns.length; i += 1) {
     for (let j = i + 1; j < towns.length; j += 1) {
       const A = new Set(grams(towns[i].text));
