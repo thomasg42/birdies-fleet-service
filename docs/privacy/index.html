@@ -40,16 +40,34 @@
 </head>
 <body class="">
 
+<svg class="dog-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><symbol id="birdies-dog" viewBox="0 0 220 150">
+  <path fill="#B89A72" d="M22 72c16 0 30 14 36 30-12 2-26-8-32-20-4-8-6-12-4-10z"/>
+  <path fill="#B89A72" d="M54 112c2-30 24-50 54-50 26 0 46 14 52 36 4 16-2 34-20 42-24 10-70 8-82-8-4-6-6-14-4-20z"/>
+  <path fill="#6B4A2F" d="M70 118c6 6 4 16 0 26H56c0-10 4-20 14-26z"/>
+  <path fill="#B89A72" d="M112 108h16v36h-16z"/>
+  <path fill="#6B4A2F" d="M132 110h16v34h-16z"/>
+  <path fill="#B89A72" d="M126 74c12-10 28-12 40-2l-8 24c-14 4-28-2-34-16-2-4-2-4 2-6z"/>
+  <ellipse cx="168" cy="58" rx="26" ry="22" fill="#B89A72"/>
+  <path fill="#C4A574" d="M184 54h28c8 0 12 8 10 14s-8 12-18 12h-24c-2-8 0-18 4-26z"/>
+  <path fill="#6B4A2F" d="M150 48c-8 0-18 12-16 30 1 12 8 18 14 16 10-4 14-18 12-32-1-8-6-14-10-14z"/>
+  <path fill="none" stroke="#1C1814" stroke-width="4" stroke-linecap="round" d="M88 80c6 12 7 24 2 32"/>
+  <path fill="none" stroke="#1C1814" stroke-width="4" stroke-linecap="round" d="M106 74c7 14 8 28 3 38"/>
+  <path fill="none" stroke="#1C1814" stroke-width="3.5" stroke-linecap="round" d="M124 76c5 12 6 22 2 30"/>
+  <path fill="none" stroke="#1C1814" stroke-width="3" stroke-linecap="round" d="M156 48c4 8 5 14 2 18"/>
+  <path fill="none" stroke="#E8631C" stroke-width="6" stroke-linecap="round" d="M138 90c14 6 28 8 38 2"/>
+  <circle cx="176" cy="54" r="3" fill="#0F0D0B"/>
+  <ellipse cx="214" cy="68" rx="4" ry="3" fill="#0F0D0B"/>
+</symbol></svg>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-row">
     <a class="brand" href="../" aria-label="Birdies Fleet Service &amp; Backcountry Repair, home"><span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
     <nav id="nav-menu" class="nav-menu" aria-label="Main">
-      <details class="nav-services">
-        <summary>Services</summary>
-        <ul><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/">Backcountry</a></li></ul>
-      </details>
+      <div class="nav-services">
+        <button class="nav-services-btn" type="button" aria-expanded="false" aria-controls="nav-services-list">Services</button>
+        <ul id="nav-services-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/">Backcountry</a></li></ul>
+      </div>
       <a href="../service-area/">Service Area</a>
       <a href="../faq/">FAQ</a>
       <a href="../about/">About</a>
@@ -65,24 +83,24 @@
     <section class="page-hero"><div class="wrap">
     <p class="kicker">Draft</p>
     <h1>Privacy</h1>
-    <p class="lead">A draft for J to approve before this site is public.</p>
+    <p class="lead">A draft for J to approve before the public copy goes out.</p>
     <div class="btn-row">
       <a class="btn btn-blaze" href="../schedule/">Book a time</a>
       <a class="btn btn-ghost" href="tel:+14355314127">Call 435-531-4127</a>
     </div>
   </div></section>
-    <section class="section"><div class="wrap prose"><p>This page is a draft for J to approve before the site is public. It describes how a booking note, a fleet sign-in, and a text to J are handled.</p>
+    <section class="section"><div class="wrap prose"><p>A draft for J to approve before the public copy goes out. It describes how a booking note, a fleet sign-in, and a text to J are handled.</p>
 <p>If you book a window or send a request, the note includes the service, the vehicle, where it is parked, your name, and your phone. Email is optional. A map pin is added only if you tap Use my location.</p>
 <p>Text me about this appointment, including schedule changes. Msg &amp; data rates may apply. Reply STOP to opt out. Reply HELP for help.</p>
 <p>We do not sell or share your mobile number or text-message consent with third parties or affiliates for marketing.</p>
-<p>A fleet PIN is checked on the server, not stored in the page. This preview build does not send the form to a live desk. Until that desk is connected, the schedule page asks you to text the note to J yourself.</p>
+<p>A fleet PIN is checked on the server, not stored in the browser. The form is not connected to a live desk yet. Until that desk is connected, the schedule asks you to text the note to J yourself.</p>
 <p>Questions about this draft go to J at 435-531-4127.</p></div></section>
 </main>
 <footer class="site-footer">
   <div class="wrap foot-grid">
     <div>
       <p class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></p>
-      <p>Keep Exploring</p>
+      <p class="foot-signoff"><span class="foot-mark"><svg class="mascot mascot-ink foot-dog" viewBox="0 0 220 150" width="220" height="150" aria-hidden="true" focusable="false"><use href="#birdies-dog" width="220" height="150"></use></svg></span><span>Keep Exploring</span></p>
       <p><a href="tel:+14355314127">435-531-4127</a></p>
     </div>
     <div>

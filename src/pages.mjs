@@ -8,6 +8,7 @@ import {
   neighborLinks, scheduleForm, contactForm, fleetScreen,
 } from './components.mjs';
 import { FAQS, ABOUT_HTML, AREA_HTML, PRIVACY_HTML, SERVICE_COPY, TOWN_COPY } from './copy.mjs';
+import { dogMark } from './dog.mjs';
 
 export { renderPage };
 
@@ -52,7 +53,13 @@ export const PAGES = [
         <h2>Service area</h2>
         ${routeMap(ctx)}
       </div></section>
-      <section class="section"><div class="wrap"><p class="trust">${ctx.esc(ctx.SITE.trust)}</p></div></section>
+      <section class="section"><div class="wrap trust-row">
+        ${dogMark({ variant: 'color', className: 'trust-dog' })}
+        <div>
+          <p class="trust">${ctx.esc(ctx.SITE.trust)}</p>
+          <p class="mascot-line">And our brindle mascot.</p>
+        </div>
+      </div></section>
       ${ctaBand(ctx, 'Book a window')}`,
   }),
 ];
@@ -151,7 +158,15 @@ PAGES.push(page({
   ],
   body: (ctx) => `${crumbs(ctx, [{ name: 'Home', path: '' }, { name: 'About', path: 'about' }])}
     ${pageHero(ctx, { kicker: 'Owner', h1: 'J Smith', lead: 'Owner and mobile mechanic.' })}
-    <section class="section"><div class="wrap prose">${ABOUT_HTML}<p class="trust">${ctx.esc(ctx.SITE.trust)}</p></div></section>`,
+    <section class="section"><div class="wrap prose">${ABOUT_HTML}<p class="trust">${ctx.esc(ctx.SITE.trust)}</p></div></section>
+    <section class="section band-char" id="mascot"><div class="wrap mascot-block">
+      ${dogMark({ variant: 'color', className: 'about-dog' })}
+      <div class="prose">
+        <h2>Mascot</h2>
+        <p>And our brindle mascot.</p>
+        <p>The mark rides along. J Smith is still the person who comes to the vehicle.</p>
+      </div>
+    </div></section>`,
 }));
 
 PAGES.push(page({
@@ -192,7 +207,7 @@ PAGES.push(page({
     breadcrumbSchema(ctx, [homeCrumb, { name: 'Privacy', path: 'privacy' }]),
   ],
   body: (ctx) => `${crumbs(ctx, [{ name: 'Home', path: '' }, { name: 'Privacy', path: 'privacy' }])}
-    ${pageHero(ctx, { kicker: 'Draft', h1: 'Privacy', lead: 'A draft for J to approve before this site is public.' })}
+    ${pageHero(ctx, { kicker: 'Draft', h1: 'Privacy', lead: 'A draft for J to approve before the public copy goes out.' })}
     <section class="section"><div class="wrap prose">${PRIVACY_HTML}</div></section>`,
 }));
 
@@ -207,7 +222,7 @@ PAGES.push(page({
   body: (ctx) => `${crumbs(ctx, [{ name: 'Home', path: '' }, { name: 'Fleet login', path: 'fleet-login' }])}
     <section class="page-hero"><div class="wrap">
       <h1 id="fleet-title">Fleet client login</h1>
-      <p>Sign in to see the board. The PIN is checked by the desk, not saved in this page.</p>
+      <p>Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
     </div></section>
     <section class="section"><div class="wrap">${fleetScreen(ctx)}</div></section>`,
 }));
@@ -236,9 +251,11 @@ PAGES.push(page({
   title: 'Wrong turn.',
   description: 'That page is not on the Birdies site. Book a time, browse services, or call and text J at 435-531-4127 in Southwest Montana.',
   schema: () => [],
-  body: (ctx) => `<section class="page-hero"><div class="wrap">
-      <h1>Wrong turn.</h1>
-      <p>That page is not here. Book a time, look at the services, or reach J directly.</p>
+  body: (ctx) => `<section class="page-hero"><div class="wrap miss-row">
+      ${dogMark({ variant: 'color', className: 'miss-dog' })}
+      <div>
+      <h1>Wrong turn. Let's get you back on the trail.</h1>
+      <p>That address is not here. Book a time, look at the services, or reach J directly.</p>
       <div class="btn-row">
         <a class="btn btn-blaze" href="${ctx.link('schedule')}">Book a time</a>
         <a class="btn btn-ghost" href="${ctx.link('fleet-maintenance')}">Services</a>
@@ -246,5 +263,6 @@ PAGES.push(page({
         <a class="btn btn-ghost" href="${ctx.sms}">Text J</a>
       </div>
       ${textJ()}
+      </div>
     </div></section>`,
 }));

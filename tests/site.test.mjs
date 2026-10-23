@@ -166,10 +166,39 @@ test('AutoRepair schema stays inside confirmed fields', () => {
   }
 });
 
+test('brindle mascot is reused and stays off the tools', () => {
+  const alt = 'Illustration of a brindle dog, the Birdies mascot.';
+  const home = readFileSync(join(docs, 'index.html'), 'utf8');
+  const about = readFileSync(join(docs, 'about/index.html'), 'utf8');
+  const missing = readFileSync(join(docs, '404.html'), 'utf8');
+  for (const html of [home, about, missing]) {
+    assert.equal(html.includes(alt), true);
+    assert.equal(html.includes('<use href="#birdies-dog"'), true);
+    assert.equal(html.includes('id="birdies-dog"'), true);
+  }
+  assert.equal(home.includes('class="mascot mascot-color hero-dog"'), true);
+  assert.equal(home.includes('And our brindle mascot.'), true);
+  assert.equal(home.includes('Insured. Locally owned. J Smith, owner and mobile mechanic.'), true);
+  assert.equal(home.includes('class="mascot mascot-ink foot-dog"'), true);
+  assert.equal(home.includes('Keep Exploring'), true);
+  assert.equal(about.includes('id="mascot"'), true);
+  assert.equal(about.includes('And our brindle mascot.'), true);
+  assert.equal(missing.includes("Wrong turn. Let's get you back on the trail."), true);
+  for (const rel of ['schedule/index.html', 'fleet-login/index.html', 'reschedule/index.html']) {
+    const html = readFileSync(join(docs, rel), 'utf8');
+    assert.equal(html.includes('birdies-dog'), false, rel);
+    assert.equal(html.includes('brindle'), false, rel);
+  }
+  const og = readFileSync(join(docs, 'assets/og.png'));
+  assert.equal(og.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  const ogTool = readFileSync(join(root, 'tools/make-og.mjs'), 'utf8');
+  assert.equal(ogTool.includes('birdies-dog'), true);
+});
+
 test('hero v0 is a still placeholder', () => {
   const html = readFileSync(join(docs, 'index.html'), 'utf8');
   assert.match(html, /data-hero-slot="v0-placeholder"/);
-  assert.match(html, /class="hero-dog"/);
+  assert.match(html, /class="[^"]*hero-dog/);
   assert.match(html, /<h1>[^<]*Southwest Montana[^<]*<\/h1>/);
   assert.match(html, /Book a time/);
   assert.match(html, /Call 435-531-4127/);
@@ -203,6 +232,14 @@ test('town and service copy length, doorway overlap, confirms', () => {
       const ratio = shared / Math.min(A.size, B.size);
       assert.ok(ratio <= 0.4, `${towns[i].file} ${towns[j].file} ${ratio}`);
     }
+  }
+});
+
+test('visitor text does not explain the website', () => {
+  const banned = /this page|this website|this site|in writing|stand-in|will not invent|confirm the scope/i;
+  for (const file of htmlFiles()) {
+    const text = visible(readFileSync(file, 'utf8'));
+    assert.equal(banned.test(text), false, `${file} ${text.match(banned)}`);
   }
 });
 

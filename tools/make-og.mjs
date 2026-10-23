@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { deflateSync } from 'node:zlib';
 import { loadPlaywright } from './dev-deps.mjs';
+import { DOG_SYMBOL } from '../src/dog.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(here, '../src/assets/og.png');
@@ -15,12 +16,15 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   .copy{position:relative;padding:64px}
   h1{font-size:92px;letter-spacing:.04em;margin:0}
   p{font-family:Georgia,serif;font-size:28px;color:#B89A72;margin:12px 0 0}
+  .og-dog{position:absolute;right:72px;bottom:118px;z-index:2}
 </style></head><body>
+  <svg width="0" height="0" aria-hidden="true">${DOG_SYMBOL}</svg>
   <svg class="trees" viewBox="0 0 1200 220" width="1200" height="220" aria-hidden="true">
     <path fill="#2F4A37" d="M0 220 0 120 80 70 150 130 230 60 320 120 430 50 560 130 700 60 860 140 1020 70 1200 120 1200 220Z"/>
     <path fill="#1F3326" d="M0 220 0 150 120 100 220 160 340 90 480 150 640 80 820 160 1000 100 1200 150 1200 220Z"/>
     <path fill="#0F0D0B" d="M0 220 0 180 140 150 280 190 460 150 680 190 900 150 1200 180 1200 220Z"/>
   </svg>
+  <svg class="og-dog" viewBox="0 0 220 150" width="240" height="164" aria-hidden="true"><use href="#birdies-dog" width="220" height="150"></use></svg>
   <div class="copy"><h1>BIRDIES</h1><p>FLEET SERVICE &amp; BACKCOUNTRY REPAIR</p></div>
 </body></html>`;
 

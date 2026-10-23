@@ -89,8 +89,18 @@ a:hover { color: var(--bone); }
 .nav-menu { display: none; gap: .35rem 1rem; align-items: center; list-style: none; margin: 0; padding: 0 0 1rem; }
 .nav-menu.is-open { display: flex; flex-direction: column; align-items: flex-start; }
 .nav-menu a { color: var(--bone); text-decoration: none; min-height: 48px; display: inline-flex; align-items: center; }
-.nav-services summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; color: var(--bone); }
-.nav-services ul { list-style: none; margin: 0; padding: 0 0 .4rem 0; }
+.nav-services { position: relative; }
+.nav-services-btn {
+  background: transparent; color: var(--bone); border: 0; gap: .4rem;
+  padding: 0 .15rem; min-height: 48px;
+}
+.nav-services-btn::after {
+  content: ""; width: .42rem; height: .42rem; display: inline-block;
+  border-right: 2px solid var(--tan-300); border-bottom: 2px solid var(--tan-300);
+  transform: translateY(-2px) rotate(45deg);
+}
+.nav-services ul { display: none; list-style: none; margin: 0; padding: 0 0 .4rem .4rem; }
+.nav-services ul.is-open { display: grid; }
 .header-phone { color: var(--bone); font-weight: 600; }
 .fleet-link { font-size: .92rem; color: var(--tan-300); }
 main { padding-bottom: 5.5rem; }
@@ -105,11 +115,27 @@ main { padding-bottom: 5.5rem; }
 .treeline-back { bottom: 18%; opacity: .45; color: var(--pine-600); }
 .treeline-mid { bottom: 8%; opacity: .75; color: var(--pine-800); }
 .treeline-front { bottom: 0; height: 22%; color: var(--char-950); }
-.hero-dog { position: absolute; right: 4%; bottom: 12%; width: min(16vw, 148px); height: auto; color: var(--tan-300); z-index: 1; }
+.dog-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.mascot-ink { filter: brightness(0); }
+.hero-dog { position: absolute; right: 4%; bottom: 12%; width: min(16vw, 148px); height: auto; z-index: 1; }
+.trust-dog { width: 160px; flex: none; }
+.about-dog { width: 220px; flex: none; }
+.miss-dog { width: 180px; flex: none; }
+.foot-dog { width: 48px; flex: none; }
+.foot-mark {
+  display: inline-flex; background: var(--bone); border-radius: .4rem; padding: .15rem .2rem;
+}
+.foot-signoff { display: flex; align-items: center; gap: .65rem; }
+.trust-row, .mascot-block, .miss-row { display: flex; align-items: center; gap: 1.25rem; }
+.mascot-line { color: var(--tan-300); margin: 0; }
 @media (max-width: 700px) {
   .hero-dog { width: 72px; right: 8%; bottom: auto; top: 10%; }
+  .trust-row, .mascot-block, .miss-row { flex-direction: column; }
 }
-.hero-inner { position: relative; z-index: 1; padding: 2.5rem 0 3rem; }
+.hero-inner { position: relative; z-index: 1; padding: 2.5rem 0 3rem; text-align: center; }
+.hero-inner .wordmark { align-items: center; margin-inline: auto; }
+.hero-inner .btn-row, .page-hero .btn-row, .band-bark .btn-row, .band-char .btn-row, .band-pine .btn-row { justify-content: center; }
+.page-hero .wrap { text-align: center; }
 .hero .tag { font-size: 1.25rem; color: var(--bone-200); }
 .help-line { color: var(--tan-300); }
 .kicker {
@@ -192,7 +218,16 @@ html.js.js-motion .reveal.is-in { opacity: 1; transform: none; transition: opaci
 .page-tool, .page-tool * { animation: none !important; transition: none !important; }
 @media (min-width: 900px) {
   .nav-toggle { display: none; }
-  .nav-menu, .nav-menu.is-open { display: flex; flex-direction: row; flex-wrap: wrap; padding: 0; margin-left: auto; justify-content: flex-end; }
+  .nav-menu, .nav-menu.is-open {
+    display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center;
+    padding: 0; margin-left: auto; justify-content: flex-end; gap: .15rem .7rem;
+  }
+  .nav-services ul, .nav-services ul.is-open {
+    display: none; position: absolute; top: calc(100% - .15rem); left: 0; z-index: 40;
+    min-width: 16rem; padding: .35rem 0; background: var(--char-950); border: 1px solid var(--bark-700);
+  }
+  .nav-services:hover ul, .nav-services:focus-within ul { display: grid; }
+  .nav-services ul a { padding: 0 .9rem; white-space: nowrap; }
   .map-layout { grid-template-columns: 1.3fr .7fr; align-items: start; }
   .foot-grid { grid-template-columns: 1.4fr 1fr 1fr; }
 }

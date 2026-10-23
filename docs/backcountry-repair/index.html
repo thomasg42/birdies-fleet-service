@@ -40,16 +40,34 @@
 </head>
 <body class="">
 
+<svg class="dog-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><symbol id="birdies-dog" viewBox="0 0 220 150">
+  <path fill="#B89A72" d="M22 72c16 0 30 14 36 30-12 2-26-8-32-20-4-8-6-12-4-10z"/>
+  <path fill="#B89A72" d="M54 112c2-30 24-50 54-50 26 0 46 14 52 36 4 16-2 34-20 42-24 10-70 8-82-8-4-6-6-14-4-20z"/>
+  <path fill="#6B4A2F" d="M70 118c6 6 4 16 0 26H56c0-10 4-20 14-26z"/>
+  <path fill="#B89A72" d="M112 108h16v36h-16z"/>
+  <path fill="#6B4A2F" d="M132 110h16v34h-16z"/>
+  <path fill="#B89A72" d="M126 74c12-10 28-12 40-2l-8 24c-14 4-28-2-34-16-2-4-2-4 2-6z"/>
+  <ellipse cx="168" cy="58" rx="26" ry="22" fill="#B89A72"/>
+  <path fill="#C4A574" d="M184 54h28c8 0 12 8 10 14s-8 12-18 12h-24c-2-8 0-18 4-26z"/>
+  <path fill="#6B4A2F" d="M150 48c-8 0-18 12-16 30 1 12 8 18 14 16 10-4 14-18 12-32-1-8-6-14-10-14z"/>
+  <path fill="none" stroke="#1C1814" stroke-width="4" stroke-linecap="round" d="M88 80c6 12 7 24 2 32"/>
+  <path fill="none" stroke="#1C1814" stroke-width="4" stroke-linecap="round" d="M106 74c7 14 8 28 3 38"/>
+  <path fill="none" stroke="#1C1814" stroke-width="3.5" stroke-linecap="round" d="M124 76c5 12 6 22 2 30"/>
+  <path fill="none" stroke="#1C1814" stroke-width="3" stroke-linecap="round" d="M156 48c4 8 5 14 2 18"/>
+  <path fill="none" stroke="#E8631C" stroke-width="6" stroke-linecap="round" d="M138 90c14 6 28 8 38 2"/>
+  <circle cx="176" cy="54" r="3" fill="#0F0D0B"/>
+  <ellipse cx="214" cy="68" rx="4" ry="3" fill="#0F0D0B"/>
+</symbol></svg>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-row">
     <a class="brand" href="../" aria-label="Birdies Fleet Service &amp; Backcountry Repair, home"><span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
     <nav id="nav-menu" class="nav-menu" aria-label="Main">
-      <details class="nav-services">
-        <summary>Services</summary>
-        <ul><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/" aria-current="page">Backcountry</a></li></ul>
-      </details>
+      <div class="nav-services">
+        <button class="nav-services-btn" type="button" aria-expanded="false" aria-controls="nav-services-list">Services</button>
+        <ul id="nav-services-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/" aria-current="page">Backcountry</a></li></ul>
+      </div>
       <a href="../service-area/">Service Area</a>
       <a href="../faq/">FAQ</a>
       <a href="../about/">About</a>
@@ -71,17 +89,18 @@
       <a class="btn btn-ghost" href="tel:+14355314127">Call 435-531-4127</a>
     </div>
   </div></section>
-      <section class="section"><div class="wrap prose" data-service-copy><p>Backcountry repair is for vehicles that are already off the pavement. The card lists Forest Service roads, trailheads, campsites, hunting areas, recovery assistance, and on-site repair. J Smith comes to the vehicle. The website does not promise that every road is reachable, that a phone will have signal, or that a visit happens in a set amount of time.</p>
-<p>What to send is specific. The nearest road or trail. A mile marker if you can see one. A GPS pin. The vehicle. What it is doing. That is enough for J to decide whether he can meet you there. Text J your location puts the pin into a text on your own phone. Nothing on this page stores that pin on a server.</p>
+      <section class="section"><div class="wrap prose" data-service-copy><p>Backcountry repair is for vehicles that are already off the pavement. The card lists Forest Service roads, trailheads, campsites, hunting areas, recovery assistance, and on-site repair. J Smith comes to the vehicle. Not every road is reachable, a phone may have no signal, and the visit follows the note you send.</p>
+<p>What to send is specific. The nearest road or trail. A mile marker if you can see one. A GPS pin. The vehicle. What it is doing. That is enough for J to decide whether he can meet you there. Text J your location puts the pin into a text on your own phone. The pin stays in that text.</p>
 <p>If the phone cannot get a location, the button still opens a text and asks you to add the nearest road, trailhead, or mile marker. An iPhone Compass reading can help. In Google Maps, a long-press drops a pin you can paste. Those are instructions for your phone, not a claim that coverage exists on the ridge.</p>
 <p>Forest Service roads and trailheads are meeting places, not a list of roads J has graded or patrols. Campsites and hunting areas are the same. Name the drainage or the sign you can see. If you are not sure of the official name, send the pin and describe the last pavement you left.</p>
-<p>On-site repair means the work he can do at the vehicle: the mobile repair list, a diesel that will not start, a coolant leak, a belt, a battery. If the job needs a shop, J will say so. Recovery assistance is on the card. It is not a promise of a winch, a trailer, or a pull. Ask him what he can do with the note you send. Hauling the vehicle somewhere else is not the offer on this page.</p>
-<p>Today or tomorrow is a phone call or a text. The schedule page is for later windows, first come, first served, in Mountain Time. A public booking cannot be made for the same day you open the page. If you are stuck now, call 435-531-4127.</p>
+<p>On-site repair means the work he can do at the vehicle: the mobile repair list, a diesel that will not start, a coolant leak, a belt, a battery. If the job needs a shop, J will say so. Recovery assistance is on the card. It is not a promise of a winch, a trailer, or a pull. Ask him what he can do with the note you send. Hauling the vehicle somewhere else is not the offer.</p>
+<p>Today or tomorrow is a phone call or a text. The schedule page is for later windows, first come, first served, in Mountain Time. A public booking cannot be made for today. If you are stuck now, call 435-531-4127.</p>
 <p>Ask J for a quote once he knows the vehicle and the spot. Nothing here invents a rescue story. The useful thing is the text with the pin and a clear description of the fault.</p>
 <p>Town pages cover Bozeman, Belgrade, Big Sky, Livingston, Manhattan, Three Forks, Ennis, West Yellowstone, Gardiner, and Big Timber. Canyons and river roads out of those towns are where these calls start. Use the town page if you want the local roads, then come back here for the location text.</p>
-<p>Send one text, not three fragments. Pin, vehicle, and the fault should land together. If the phone drops signal after the pin loads, that single text is the one that matters. Add a mile marker when you can read one, and name the last pavement you left. J uses that to decide if the spot is a place he can meet you. The page cannot decide it for him.</p>
-<p>On-site repair still means the mobile list: brakes, a battery, a starter, coolant, a belt, a diesel that quit. If the vehicle is off a trail and will not roll, say that in the first line. Recovery assistance stays a question for the call. Do not read this page as a promise that every spur road is in reach.</p>
-<p>If you can see a sign, read it into the text. If you can see a mile marker, read the number. If you only know the last town you drove through, say that town and the direction you left it. One complete text beats a string of partial ones sent as the signal fades.</p></div></section>
+<p>Send one text, not three fragments. Pin, vehicle, and the fault should land together. If the phone drops signal after the pin loads, that single text is the one that matters. Add a mile marker when you can read one, and name the last pavement you left. J uses that to decide if the spot is a place he can meet you. J decides from that text.</p>
+<p>On-site repair still means the mobile list: brakes, a battery, a starter, coolant, a belt, a diesel that quit. If the vehicle is off a trail and will not roll, say that in the first line. Recovery assistance stays a question for the call. Not every spur road is in reach.</p>
+<p>If you can see a sign, read it into the text. If you can see a mile marker, read the number. If you only know the last town you drove through, say that town and the direction you left it. One complete text beats a string of partial ones sent as the signal fades.</p>
+<p>If a second vehicle is with you, say so, and say which one will not move. A pin for the one that is stopped is the pin that matters. Call or text 435-531-4127 when you need J before the next public window.</p></div></section>
       <section class="section band-char"><div class="wrap">
         <h2>Other services</h2>
         <ul class="link-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment repair</a></li></ul>
@@ -106,7 +125,7 @@
   <div class="wrap foot-grid">
     <div>
       <p class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></p>
-      <p>Keep Exploring</p>
+      <p class="foot-signoff"><span class="foot-mark"><svg class="mascot mascot-ink foot-dog" viewBox="0 0 220 150" width="220" height="150" aria-hidden="true" focusable="false"><use href="#birdies-dog" width="220" height="150"></use></svg></span><span>Keep Exploring</span></p>
       <p><a href="tel:+14355314127">435-531-4127</a></p>
     </div>
     <div>

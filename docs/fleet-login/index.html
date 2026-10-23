@@ -39,16 +39,17 @@
 </head>
 <body class="page-tool">
 
+
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-row">
     <a class="brand" href="../" aria-label="Birdies Fleet Service &amp; Backcountry Repair, home"><span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
     <nav id="nav-menu" class="nav-menu" aria-label="Main">
-      <details class="nav-services">
-        <summary>Services</summary>
-        <ul><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/">Backcountry</a></li></ul>
-      </details>
+      <div class="nav-services">
+        <button class="nav-services-btn" type="button" aria-expanded="false" aria-controls="nav-services-list">Services</button>
+        <ul id="nav-services-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/">Backcountry</a></li></ul>
+      </div>
       <a href="../service-area/">Service Area</a>
       <a href="../faq/">FAQ</a>
       <a href="../about/">About</a>
@@ -63,7 +64,7 @@
 <nav class="crumbs wrap" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Fleet login</li></ol></nav>
     <section class="page-hero"><div class="wrap">
       <h1 id="fleet-title">Fleet client login</h1>
-      <p>Sign in to see the board. The PIN is checked by the desk, not saved in this page.</p>
+      <p>Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
     </div></section>
     <section class="section"><div class="wrap"><p id="fleet-msg" class="form-msg" role="status"></p>
   <form id="fleet-login" class="stack panel">
@@ -106,7 +107,7 @@
   <div class="wrap foot-grid">
     <div>
       <p class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></p>
-      <p>Keep Exploring</p>
+      <p class="foot-signoff">Keep Exploring</p>
       <p><a href="tel:+14355314127">435-531-4127</a></p>
     </div>
     <div>

@@ -33,6 +33,15 @@ function bootNav(doc) {
   menu.addEventListener('click', (event) => {
     if (event.target && event.target.closest && event.target.closest('a')) setOpen(false);
   });
+  const servicesBtn = doc.querySelector('.nav-services-btn');
+  const servicesList = doc.getElementById('nav-services-list');
+  if (servicesBtn && servicesList) {
+    servicesBtn.addEventListener('click', () => {
+      const open = servicesBtn.getAttribute('aria-expanded') === 'true';
+      servicesBtn.setAttribute('aria-expanded', String(!open));
+      servicesList.classList.toggle('is-open', !open);
+    });
+  }
 }
 
 function bootReveal(doc) {

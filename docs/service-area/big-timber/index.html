@@ -40,16 +40,34 @@
 </head>
 <body class="">
 
+<svg class="dog-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><symbol id="birdies-dog" viewBox="0 0 220 150">
+  <path fill="#B89A72" d="M22 72c16 0 30 14 36 30-12 2-26-8-32-20-4-8-6-12-4-10z"/>
+  <path fill="#B89A72" d="M54 112c2-30 24-50 54-50 26 0 46 14 52 36 4 16-2 34-20 42-24 10-70 8-82-8-4-6-6-14-4-20z"/>
+  <path fill="#6B4A2F" d="M70 118c6 6 4 16 0 26H56c0-10 4-20 14-26z"/>
+  <path fill="#B89A72" d="M112 108h16v36h-16z"/>
+  <path fill="#6B4A2F" d="M132 110h16v34h-16z"/>
+  <path fill="#B89A72" d="M126 74c12-10 28-12 40-2l-8 24c-14 4-28-2-34-16-2-4-2-4 2-6z"/>
+  <ellipse cx="168" cy="58" rx="26" ry="22" fill="#B89A72"/>
+  <path fill="#C4A574" d="M184 54h28c8 0 12 8 10 14s-8 12-18 12h-24c-2-8 0-18 4-26z"/>
+  <path fill="#6B4A2F" d="M150 48c-8 0-18 12-16 30 1 12 8 18 14 16 10-4 14-18 12-32-1-8-6-14-10-14z"/>
+  <path fill="none" stroke="#1C1814" stroke-width="4" stroke-linecap="round" d="M88 80c6 12 7 24 2 32"/>
+  <path fill="none" stroke="#1C1814" stroke-width="4" stroke-linecap="round" d="M106 74c7 14 8 28 3 38"/>
+  <path fill="none" stroke="#1C1814" stroke-width="3.5" stroke-linecap="round" d="M124 76c5 12 6 22 2 30"/>
+  <path fill="none" stroke="#1C1814" stroke-width="3" stroke-linecap="round" d="M156 48c4 8 5 14 2 18"/>
+  <path fill="none" stroke="#E8631C" stroke-width="6" stroke-linecap="round" d="M138 90c14 6 28 8 38 2"/>
+  <circle cx="176" cy="54" r="3" fill="#0F0D0B"/>
+  <ellipse cx="214" cy="68" rx="4" ry="3" fill="#0F0D0B"/>
+</symbol></svg>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-row">
     <a class="brand" href="../../" aria-label="Birdies Fleet Service &amp; Backcountry Repair, home"><span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
     <nav id="nav-menu" class="nav-menu" aria-label="Main">
-      <details class="nav-services">
-        <summary>Services</summary>
-        <ul><li><a href="../../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../../dot-inspections/">DOT inspections</a></li><li><a href="../../mobile-repair/">Mobile repair</a></li><li><a href="../../diesel-repair/">Diesel repair</a></li><li><a href="../../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../../backcountry-repair/">Backcountry</a></li></ul>
-      </details>
+      <div class="nav-services">
+        <button class="nav-services-btn" type="button" aria-expanded="false" aria-controls="nav-services-list">Services</button>
+        <ul id="nav-services-list"><li><a href="../../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../../dot-inspections/">DOT inspections</a></li><li><a href="../../mobile-repair/">Mobile repair</a></li><li><a href="../../diesel-repair/">Diesel repair</a></li><li><a href="../../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../../backcountry-repair/">Backcountry</a></li></ul>
+      </div>
       <a href="../../service-area/" aria-current="page">Service Area</a>
       <a href="../../faq/">FAQ</a>
       <a href="../../about/">About</a>
@@ -76,7 +94,7 @@
 <p>Ranch diesels and pickups here work dusty section roads and then sit in the weather. A wander after a washboard stretch, a hum that tracks speed, or a hydraulic leak at the shop yard are the kinds of notes that match the card. Write the symptom in driver language. Leave the part name blank if you are guessing.</p>
 <p>I-90 brings trucks that would rather not backtrack to a larger city for a no-crank or a brake grind. If the truck is on a ramp or a frontage lot, say the exit you can see. If it is still on the shoulder, say that before anything else. A shoulder is a safety fact, not a color detail.</p>
 <p>Wind off the Crazies will strip heat out of an engine bay overnight and will dry a coolant drip by morning. Mention the gauge or the smell if the puddle is gone. A cold no-crank after a clear night is its own sentence: click, slow, or silent.</p>
-<p>Big Timber is the east end of this site's town list. It is not a Livingston overflow page. The Boulder, the Crazies, and the county seat are the landmarks worth typing into the note. Add the exit or the river-road marker before you add anything else.</p></div></section>
+<p>Big Timber is the east end of the town list. It is not a Livingston overflow page. The Boulder, the Crazies, and the county seat are the landmarks worth typing into the note. Add the exit or the river-road marker before you add anything else.</p></div></section>
       <section class="section band-char"><div class="wrap">
         <h2>Services</h2>
         <ul class="link-list"><li><a href="../../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../../dot-inspections/">DOT inspections</a></li><li><a href="../../mobile-repair/">Mobile repair</a></li><li><a href="../../diesel-repair/">Diesel repair</a></li><li><a href="../../heavy-equipment-repair/">Heavy equipment repair</a></li><li><a href="../../backcountry-repair/">Backcountry repair</a></li></ul>
@@ -101,7 +119,7 @@
   <div class="wrap foot-grid">
     <div>
       <p class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></p>
-      <p>Keep Exploring</p>
+      <p class="foot-signoff"><span class="foot-mark"><svg class="mascot mascot-ink foot-dog" viewBox="0 0 220 150" width="220" height="150" aria-hidden="true" focusable="false"><use href="#birdies-dog" width="220" height="150"></use></svg></span><span>Keep Exploring</span></p>
       <p><a href="tel:+14355314127">435-531-4127</a></p>
     </div>
     <div>
