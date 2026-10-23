@@ -42,8 +42,9 @@ The prior declined estimate was GPT Image 2, 2K/high, five one-image runs at 6.5
 
 ## Open decisions and source gaps
 
-- Mascot studies shown: seated vector + portrait crest; awaiting Thomas's selection before integration. J's original logo remains untouched.
+- Mascot studies shown: seated vector + portrait crest; Thomas explicitly chose to hold integration for J's original logo. J's original logo remains untouched.
 - Supplied card/sticker originals retained under `images/source/` with provenance and SHA256. No clean logo file or actual service-truck photograph yet.
 - Card photos appear to show **435-531-1427**; current website/claims say **435-531-4127**. Flagged, not changed under look-only scope.
 - Canonical `tools/site-qa/site-qa.mjs` is absent on this Windows vault (README only). Independent browser QA is documented separately; it is not represented as a run of that harness or proof that real alerts work.
 - Website booking API is still disconnected pending J's alert setup. No production booking, notification, Google indexing, external message, paid media or deployment changed.
+
