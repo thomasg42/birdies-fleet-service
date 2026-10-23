@@ -370,9 +370,9 @@ export function createMock(opts = {}) {
     const victim = state.bookings.find((b) => b.id === row.bookingId);
     if (body.choice === 'callback') {
       state.outbox.push({
-        to: 'J',
+        to: 'Jay',
         kind: 'CALLBACK',
-        text: `Birdies: ${row.firstName} will wait for your call about ${row.original}.`,
+        text: `Birdie's: ${row.firstName} will wait for your call about ${row.original}.`,
       });
       save();
       return { status: 200, body: { ok: true, state: 'callback' } };
@@ -436,7 +436,7 @@ export function createMock(opts = {}) {
     if (verb === 'POST' && path === '/reschedule') return postReschedule(body || {});
     if (verb === 'POST' && path === '/leads') {
       state.leads.push(body || {});
-      state.outbox.push({ to: 'J', kind: 'LEAD', text: `Birdies lead: ${(body && body.name) || ''}` });
+      state.outbox.push({ to: 'Jay', kind: 'LEAD', text: `Birdie's lead: ${(body && body.name) || ''}` });
       save();
       return { status: 200, body: { ok: true } };
     }

@@ -274,7 +274,7 @@ export function validateBooking(v) {
   if (!v.windowId) errs.window = 'Pick a day and window.';
   if (!String(v.location || '').trim()) errs.location = 'Say where it is parked.';
   if (!String(v.name || '').trim()) errs.name = 'Add your name.';
-  if (!phoneOk(v.phone)) errs.phone = 'Add a phone number J can call or text.';
+  if (!phoneOk(v.phone)) errs.phone = 'Add a phone number Jay can call or text.';
   if (!emailOk(v.email)) errs.email = 'That email does not look right.';
   return errs;
 }
@@ -294,13 +294,13 @@ export function validateLead(v) {
   const errs = {};
   if (!v.type) errs.type = 'Pick what you need.';
   if (!String(v.name || '').trim()) errs.name = 'Add your name.';
-  if (!phoneOk(v.phone)) errs.phone = 'Add a phone number J can call or text.';
+  if (!phoneOk(v.phone)) errs.phone = 'Add a phone number Jay can call or text.';
   if (!emailOk(v.email)) errs.email = 'That email does not look right.';
   return errs;
 }
 
 export function requestMessage(v) {
-  const lines = ['Birdies time request'];
+  const lines = ["Birdie's time request"];
   const add = (k, val) => { if (val && String(val).trim()) lines.push(`${k}: ${String(val).trim()}`); };
   add('Service', v.serviceName || v.service);
   add('Item', v.serviceItem);
@@ -316,7 +316,7 @@ export function requestMessage(v) {
 }
 
 export function leadMessage(v) {
-  const lines = ['Birdies website request'];
+  const lines = ["Birdie's website request"];
   const add = (k, val) => { if (val && String(val).trim()) lines.push(`${k}: ${String(val).trim()}`); };
   add('Need', v.typeLabel || v.type);
   add('Name', v.name);
@@ -343,11 +343,11 @@ export function mapsLink(lat, lng) {
 export function locationText(lat, lng, accuracy) {
   const map = mapsLink(lat, lng);
   const acc = Number.isFinite(Number(accuracy)) ? ` (about ${Math.round(Number(accuracy))} m)` : '';
-  return `Birdies, I need help. My location: ${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}${acc} ${map}. Vehicle: . What it's doing: .`;
+  return `Jay, I need help. My location: ${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}${acc} ${map}. Vehicle: . What it's doing: .`;
 }
 
 export function locationFallbackText() {
-  return 'Birdies, I need help. My location: . Vehicle: . What it\'s doing: .';
+  return 'Jay, I need help. My location: . Vehicle: . What it\'s doing: .';
 }
 
 function icsEscape(s) {
@@ -365,14 +365,14 @@ export function icsFor(booking) {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Birdies//Booking//EN',
+    "PRODID:-//Birdie's//Booking//EN",
     'CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
     `UID:${uid}`,
     `DTSTAMP:${icsStamp(new Date())}`,
     `DTSTART:${icsStamp(start)}`,
     `DTEND:${icsStamp(end)}`,
-    `SUMMARY:${icsEscape(booking.summary || ('Birdies ' + (booking.full || booking.label || 'appointment')))}`,
+    `SUMMARY:${icsEscape(booking.summary || ("Birdie's " + (booking.full || booking.label || 'appointment')))}`,
     'END:VEVENT',
     'END:VCALENDAR',
     '',
@@ -388,30 +388,30 @@ export function bumpDrafts({ accountName, label, customerName, customerPhone, op
   const openings = (options || []).map((o) => o.full || o.label).join('; ');
   return [
     {
-      to: 'J',
+      to: 'Jay',
       kind: 'FLEET_OVERRIDE',
-      text: `Birdies fleet: ${accountName} took ${label}. Bumped ${customerName} ${customerPhone}. They have a reschedule link.`,
+      text: `Birdie's fleet: ${accountName} took ${label}. Bumped ${customerName} ${customerPhone}. They have a reschedule link.`,
     },
     {
       to: 'customer',
       kind: 'BUMP',
-      text: `Birdies: Something came up and J needs to move your ${label} appointment. J will reach out to you in a little bit. Next openings: ${openings}. Pick one: ${rescheduleUrl}`,
+      text: `Birdie's: Something came up and Jay needs to move your ${label} appointment. Jay will reach out to you in a little bit. Next openings: ${openings}. Pick one: ${rescheduleUrl}`,
     },
   ];
 }
 
 export function rescheduledDraft({ customerName, fromLabel, toLabel }) {
   return {
-    to: 'J',
+    to: 'Jay',
     kind: 'RESCHEDULED',
-    text: `Birdies RESCHEDULED: ${customerName} moved from ${fromLabel} to ${toLabel}.`,
+    text: `Birdie's RESCHEDULED: ${customerName} moved from ${fromLabel} to ${toLabel}.`,
   };
 }
 
 export function newBookingDraft({ who, label, name, phone, where }) {
   return {
-    to: 'J',
+    to: 'Jay',
     kind: 'NEW_BOOKING',
-    text: `Birdies booking: ${who} booked ${label}. ${name} ${phone}. Where: ${where}.`,
+    text: `Birdie's booking: ${who} booked ${label}. ${name} ${phone}. Where: ${where}.`,
   };
 }

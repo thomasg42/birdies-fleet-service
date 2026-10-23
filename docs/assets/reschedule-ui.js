@@ -27,8 +27,8 @@ export async function bootReschedule(doc, opts) {
     call.textContent = `Call ${config.phoneDisplay}`;
     const text = doc.createElement('a');
     text.className = 'btn btn-ghost';
-    text.href = core.smsHref(config.phoneE164, 'Birdies, I need help with a moved appointment.');
-    text.textContent = 'Text J';
+    text.href = core.smsHref(config.phoneE164, 'Jay, I need help with a moved appointment.');
+    text.textContent = 'Text Jay';
     row.appendChild(call);
     row.appendChild(text);
     return row;
@@ -40,7 +40,7 @@ export async function bootReschedule(doc, opts) {
   }
   function showOptions(data) {
     clear(view);
-    view.appendChild(p(`Hi ${data.firstName}, something came up and J needs to move your ${data.original.label} appointment. J will reach out to you in a little bit. If you'd like, pick a new time now:`));
+    view.appendChild(p(`Hi ${data.firstName}, something came up and Jay needs to move your ${data.original.label} appointment. Jay will reach out to you in a little bit. If you'd like, pick a new time now:`));
     const list = doc.createElement('div');
     list.className = 'chip-grid';
     for (const option of data.options || []) {
@@ -73,7 +73,7 @@ export async function bootReschedule(doc, opts) {
     const wait = doc.createElement('button');
     wait.type = 'button';
     wait.setAttribute('data-callback', '1');
-    wait.textContent = 'I\'ll wait for J\'s call';
+    wait.textContent = 'I\'ll wait for Jay\'s call';
     view.appendChild(wait);
     view.appendChild(actions());
   }
@@ -93,11 +93,11 @@ export async function bootReschedule(doc, opts) {
       showOptions(current);
       return;
     }
-    if (res.status === 410) return showFail('This link has expired. Call or text J.');
-    if (res.status === 404) return showFail('This link does not match a booking. Call or text J.');
+    if (res.status === 410) return showFail('This link has expired. Call or text Jay.');
+    if (res.status === 404) return showFail('This link does not match a booking. Call or text Jay.');
     if (data.state === 'callback') {
       clear(view);
-      view.appendChild(p('You asked to wait for J\'s call.'));
+      view.appendChild(p('You asked to wait for Jay\'s call.'));
       view.appendChild(actions());
       return;
     }
@@ -112,27 +112,27 @@ export async function bootReschedule(doc, opts) {
       view.appendChild(actions());
       return;
     }
-    showFail('Call or text J.');
+    showFail('Call or text Jay.');
   }
 
   clear(view);
   view.appendChild(p('Checking this link.'));
   if (!token || !config.api) {
-    showFail('Call or text J.');
+    showFail('Call or text Jay.');
     return;
   }
   let res;
   try {
     res = await client.rescheduleGet(token);
   } catch (err) {
-    showFail('Call or text J.');
+    showFail('Call or text Jay.');
     return;
   }
-  if (!res || res.status === 0) return showFail('Call or text J.');
-  if (res.status === 410) return showFail('This link has expired. Call or text J.');
-  if (res.status === 404 || !res.ok) return showFail('This link does not match a booking. Call or text J.');
+  if (!res || res.status === 0) return showFail('Call or text Jay.');
+  if (res.status === 410) return showFail('This link has expired. Call or text Jay.');
+  if (res.status === 404 || !res.ok) return showFail('This link does not match a booking. Call or text Jay.');
   const data = res.data;
-  if (!data || data.state !== 'open') return showFail('Call or text J.');
+  if (!data || data.state !== 'open') return showFail('Call or text Jay.');
   current = data;
   showOptions(data);
   view.addEventListener('click', (event) => {

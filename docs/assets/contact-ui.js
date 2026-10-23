@@ -47,7 +47,7 @@ export function bootContact(doc, opts) {
       if (handoff) handoff.hidden = false;
       if (thanks) thanks.hidden = true;
       smsAnchor(doc.getElementById('contact-handoff-sms'), core, config.phoneE164, body);
-      if (msg) msg.textContent = 'Last step: send it to J';
+      if (msg) msg.textContent = 'Last step: send it to Jay';
       return;
     }
     pending = true;
@@ -74,7 +74,7 @@ export function bootContact(doc, opts) {
     }
     pending = false;
     if (submit) submit.disabled = false;
-    if (msg) msg.textContent = 'That did not go through. Text it to J instead.';
+    if (msg) msg.textContent = 'That did not go through. Text it to Jay instead.';
     const err = doc.getElementById('contact-error');
     if (err) err.hidden = false;
     smsAnchor(doc.getElementById('contact-error-sms'), core, config.phoneE164, body);

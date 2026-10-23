@@ -38,7 +38,7 @@ export function icsHref(core, booking) {
     id: booking.id || booking.windowId,
     start: booking.start,
     end: booking.end,
-    summary: `Birdies ${booking.full || booking.label || 'appointment'}`,
+    summary: `Birdie’s ${booking.full || booking.label || 'appointment'}`,
   });
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(text)}`;
 }

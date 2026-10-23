@@ -8,7 +8,7 @@ function renderPublicWindows(doc, box, days, { removeId, core, now, mode }) {
   if (!flat.length) {
     const note = doc.createElement('p');
     note.className = 'windows-note';
-    note.textContent = 'No open windows are on the board. Call or text J.';
+    note.textContent = 'No open windows are on the board. Call or text Jay.';
     box.appendChild(note);
     if (submit) submit.disabled = true;
     return;
@@ -88,7 +88,7 @@ export async function bootSchedule(doc, opts) {
   if (submit && mode === 'request') submit.textContent = 'Request this time';
   if (intro) {
     const start = core.earliestPublicStart(now, rules);
-    intro.textContent = `First come, first served. Online booking starts ${core.labelDay(start)}. For today or tomorrow, call or text J.`;
+    intro.textContent = `First come, first served. Online booking starts ${core.labelDay(start)}. For today or tomorrow, call or text Jay.`;
   }
 
   async function refresh() {
@@ -180,7 +180,7 @@ export async function bootSchedule(doc, opts) {
       if (handoff) handoff.hidden = false;
       if (thanks) thanks.hidden = true;
       smsAnchor(doc.getElementById('book-handoff-sms'), core, config.phoneE164, body);
-      if (msg) msg.textContent = 'Last step: send it to J';
+      if (msg) msg.textContent = 'Last step: send it to Jay';
       return;
     }
     pending = true;
@@ -212,7 +212,7 @@ export async function bootSchedule(doc, opts) {
     if (!res.ok || data.ok !== true || !data.booking) {
       pending = false;
       if (submit) submit.disabled = false;
-      if (msg) msg.textContent = 'That did not go through. Text it to J instead.';
+      if (msg) msg.textContent = 'That did not go through. Text it to Jay instead.';
       smsAnchor(doc.getElementById('book-error-sms'), core, config.phoneE164, body);
       const err = doc.getElementById('book-error');
       if (err) err.hidden = false;

@@ -1,4 +1,4 @@
-export const DOG_ALT = 'Illustration of a brindle dog, the Birdies mascot.';
+export const DOG_ALT = 'Illustration of the Birdie’s mascot dog.';
 
 export const DOG_SYMBOL = `<symbol id="birdies-dog" viewBox="0 0 220 150">
   <path fill="#B89A72" d="M22 72c16 0 30 14 36 30-12 2-26-8-32-20-4-8-6-12-4-10z"/>

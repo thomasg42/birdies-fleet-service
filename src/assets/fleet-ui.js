@@ -1,7 +1,7 @@
 import { createClient } from './booking-api.js';
 import { val, mark, flattenDays, weekHeading } from './booking-dom.js';
 
-const BUMP_BODY = 'If you take it, they\'ll get a text that something came up, with the next two openings, and J is told right away.';
+const BUMP_BODY = 'If you take it, they\'ll get a text that something came up, with the next two openings, and Jay is told right away.';
 
 export async function bootFleet(doc, opts) {
   const login = doc.getElementById('fleet-login');
@@ -93,7 +93,7 @@ export async function bootFleet(doc, opts) {
   async function loadBoard() {
     const res = await client().fleetWindows(token);
     if (res.status === 401) return backToLogin('That sign-in expired. Sign in again. Your fleet form is still here.');
-    if (!res.ok || !res.data) { say('The board did not load. Call or text J.'); return; }
+    if (!res.ok || !res.data) { say('The board did not load. Call or text Jay.'); return; }
     if (title) title.textContent = res.data.accountName || 'Fleet';
     paintWindows(res.data.windows || res.data.days || []);
   }
@@ -120,7 +120,7 @@ export async function bootFleet(doc, opts) {
       return;
     }
     if (!res.ok) {
-      say('That Fleet ID and PIN didn\'t match. Call or text J for help.');
+      say('That Fleet ID and PIN didn\'t match. Call or text Jay for help.');
       return;
     }
     token = res.data.token;
@@ -216,12 +216,12 @@ export async function bootFleet(doc, opts) {
       return;
     }
     if (!res.ok || !data.booking) {
-      say('That did not go through. Call or text J.');
+      say('That did not go through. Call or text Jay.');
       return;
     }
     if (done) {
       done.hidden = false;
-      done.textContent = `Booked: ${data.booking.label}. J has been notified.`;
+      done.textContent = `Booked: ${data.booking.label}. Jay has been notified.`;
     }
     say('');
   }

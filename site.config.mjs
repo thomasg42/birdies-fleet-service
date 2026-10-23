@@ -23,17 +23,17 @@ export const PAIRS = [
 ];
 
 export const SITE = {
-  name: 'Birdies Fleet Service & Backcountry Repair',
-  shortName: 'Birdies',
-  owner: 'J Smith',
+  name: 'Birdie’s Fleet Service & Backcountry Repair',
+  shortName: 'Birdie’s',
+  owner: 'Jay Smith',
   tagline: 'We come to you.',
   slogan: 'Keep Exploring',
   cardLines: [
-    "Can't get it in the shop? We'll come to you.",
+    "Can't get it to the shop? We'll come to you.",
     'We come to you.',
     'Keep Exploring',
   ],
-  trust: 'Insured. Locally owned. J Smith, owner and mobile mechanic.',
+  trust: 'Insured. Locally owned. Jay Smith, owner and mobile mechanic.',
   region: 'Southwest Montana',
   url: 'https://thomasg42.github.io/birdies-fleet-service',
   customDomain: '',
@@ -63,7 +63,7 @@ export const SITE = {
     "src": "photos/pickup.webp",
     "width": 1000,
     "height": 667,
-    "alt": "Stock photograph: a white pickup in a conifer forest; not the Birdies service truck.",
+    "alt": "Stock photograph: a white pickup in a conifer forest; not the Birdie’s service truck.",
     "credit": "JBC Media Company / Pexels",
     "source": "https://www.pexels.com/photo/white-pickup-truck-in-scenic-forest-landscape-32104658/"
   },
@@ -71,7 +71,7 @@ export const SITE = {
     "src": "photos/mechanic.webp",
     "width": 1000,
     "height": 667,
-    "alt": "Stock photograph: a mechanic inspecting a truck engine; not J or a Birdies job.",
+    "alt": "Stock photograph: a mechanic inspecting a truck engine; not Jay or a Birdie’s job.",
     "credit": "Gustavo Fring / Pexels",
     "source": "https://www.pexels.com/photo/a-man-checking-the-engine-6720519/"
   },
@@ -108,14 +108,14 @@ export const SITE = {
       status: 'PUBLIC',
       name: 'Fleet maintenance',
       href: 'fleet-maintenance',
-      items: ['Preventive maintenance', 'Diagnosis', 'Emergency fleet repair', 'DOT inspections'],
+      items: ['Preventative maintenance', 'Diagnostics', 'Emergency fleet repairs', 'DOT inspections'],
     },
     {
       id: 'mobile',
       status: 'PUBLIC',
       name: 'Mobile repair',
       href: 'mobile-repair',
-      items: ['Brakes', 'Suspension', 'Steering', 'Wheel bearings', 'Batteries', 'Alternators', 'Starters', 'Coolant'],
+      items: ['Brakes', 'Suspension', 'Steering', 'Wheel bearings', 'Batteries', 'Alternators', 'Starters', 'Cooling systems'],
     },
     {
       id: 'diesel',
@@ -129,7 +129,7 @@ export const SITE = {
       status: 'PUBLIC',
       name: 'Backcountry repair',
       href: 'backcountry-repair',
-      items: ['Forest Service roads', 'Trailheads', 'Campsites', 'Hunting areas', 'Recovery assistance', 'On-site repair'],
+      items: ['Forest Service roads', 'Trailheads', 'Campsites', 'Hunting areas', 'Recovery assistance', 'On-site repairs'],
     },
   ],
   services: [

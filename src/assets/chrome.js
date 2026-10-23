@@ -1,4 +1,4 @@
-/* Header, reveal, route line, Text J, and the hero scrub Codex will turn on. */
+/* Header, reveal, route line, Text Jay, and the hero scrub Codex will turn on. */
 
 function smsHref(phone, body) {
   return `sms:${phone}?&body=${encodeURIComponent(body || '')}`;
@@ -9,10 +9,10 @@ function mapsLink(lat, lng) {
 function locationText(lat, lng, accuracy) {
   const map = mapsLink(lat, lng);
   const acc = Number.isFinite(Number(accuracy)) ? ` (about ${Math.round(Number(accuracy))} m)` : '';
-  return `Birdies, I need help. My location: ${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}${acc} ${map}. Vehicle: . What it's doing: .`;
+  return `Jay, I need help. My location: ${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}${acc} ${map}. Vehicle: . What it's doing: .`;
 }
 function locationFallbackText() {
-  return 'Birdies, I need help. My location: . Vehicle: . What it\'s doing: .';
+  return 'Jay, I need help. My location: . Vehicle: . What it\'s doing: .';
 }
 
 function bootNav(doc) {

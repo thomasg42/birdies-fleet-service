@@ -1,4 +1,4 @@
-// Birdies booking backend: one Cloudflare Worker plus a D1 database.
+// Birdie's booking backend: one Cloudflare Worker plus a D1 database.
 // It implements BOOKING-API-CONTRACT.md, the contract the site's pages already call.
 // Booking rules, Denver time math, labels and message drafts come from birdies-core.js
 // (through site.config.mjs), so the site and the backend can never disagree about a window.
@@ -212,7 +212,7 @@ function insertBooking(db, row) {
 const guard = (db) => db.prepare('INSERT INTO guard (x) SELECT 1 WHERE changes() = 0');
 
 function owner(env) {
-  return { role: 'owner', name: env.OWNER_NAME || 'J', phone: nil(env.OWNER_PHONE), email: nil(env.OWNER_EMAIL), smsOk: true };
+  return { role: 'owner', name: env.OWNER_NAME || 'Jay', phone: nil(env.OWNER_PHONE), email: nil(env.OWNER_EMAIL), smsOk: true };
 }
 
 function outbox(db, draft, to, nowIso) {
@@ -362,7 +362,7 @@ async function bookFleet(request, env, now, body, ip) {
       outbox(db, newBookingDraft({ who: acct.name, label: win.full, name: row.name, phone: row.phone, where: row.location }), owner(env), nowIso),
     );
   } else {
-    // A customer holds this window: move them out, hand them a reschedule link, tell J. All or nothing.
+    // A customer holds this window: move them out, hand them a reschedule link, tell Jay. All or nothing.
     const occupied = await occupiedIds(db, now);
     const options = bumpOptions(now, RULES, win.id, occupied);
     const more = moreOptions(now, win.id, occupied, options);
@@ -439,10 +439,10 @@ async function postReschedule(env, now, body) {
   const nowIso = new Date().toISOString();
 
   if (body.choice === 'callback') {
-    // Waiting for J's call does not use up the link.
+    // Waiting for Jay's call does not use up the link.
     await env.DB.batch([
       env.DB.prepare('UPDATE reschedules SET callback_at = ? WHERE token_hash = ?').bind(nowIso, row.token_hash),
-      outbox(env.DB, { kind: 'CALLBACK', text: `Birdies: ${row.first_name} will wait for your call about ${row.original}. ${victim.phone || ''}`.trim() }, owner(env), nowIso),
+      outbox(env.DB, { kind: 'CALLBACK', text: `Birdie's: ${row.first_name} will wait for your call about ${row.original}. ${victim.phone || ''}`.trim() }, owner(env), nowIso),
     ]);
     return json(200, { ok: true, state: 'callback' });
   }
@@ -505,7 +505,7 @@ async function postLead(env, body, ip) {
     location: nil(str(body.location, 300)),
     details: nil(str(body.details, 2000)),
   };
-  const text = `Birdies lead (${lead.type}): ${lead.name} ${lead.phone}${lead.company ? `, ${lead.company}` : ''}${lead.details ? `. ${lead.details}` : ''}`.slice(0, 600);
+  const text = `Birdie's lead (${lead.type}): ${lead.name} ${lead.phone}${lead.company ? `, ${lead.company}` : ''}${lead.details ? `. ${lead.details}` : ''}`.slice(0, 600);
   await env.DB.batch([
     env.DB
       .prepare('INSERT INTO leads (id, type, name, phone, email, company, units, location, details, sms_consent, created_at, ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')

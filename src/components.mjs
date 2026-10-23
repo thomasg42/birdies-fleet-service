@@ -2,9 +2,9 @@ import { photoFor, stockPhoto } from './photos.mjs';
 import { liveTowns } from '../site.config.mjs';
 
 const ITEM_HREF = {
-  'Preventive maintenance': 'fleet-maintenance',
-  Diagnosis: 'fleet-maintenance',
-  'Emergency fleet repair': 'fleet-maintenance',
+  'Preventative maintenance': 'fleet-maintenance',
+  Diagnostics: 'fleet-maintenance',
+  'Emergency fleet repairs': 'fleet-maintenance',
   'DOT inspections': 'dot-inspections',
   Brakes: 'mobile-repair',
   Suspension: 'mobile-repair',
@@ -13,7 +13,7 @@ const ITEM_HREF = {
   Batteries: 'mobile-repair',
   Alternators: 'mobile-repair',
   Starters: 'mobile-repair',
-  Coolant: 'mobile-repair',
+  'Cooling systems': 'mobile-repair',
   'Diesel pickups': 'diesel-repair',
   'Heavy equipment': 'heavy-equipment-repair',
   'Construction equipment': 'heavy-equipment-repair',
@@ -24,7 +24,7 @@ const ITEM_HREF = {
   Campsites: 'backcountry-repair',
   'Hunting areas': 'backcountry-repair',
   'Recovery assistance': 'backcountry-repair',
-  'On-site repair': 'backcountry-repair',
+  'On-site repairs': 'backcountry-repair',
 };
 
 export function serviceCards(ctx) {
@@ -43,10 +43,10 @@ export function howSteps(ctx) {
   return `<ol class="steps">${steps.map((s, i) => `<li><strong>${i + 1}.</strong> ${ctx.esc(s)}</li>`).join('')}</ol>`;
 }
 
-export function textJ(label = 'Text J your location') {
+export function textJ(label = 'Text Jay your location') {
   return `<div class="text-j" data-text-j-wrap>
     <button class="btn btn-blaze" type="button" data-text-j>${label}</button>
-    <span class="fine">Your location goes only into your own text to J.</span>
+    <span class="fine">Your location goes only into your own text to Jay.</span>
     <span data-text-j-note hidden>Add the nearest road, trailhead or mile marker. On an iPhone, Compass can help. In Google Maps, long-press the spot to drop a pin and paste it into the text.</span>
   </div>`;
 }
@@ -121,9 +121,9 @@ export function scheduleForm(ctx) {
     <p id="book-msg" class="form-msg" role="status"></p>
     <button id="book-submit" class="btn btn-blaze" type="submit">${button}</button>
     <div id="book-handoff" hidden>
-      <a id="book-handoff-sms" class="btn btn-blaze">Text this to J</a>
+      <a id="book-handoff-sms" class="btn btn-blaze">Text this to Jay</a>
     </div>
-    <p id="book-error" hidden>That did not go through. <a id="book-error-sms">Text J</a></p>
+    <p id="book-error" hidden>That did not go through. <a id="book-error-sms">Text Jay</a></p>
     <div id="book-thanks" hidden>
       <p id="book-thanks-label"></p>
       <a id="book-ics" class="btn btn-ghost">Add to calendar</a>
@@ -154,10 +154,10 @@ export function contactForm(ctx) {
     <label class="check"><input name="smsConsent" type="checkbox" value="yes"> <span>${CONSENT} <a href="${ctx.link('privacy')}">Privacy</a></span></label>
     <p class="hp" hidden><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></p>
     <p id="contact-msg" class="form-msg" role="status"></p>
-    <button id="contact-submit" class="btn btn-blaze" type="submit">Send to J</button>
-    <div id="contact-handoff" hidden><a id="contact-handoff-sms" class="btn btn-blaze">Text this to J</a></div>
-    <p id="contact-error" hidden>That did not go through. <a id="contact-error-sms">Text J</a></p>
-    <p id="contact-thanks" hidden>J has your note.</p>
+    <button id="contact-submit" class="btn btn-blaze" type="submit">Send to Jay</button>
+    <div id="contact-handoff" hidden><a id="contact-handoff-sms" class="btn btn-blaze">Text this to Jay</a></div>
+    <p id="contact-error" hidden>That did not go through. <a id="contact-error-sms">Text Jay</a></p>
+    <p id="contact-thanks" hidden>Jay has your note.</p>
   </form>`;
 }
 
@@ -167,7 +167,7 @@ export function fleetScreen(ctx) {
     <label>Fleet ID <input name="fleetId" required autocomplete="username"></label>
     <label>PIN <input name="pin" required inputmode="numeric" autocomplete="current-password"></label>
     <button class="btn btn-blaze" type="submit">Sign in</button>
-    <p><a class="btn btn-ghost" href="${ctx.tel}">Emergency right now? Call J</a></p>
+    <p><a class="btn btn-ghost" href="${ctx.tel}">Emergency right now? Call Jay</a></p>
   </form>
   <div id="fleet-board" hidden>
     <p><button id="fleet-signout" class="btn btn-ghost" type="button">Sign out</button></p>

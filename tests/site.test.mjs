@@ -154,10 +154,10 @@ test('AutoRepair schema stays inside confirmed fields', () => {
     assert.equal(repair.length, allowed ? 1 : 0, rel);
     for (const node of repair) {
       assert.equal(node.name, SITE.name);
-      assert.equal(node.alternateName, 'Birdies');
+      assert.equal(node.alternateName, 'Birdie’s');
       assert.equal(node.telephone, '+1-435-531-4127');
       assert.equal(node.slogan, 'Keep Exploring');
-      assert.equal(node.founder.name, 'J Smith');
+      assert.equal(node.founder.name, 'Jay Smith');
       assert.equal(node.address.addressRegion, 'MT');
       assert.equal(node.address.addressCountry, 'US');
       assert.equal(node.address.streetAddress, undefined);
@@ -222,7 +222,7 @@ test('town and service copy length, doorway overlap, confirms', () => {
   const confirmed = towns.filter((t) => t.confirm).map((t) => t.file);
   assert.deepEqual(confirmed, []);
   const blob = towns.map((t) => t.text).join('\n');
-  assert.equal(/J has confirmed|this town is confirmed/i.test(blob), false);
+  assert.equal(/(?:J|Jay) has confirmed|this town is confirmed/i.test(blob), false);
   for (let i = 0; i < towns.length; i += 1) {
     for (let j = i + 1; j < towns.length; j += 1) {
       const A = new Set(grams(towns[i].text));
@@ -382,7 +382,7 @@ test('schedule request mode never says booked', async () => {
   form.querySelector('[name="website"]').value = '';
   form.dispatchEvent(new doc.defaultView.Event('submit', { bubbles: true, cancelable: true }));
   assert.equal(doc.getElementById('book-handoff').hidden, false);
-  assert.match(doc.getElementById('book-msg').textContent, /Last step: send it to J/);
+  assert.match(doc.getElementById('book-msg').textContent, /Last step: send it to Jay/);
   assert.equal(doc.getElementById('book-thanks').hidden, true);
   assert.doesNotMatch(doc.body.textContent, /You're booked/);
 });
@@ -457,5 +457,5 @@ test('fleet dialog and reschedule fail closed', async () => {
 
   const res = dom('reschedule/index.html');
   await bootReschedule(res, { config: { api: '', phoneE164: SITE.phone.e164, phoneDisplay: SITE.phone.display }, core, now, search: '' });
-  assert.match(res.getElementById('reschedule-view').textContent, /Call or text J/);
+  assert.match(res.getElementById('reschedule-view').textContent, /Call or text Jay/);
 });

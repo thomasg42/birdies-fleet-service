@@ -41,7 +41,7 @@ function setup(extra = {}) {
     SITE_URL: 'https://thomasg42.github.io/birdies-fleet-service',
     ALLOWED_ORIGINS: 'https://thomasg42.github.io',
     ADMIN_KEY: 'test-admin-key',
-    OWNER_NAME: 'J',
+    OWNER_NAME: 'Jay',
     ...extra,
   };
   const waits = [];
@@ -197,7 +197,7 @@ test('the full bump story: confirm, bump, link, callback, reschedule, link used 
   assert.equal(bump.to_role, 'customer');
   assert.equal(bump.to_phone, '406-555-0100');
   assert.equal(bump.sms_ok, 1);
-  assert.match(bump.text, /Something came up and J needs to move your Saturday, October 24, 8 to 10 AM appointment/);
+  assert.match(bump.text, /Something came up and Jay needs to move your Saturday, October 24, 8 to 10 AM appointment/);
   const link = bump.text.match(/https:\/\/thomasg42\.github\.io\/birdies-fleet-service\/reschedule\/\?t=(\S+)$/);
   assert.ok(link, bump.text);
   const token = decodeURIComponent(link[1]);

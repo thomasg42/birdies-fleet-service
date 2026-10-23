@@ -20,7 +20,7 @@ export function makeCtx(SITE, slug, opts = {}) {
     abs: (path = '') => `${base}/${String(path).replace(/^\//, '')}`,
     link: (s) => (s ? `${root}${s}/` : root),
     tel: `tel:${SITE.phone.e164}`,
-    sms: `sms:${SITE.phone.e164}?&body=${encodeURIComponent('Birdies, I need help.')}`,
+    sms: `sms:${SITE.phone.e164}?&body=${encodeURIComponent('Jay, I need help.')}`,
     asset: (p) => `${root}assets/${p}?v=${encodeURIComponent(SITE.assetVersion)}`,
     font: (p) => `${root}assets/fonts/${p}`,
   };
@@ -28,9 +28,9 @@ export function makeCtx(SITE, slug, opts = {}) {
 
 function wordmark(ctx) {
   if (ctx.SITE.logo) {
-    return `<img class="brand-logo" src="${ctx.asset(ctx.SITE.logo)}" alt="Birdies" width="180" height="48">`;
+    return `<img class="brand-logo" src="${ctx.asset(ctx.SITE.logo)}" alt="Birdie’s" width="180" height="48">`;
   }
-  return `<span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span>`;
+  return `<span class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair</small></span>`;
 }
 
 export function homeHero(ctx) {
@@ -44,9 +44,9 @@ export function homeHero(ctx) {
     <div class="btn-row">
       <a class="btn btn-blaze" href="${ctx.link('schedule')}">Book a time</a>
       <a class="btn btn-ghost" href="${ctx.tel}">Call ${esc(SITE.phone.display)}</a>
-      <a class="btn btn-ghost" href="${ctx.sms}">Text J</a>
+      <a class="btn btn-ghost" href="${ctx.sms}">Text Jay</a>
     </div>
-    <p class="help-line">Need help today or tomorrow? Call or text J.</p>
+    <p class="help-line">Need help today or tomorrow? Call or text Jay.</p>
     <p><a class="fleet-link" href="${ctx.link('fleet-login')}">Fleet client login</a></p>
   </div>
 </section>`;
@@ -87,7 +87,7 @@ function footer(ctx) {
   return `<footer class="site-footer">
   <div class="wrap foot-grid">
     <div>
-      <p class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></p>
+      <p class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair</small></p>
       <p class="foot-signoff">${signoff}</p>
       <p><a href="${ctx.tel}">${esc(ctx.SITE.phone.display)}</a></p>
     </div>
@@ -141,7 +141,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : '<meta name="ro
 <meta property="og:image" content="${og}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Birdies wordmark over a dark pine treeline">
+<meta property="og:image:alt" content="Birdie’s wordmark over a dark pine treeline">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(page.title)}">
@@ -272,7 +272,7 @@ export function ctaBand(ctx, title) {
     <div class="btn-row">
       <a class="btn btn-blaze" href="${ctx.link('schedule')}">Book a time</a>
       <a class="btn btn-ghost" href="${ctx.tel}">Call ${esc(ctx.SITE.phone.display)}</a>
-      <a class="btn btn-ghost" href="${ctx.sms}">Text J</a>
+      <a class="btn btn-ghost" href="${ctx.sms}">Text Jay</a>
     </div>
   </div></section>`;
 }
