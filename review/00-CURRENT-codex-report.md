@@ -58,3 +58,8 @@ OPEN FOR J / THOMAS:
 ATTACK CHECK: actual browser inspection found hidden fast-scroll content, map label crowding and Book contrast; corrected and rechecked. No copy/SEO drift found. Remaining limitations: mascot intentionally deferred, missing source assets, held images, no hero, missing canonical site-QA, unverified real notification delivery, phone discrepancy.
 ```
 
+
+## Published visual update — 2026-10-23 09:07 MDT
+
+Thomas explicitly asked to push the finished visual page. Pushed through 9ffcf8fca0cbbaf36854a0f60566a03dfc75fcbe. Pages status built at that exact SHA. Actual served HTML has data-forest-opening; served CSS matches the local committed CSS byte-for-byte after line-ending normalization. Browser checks at390/1440 found no overflow or page errors; noindex,nofollow remains. Evidence: visual-qa/live-verification.json and live-home-390.png / live-home-1440.png. This verifies the visual update, not live booking-alert delivery or the missing canonical site-qa harness. No hero generation/spend. Mechanic outfit now locked: blue mechanic overalls, work jacket, dark cap. Full initial report above is preserved as the pre-push record.
+
