@@ -15,7 +15,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const assetSrc = join(here, 'src/assets');
 const assetHash = createHash('sha1');
 for (const name of readdirSync(assetSrc).filter((n) => /\.(css|js)$/.test(n)).sort()) {
-  assetHash.update(name).update(readFileSync(join(assetSrc, name)));
+  // Normalize line endings so Windows, Mac and Cursor's cloud compute the same hash.
+  assetHash.update(name).update(readFileSync(join(assetSrc, name), 'utf8').replace(/\r\n/g, '\n'));
 }
 SITE.assetVersion = `${SITE.assetVersion}-${assetHash.digest('hex').slice(0, 8)}`;
 const dev = process.argv.includes('--dev');
