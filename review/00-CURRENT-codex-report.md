@@ -1,15 +1,21 @@
-# Birdies — Lane 2 Codex report, 2026-10-23
+# Birdies photographic correction — Lane 2 Codex, 2026-10-23
 
 ```text
-STATE: Part 1 authorized code pass built, tested and locally committed. Not pushed. Thomas explicitly held the mascot for J's original logo and held paid section images. Part 2 shot interview has started; no storyboard images, hero generation or integration.
+REQUEST: Replace cartoon evergreen scenery and drawn map with real-life imagery and an authentic Google Map. Add real photographs to the other service-page heroes. All rendered imagery must avoid the cartoon treatment.
 
-SCOPE: field-atlas layout, bone-paper material, refined type/spacing/navigation, coded forest depth and scroll opening, readable service/town pages, map-label placement, compact static booking controls, accessibility corrections. Copy, facts, metadata, schema, URLs, indexing, booking logic and backend configuration preserved.
-
-REPO: C:\Users\thoma\dev\birdies-fleet-service
-BASE SHA: b54c4eee30eb50ea964c4abfb5576b1a88949974
-LOCAL BUILD COMMIT: 35d447f421ecb3ca0cdec135b8974bde38560154. A later documentation commit records this report.
-PUSHED SHA: none for this work.
+BUILD COMMIT: 8ed84f23f0fc7556d93c1259c18f57c3765446b2.
+PUBLISH: Authorized by Thomas; exact final report/push SHA is in git history and the subsequent live-verification record. No claim of production booking-alert readiness.
 DESTINATION: https://thomasg42.github.io/birdies-fleet-service/
+
+CHANGES:
+- Real evergreen/mountain photo in the home hero, with separate phone crop; real pine-road photograph in the backcountry section.
+- Seven inspected free stock photographs; home category cards and all six service-page hero photographs wired through SITE.photos. Generic marketing-page headers also have real forest imagery.
+- Source/photographer credits and stock-photo alt text distinguish these from J, his vehicle, crew, property and customer jobs.
+- Cartoon dog removed from rendered pages, footer and social preview while awaiting J's original logo. Existing text and source insertion slots retained.
+- Drawn SVG route replaced by Google-hosted Maps with real roads/town labels, controls and attribution. All ten original service-town links retained. No fabricated business pin or coverage polygon.
+- Map starts loading only when the visitor approaches it. No Google requests at the top of the page at 390 or 1440. Actual map rendering checked at both widths. An iframe fallback is supplied for no-JS; town links remain independently usable.
+- Responsive photo dimensions, lazy section imagery, high-priority hero and WebP optimization. Local dev server now serves WebP with image/webp MIME.
+- Photographic social PNG replaces the illustrated preview. No generated media, image-model calls, paid stock, keys, new billing account or paid retries.
 
 TEST SUMMARY (verbatim):
 ℹ tests 17
@@ -20,46 +26,33 @@ TEST SUMMARY (verbatim):
 ℹ skipped 0
 ℹ todo 0
 
-BROWSER QA: 17 routes at 390 and 1440 = 34 screenshots; zero horizontal overflow, page errors or motion on working screens. Home additionally captured with reduced motion and JavaScript off. Isolated DEMO fleet board captured at both widths. Eleven interaction checks passed: skip-to-main, mobile menu Escape/focus, scroll progress, back-content visibility, reduced-motion scenery and demo fleet board. No production lead, booking or message submitted.
+TEST CHANGES: Superseded required-cartoon assertions now enforce no rendered dog/forest drawings, real photo dimensions/alt and asset budgets, genuine Google-hosted map, and no unapproved video/autoplay. Link validation permits only configured source-credit URLs, the Google embed and existing website URLs.
 
-PRESERVATION CHECK: all 26 generated HTML documents compared to pre-change HEAD: normalized non-SVG visitor text, metadata and JSON-LD identical. No changed copy/SEO documents. Config changes in generated docs are automatic asset hashes only; source site.config.mjs is untouched.
+BROWSER: 34 route/viewport captures at 390 and 1440; no overflow, missing photos, script errors, rendered cartoon selectors or motion on working screens. Eleven keyboard/menu/back/reduced-motion/demo-fleet checks passed. Reduced-motion and no-JS home captures retained. Final targeted map test: initialGoogleRequests 0, googleMapRendered true, responsiveMapCorrect true, overflow false, cartoons false at both widths.
+COPY/SEO: No business wording, title/meta/JSON-LD changes in the 26 generated HTML documents. Preservation comparison excludes SVG and newly added photo-credit figcaptions. Booking behavior/endpoints, phone and indexing unchanged.
 
-SCREENSHOT / QA ROOT (vault):
-FGA-AIOS/clients/birdies-fleet-service/website/review/visual-qa/
-home-390.png, home-1440.png, home-390-reduced.png, home-390-no-js.png;
-fleet-maintenance, dot-inspections, mobile-repair, diesel-repair, heavy-equipment-repair, backcountry-repair, service-area-bozeman, schedule, fleet-login, about, contact, faq, reschedule, service-area, privacy, 404.html: each -390.png and -1440.png;
-fleet-board-390.png, fleet-board-1440.png;
-reference-0.png through reference-5.png;
-qa.json, interaction-and-lighthouse.json, lighthouse.report.html, lighthouse.report.json.
-REPRODUCTION: visual-qa.mjs and interaction-qa.mjs in the same vault review folder. They use installed Chrome and the bundled runtime; package/temp paths are specific to this Windows machine.
+LIGHTHOUSE MOBILE, local production build: Performance 90 / Accessibility 100 / Best Practices 100 / SEO 69. Only failed SEO audit is is-crawlable, from the existing noindex/robots block. Earlier photo run scored 70 Performance; Google loaded prematurely despite native lazy loading. Corrected with near-viewport loading and remeasured at 90. LCP 3.6s, CLS 0, TBT 0ms in the final local report. Scores are local lab measurements, not field-performance guarantees.
 
-LIGHTHOUSE MOBILE, local production preview:
-Performance 98 / Accessibility 100 / Best Practices 100 / SEO 66.
-SEO's failed audit is is-crawlable: intentional existing noindex,nofollow and robots Disallow. Do not turn indexing on for a score. No launch authorization.
+MEDIA BUDGET: home desktop WebP 188206 bytes; phone WebP 118938; backcountry landscape 192340. All seven 1000x667 section/header WebPs <=150000 bytes. All existing JS/CSS/HTML test budgets pass. Social PNG is a separate share-preview asset, not fetched by the page.
 
-CANONICAL SITE-QA: not run; tools/site-qa/site-qa.mjs is missing from this Windows vault (README only). Browser checks above are independent evidence, not a claim the canonical harness ran. Live alert delivery remains unverified/disconnected, owned by Lane 1 and waiting for J's destinations.
+EVIDENCE ROOT (vault): FGA-AIOS/clients/birdies-fleet-service/website/review/photo-qa-20261023/
+- home-preview-390.png, home-preview-1440.png
+- home-390.png / home-1440.png, all six service pages, Bozeman town, About, schedule, fleet login/board, contact, FAQ, privacy, reschedule and service area captures
+- google-map-final-390.png / google-map-final-1440.png
+- qa.json; final-map-and-preview.json; interaction-and-lighthouse.json; lighthouse.report.json/.html
+- photo-qa.mjs and photo-interaction-qa.mjs in the parent review folder reproduce the checks on this Windows setup.
+NOTE: A full-page browser capture can leave a Google iframe blank when outside the active viewport. The dedicated in-viewport map captures and frame checks show the actual rendered Google map; do not diagnose the full-page blank region alone as a failed embed.
 
-GENERATION COSTS / JOBS:
-Prior declined quote: GPT Image 2, 2K/high, five one-image jobs, 6.5 exact credits each / 32.5 total.
-Approved credits: 0. Actually spent: 0. Generation job IDs: none.
-Thomas's newest direction: hold images until J's photos and the hero quote; map real-photo coverage before quoting remaining card-size images at 1K. Do not reuse the declined 2K quote as an allowance.
+SOURCES: images/source/stock-2026-10-23/README.md, download-manifest.json and SHA256SUMS.txt in the vault client home; source summary also copied to repository review/photo-sources-20261023.md. Originals/provider downloads retained untouched. WebP derivatives only are served. Unsplash/Pexels free-use designations and license pages checked; Google embed-help page checked. No claim these are J's photos or all local Montana locations.
 
-MASCOT: images/00-CURRENT-mascot-directions.svg + .png in the vault client home. Original coded seated mark + compact portrait crest, informed by supplied card motif; J's logo unaltered. Thomas chose HOLD for J's original logo. Existing placeholder remains; studies saved for reference.
+COST: 0 credits spent, 0 paid purchases, no generation job IDs. Paid image/hero allowances remain unapproved. New instruction authorizes real stock imagery; it does not lift the paid-generation hold.
 
-HERO QA: not applicable yet; no take or integration. Preserve the mud-rescue sequence exactly. Shot interview, full numbered image storyboard, approval of every image and transition, exact model preflight, quote/cap, one planned motion pass and transition inspection are still required. No paid retries.
+ATTACK CHECK: Matched scope to actual pixels; inspected source photos, all imagery loading, responsive hero and map screenshots. Found and fixed premature Google loading and a mobile map-frame presentation issue. Verified actual Google frame/attribution rather than accepting only iframe markup. Preserved all business copy and booking tests. No rendered cartoon imagery found.
 
-OPEN FOR J / THOMAS:
-1. J's original logo; Thomas explicitly held the mascot update.
-2. Confirm phone: attached cards appear 435-531-1427; current site/claims 435-531-4127. No correction made under look-only instruction.
-3. Clean original logo and a real service-truck photo for accurate hero reference. Card/sticker photos are retained in images/source/ with SHA256; they are not truck-reference photographs.
-4. Real photos; hero timing/mechanical/camera decisions; later media allowance.
-5. Publication only on Thomas's explicit 'push'. Launch/indexing and booking connection remain separate permissions.
-
-ATTACK CHECK: actual browser inspection found hidden fast-scroll content, map label crowding and Book contrast; corrected and rechecked. No copy/SEO drift found. Remaining limitations: mascot intentionally deferred, missing source assets, held images, no hero, missing canonical site-QA, unverified real notification delivery, phone discrepancy.
+LIMITATIONS / OPEN:
+- The canonical tools/site-qa/site-qa.mjs is still absent on this Windows vault; the independent browser checks are not that harness or proof that real lead alerts work.
+- Booking API remains disconnected pending Lane 1/J's alert setup.
+- J's actual service-truck photo and clean logo are still needed for the 10-second rescue storyboard and final real logo. No hero video generated/integrated.
+- Hero decisions remain: 10s; early warm sun/light fog; anonymous mechanic in blue overalls, work jacket, dark cap; clean hand-width lift/wheel alignment/mud drop/settle, no glow. Exact compartment and remaining storyboard/crop decisions await the real truck reference.
+- Card phone appears 435-531-1427 while site is 435-531-4127. Previously flagged; unchanged under copy lock.
 ```
-
-
-## Published visual update — 2026-10-23 09:07 MDT
-
-Thomas explicitly asked to push the finished visual page. Pushed through 9ffcf8fca0cbbaf36854a0f60566a03dfc75fcbe. Pages status built at that exact SHA. Actual served HTML has data-forest-opening; served CSS matches the local committed CSS byte-for-byte after line-ending normalization. Browser checks at390/1440 found no overflow or page errors; noindex,nofollow remains. Evidence: visual-qa/live-verification.json and live-home-390.png / live-home-1440.png. This verifies the visual update, not live booking-alert delivery or the missing canonical site-qa harness. No hero generation/spend. Mechanic outfit now locked: blue mechanic overalls, work jacket, dark cap. Full initial report above is preserved as the pre-push record.
-
