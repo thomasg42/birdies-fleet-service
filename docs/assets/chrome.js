@@ -63,43 +63,23 @@ function bootReveal(doc) {
 }
 
 function bootMap(doc) {
-  const section = doc.querySelector('[data-route]');
-  if (!section) return;
-  const path = section.querySelector('[data-route-line]');
-  const dots = [...section.querySelectorAll('[data-route-dot]')];
   const view = doc.defaultView;
-  const reduce = view.matchMedia && view.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const motion = doc.documentElement.classList.contains('js-motion') && !reduce;
-  if (!path || typeof path.getTotalLength !== 'function' || !motion) {
-    if (path) {
-      try {
-        const len = path.getTotalLength();
-        path.style.strokeDasharray = String(len);
-        path.style.strokeDashoffset = '0';
-      } catch (err) { /* static map still shows */ }
-    }
-    dots.forEach((dot) => dot.classList.add('is-on'));
-    return;
-  }
-  const len = path.getTotalLength();
-  path.style.strokeDasharray = String(len);
-  let frame = 0;
-  const draw = () => {
-    frame = 0;
-    const rect = section.getBoundingClientRect();
-    const vh = view.innerHeight || 800;
-    const total = Math.max(1, rect.height + vh * 0.6);
-    const seen = vh * 0.7 - rect.top;
-    const p = Math.min(1, Math.max(0, seen / total));
-    path.style.strokeDashoffset = String(len * (1 - p));
-    dots.forEach((dot) => {
-      dot.classList.toggle('is-on', p >= Number(dot.getAttribute('data-route-at') || 0));
-    });
-  };
-  const onScroll = () => { if (!frame) frame = view.requestAnimationFrame(draw); };
-  view.addEventListener('scroll', onScroll, { passive: true });
-  view.addEventListener('resize', onScroll, { passive: true });
-  draw();
+  const media = view.matchMedia('(max-width: 599px)');
+  doc.querySelectorAll('[data-google-map]').forEach((frame) => {
+    let loaded = false;
+    const apply = () => {
+      if (!loaded) return;
+      const src = frame.getAttribute(media.matches ? 'data-map-mobile' : 'data-map-desktop');
+      if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
+    };
+    const load = () => { loaded = true; apply(); };
+    media.addEventListener?.('change', apply);
+    if (!('IntersectionObserver' in view)) { load(); return; }
+    const observer = new view.IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) { observer.disconnect(); load(); }
+    }, {rootMargin: '800px 0px'});
+    observer.observe(frame);
+  });
 }
 
 function bootTextJ(doc, cfg) {
@@ -270,7 +250,7 @@ function bootForest(doc) {
  if (!section || doc.body.classList.contains('page-tool')) return;
  const media=view.matchMedia('(prefers-reduced-motion: reduce)');
  let frame=0;
- const draw=()=>{frame=0;const r=section.getBoundingClientRect();const p=media.matches ? 1 : Math.max(0,Math.min(1,((view.innerHeight||800)-r.top)/(Math.min(r.height,view.innerHeight||800)*.85)));section.style.setProperty('--forest-progress',p.toFixed(3));};
+ const draw=()=>{frame=0;const r=section.getBoundingClientRect();const p=media.matches ? 1 : Math.max(0,Math.min(1,((view.innerHeight||800)-r.top)/(Math.min(r.height,view.innerHeight||800)*.85)));section.style.setProperty('--forest-progress',p.toFixed(3));section.style.setProperty('--forest-scale',(media.matches ? 1 : 1.06-.06*p).toFixed(3));};
  const tick=()=>{if(!frame)frame=view.requestAnimationFrame(draw);};
  view.addEventListener('scroll',tick,{passive:true});view.addEventListener('resize',tick,{passive:true});
  media.addEventListener?.('change',tick);draw();

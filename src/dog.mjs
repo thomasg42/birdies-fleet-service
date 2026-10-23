@@ -19,14 +19,5 @@ export const DOG_SYMBOL = `<symbol id="birdies-dog" viewBox="0 0 220 150">
   <ellipse cx="214" cy="68" rx="4" ry="3" fill="#0F0D0B"/>
 </symbol>`;
 
-export function dogSprite() {
-  return `<svg class="dog-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${DOG_SYMBOL}</svg>`;
-}
-
-export function dogMark({ variant = 'color', className = '' } = {}) {
-  const cls = ['mascot', variant === 'ink' ? 'mascot-ink' : 'mascot-color', className].filter(Boolean).join(' ');
-  const label = variant === 'ink'
-    ? 'aria-hidden="true" focusable="false"'
-    : `role="img" aria-label="${DOG_ALT}"`;
-  return `<svg class="${cls}" viewBox="0 0 220 150" width="220" height="150" ${label}><use href="#birdies-dog" width="220" height="150"></use></svg>`;
-}
+export function dogSprite() { return ''; }
+export function dogMark() { return '<!-- mascot asset slot -->'; }

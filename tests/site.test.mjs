@@ -125,6 +125,10 @@ test('seo contract, one h1, launched noindex, links and assets', () => {
     for (const href of hrefs) {
       if (/^(tel:|sms:|mailto:|#|data:)/.test(href)) continue;
       if (/^https?:/.test(href)) {
+        const decoded = href.replace(/&amp;/g, '&');
+        if (Object.values(SITE.photos).some((photo) => photo.source === decoded)) continue;
+        const external = new URL(decoded);
+        if (external.protocol === 'https:' && external.hostname === 'www.google.com' && external.pathname === '/maps/embed') continue;
         assert.match(href, /^https:\/\/thomasg42\.github\.io\/birdies-fleet-service/);
         continue;
       }
@@ -166,42 +170,38 @@ test('AutoRepair schema stays inside confirmed fields', () => {
   }
 });
 
-test('brindle mascot is reused and stays off the tools', () => {
-  const alt = 'Illustration of a brindle dog, the Birdies mascot.';
+test('photographic surfaces replace all cartoon placeholders', () => {
   const home = readFileSync(join(docs, 'index.html'), 'utf8');
-  const about = readFileSync(join(docs, 'about/index.html'), 'utf8');
-  const missing = readFileSync(join(docs, '404.html'), 'utf8');
-  for (const html of [home, about, missing]) {
-    assert.equal(html.includes(alt), true);
-    assert.equal(html.includes('<use href="#birdies-dog"'), true);
-    assert.equal(html.includes('id="birdies-dog"'), true);
+  for (const file of htmlFiles()) {
+    const html = readFileSync(file, 'utf8');
+    assert.doesNotMatch(html, /<use href="#birdies-dog"|id="birdies-dog"|<svg class="forest-scene/);
+    if (html.includes('class="google-map"')) {
+      const { document } = parseHTML(html);
+      const frame = document.querySelector('iframe.google-map');
+      assert.equal(new URL(frame.getAttribute('data-map-mobile') || frame.getAttribute('src')).hostname, 'www.google.com');
+      assert.match(frame.getAttribute('title'), /Southwest Montana/);
+      assert.equal(frame.getAttribute('loading'), 'lazy');
+      assert.doesNotMatch(html, /data-route-line|data-route-dot/);
+    }
+    const { document } = parseHTML(html);
+    for (const img of document.querySelectorAll('.stock-photo img')) {
+      assert.match(img.getAttribute('alt'), /^Stock photograph:/);
+      assert.ok(Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0);
+    }
   }
-  assert.equal(home.includes('class="mascot mascot-color hero-dog"'), true);
-  assert.equal(home.includes('And our brindle mascot.'), true);
-  assert.equal(home.includes('Insured. Locally owned. J Smith, owner and mobile mechanic.'), true);
-  assert.equal(home.includes('class="mascot mascot-ink foot-dog"'), true);
-  assert.equal(home.includes('Keep Exploring'), true);
-  assert.equal(about.includes('id="mascot"'), true);
-  assert.equal(about.includes('And our brindle mascot.'), true);
-  assert.equal(missing.includes("Wrong turn. Let's get you back on the trail."), true);
-  for (const rel of ['schedule/index.html', 'fleet-login/index.html', 'reschedule/index.html']) {
-    const html = readFileSync(join(docs, rel), 'utf8');
-    assert.equal(html.includes('birdies-dog'), false, rel);
-    assert.equal(html.includes('brindle'), false, rel);
-  }
-  const og = readFileSync(join(docs, 'assets/og.png'));
-  assert.equal(og.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
-  const ogTool = readFileSync(join(root, 'tools/make-og.mjs'), 'utf8');
-  assert.equal(ogTool.includes('birdies-dog'), true);
+  assert.match(home, /photos\/forest-hero.webp/);
+  assert.match(home, /photos\/forest-hero-mobile.webp/);
+  const photoFiles = walk(join(docs, 'assets/photos'));
+  for (const file of photoFiles) assert.ok(statSync(file).size <= (file.includes('hero') || file.includes('forest-road') ? 200000 : 150000), file);
+  assert.equal(readFileSync(join(docs, 'assets/og.png')).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
 });
 
-test('hero v0 is a still placeholder', () => {
+test('photo hero stays static until an approved video is supplied', () => {
   const html = readFileSync(join(docs, 'index.html'), 'utf8');
   assert.match(html, /data-hero-slot="v0-placeholder"/);
-  assert.match(html, /class="[^"]*hero-dog/);
+  assert.match(html, /fetchpriority="high"/);
   assert.match(html, /<h1>[^<]*Southwest Montana[^<]*<\/h1>/);
   assert.match(html, /Book a time/);
-  assert.match(html, /Call 435-531-4127/);
   assert.doesNotMatch(html, /<video|autoplay|data-hero-video/);
 });
 

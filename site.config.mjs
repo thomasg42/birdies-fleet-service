@@ -42,7 +42,64 @@ export const SITE = {
   phone: { display: '435-531-4127', e164: '+14355314127', schema: '+1-435-531-4127' },
   booking: { api: '', ...DEFAULT_RULES },
   logo: null,
-  photos: {},
+  photos: {
+  "forest": {
+    "src": "photos/forest.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: real evergreen trees and mountain peaks.",
+    "credit": "Fern / Unsplash",
+    "source": "https://unsplash.com/photos/a-view-of-a-mountain-range-from-a-highway-g9yqkaU7o6k"
+  },
+  "road": {
+    "src": "photos/road.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: a dirt road among real pine trees.",
+    "credit": "Snejina Nikolova / Pexels",
+    "source": "https://www.pexels.com/photo/tall-trees-near-a-dirt-road-4316627/"
+  },
+  "pickup": {
+    "src": "photos/pickup.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: a white pickup in a conifer forest; not the Birdies service truck.",
+    "credit": "JBC Media Company / Pexels",
+    "source": "https://www.pexels.com/photo/white-pickup-truck-in-scenic-forest-landscape-32104658/"
+  },
+  "mechanic": {
+    "src": "photos/mechanic.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: a mechanic inspecting a truck engine; not J or a Birdies job.",
+    "credit": "Gustavo Fring / Pexels",
+    "source": "https://www.pexels.com/photo/a-man-checking-the-engine-6720519/"
+  },
+  "equipment": {
+    "src": "photos/equipment.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: an excavator at a construction site in Missoula.",
+    "credit": "John Kakuk / Unsplash",
+    "source": "https://unsplash.com/photos/a-construction-vehicle-in-a-dirt-field-GK3GYxaFc-8"
+  },
+  "fleet": {
+    "src": "photos/fleet.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: refrigerated trailers parked in a yard.",
+    "credit": "Tom Jackson / Pexels",
+    "source": "https://www.pexels.com/photo/view-of-parked-trucks-27099094/"
+  },
+  "trucks": {
+    "src": "photos/trucks.webp",
+    "width": 1000,
+    "height": 667,
+    "alt": "Stock photograph: commercial trucks parked in a row.",
+    "credit": "YL Lew / Pexels",
+    "source": "https://www.pexels.com/photo/colorful-semi-trucks-parked-in-open-lot-35996049/"
+  }
+},
   updated: '2026-10-22',
   assetVersion: '20261022-v0',
   categories: [

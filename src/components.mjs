@@ -1,3 +1,4 @@
+import { photoFor, stockPhoto } from './photos.mjs';
 import { liveTowns } from '../site.config.mjs';
 
 const ITEM_HREF = {
@@ -27,7 +28,7 @@ const ITEM_HREF = {
 };
 
 export function serviceCards(ctx) {
-  return `<div class="cards">${ctx.categories.map((c) => `<article class="card">
+  return `<div class="cards">${ctx.categories.map((c) => `<article class="card">${stockPhoto(ctx, photoFor(ctx, c.id), 'card-photo')}
     <h3><a href="${ctx.link(c.href)}">${ctx.esc(c.name)}</a></h3>
     <ul>${c.items.map((item) => `<li><a href="${ctx.link(ITEM_HREF[item] || c.href)}">${ctx.esc(item)}</a></li>`).join('')}</ul>
   </article>`).join('')}</div>`;
@@ -51,39 +52,10 @@ export function textJ(label = 'Text J your location') {
 }
 
 export function routeMap(ctx) {
-  const byId = Object.fromEntries(ctx.towns.map((t) => [t.id, t]));
-  const order = ctx.SITE.routeOrder.map((id) => byId[id]).filter(Boolean);
-  const lats = order.map((t) => t.lat);
-  const lngs = order.map((t) => t.lng);
-  const minLat = Math.min(...lats);
-  const maxLat = Math.max(...lats);
-  const minLng = Math.min(...lngs);
-  const maxLng = Math.max(...lngs);
-  const W = 600;
-  const H = 430;
-  const pad = 70;
-  const xOf = (lng) => pad + ((lng - minLng) / (maxLng - minLng)) * (W - pad * 2);
-  const yOf = (lat) => pad + ((maxLat - lat) / (maxLat - minLat)) * (H - pad * 2);
-  const pts = order.map((t) => ({ ...t, x: xOf(t.lng), y: yOf(t.lat) }));
-  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-  const last = Math.max(1, pts.length - 1);
-  const labelOffsets = {
-    'west-yellowstone': [12, 20, 'start'], 'big-sky': [12, 4, 'start'],
-    bozeman: [12, 22, 'start'], belgrade: [12, 4, 'start'],
-    manhattan: [-10, -14, 'end'], 'three-forks': [-10, -18, 'end'],
-    ennis: [12, 0, 'start'], gardiner: [12, -10, 'start'],
-    livingston: [12, -8, 'start'], 'big-timber': [-12, -14, 'end'],
-  };
-  const dots = pts.map((p, i) => `<g>
-    <circle class="route-dot" data-route-dot data-route-at="${(i / last).toFixed(3)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5"/>
-    <text class="route-label" text-anchor="${labelOffsets[p.id][2]}" x="${(p.x + labelOffsets[p.id][0]).toFixed(1)}" y="${(p.y + labelOffsets[p.id][1]).toFixed(1)}">${ctx.esc(p.name)}</text>
-  </g>`).join('');
   const links = ctx.towns.map((t) => `<li><a href="${ctx.link('service-area/' + t.slug)}">${ctx.esc(t.name)}</a></li>`).join('');
   return `<div class="map-layout">
-    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true" focusable="false">
-      <path class="route-line" data-route-line d="${d}"/>
-      ${dots}
-    </svg>
+    <div class="map-viewport"><iframe class="google-map" data-google-map data-map-mobile="https://www.google.com/maps/embed?origin=mfe&amp;pb=!1m11!1m8!1m3!1d2868698.1450053034!2d-111.05!3d45.4!3m2!1i1024!2i768!4f13.1!5e0!6i8!3m1!1sen!5m1!1sen" data-map-desktop="https://www.google.com/maps/embed?origin=mfe&amp;pb=!1m11!1m8!1m3!1d1434349.0725026517!2d-111.05!3d45.4!3m2!1i1024!2i768!4f13.1!5e0!6i8!3m1!1sen!5m1!1sen" title="Google Maps: Southwest Montana service area" width="720" height="520" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <noscript><iframe class="google-map" title="Google Maps: Southwest Montana service area" src="https://www.google.com/maps/embed?origin=mfe&amp;pb=!1m11!1m8!1m3!1d2868698.1450053034!2d-111.05!3d45.4!3m2!1i1024!2i768!4f13.1!5e0!6i8!3m1!1sen!5m1!1sen" width="720" height="520" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></noscript></div>
     <ul class="town-list">${links}</ul>
   </div>`;
 }

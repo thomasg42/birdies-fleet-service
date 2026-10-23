@@ -1,4 +1,4 @@
-import { forestScene } from './forest.mjs';
+import { forestPhoto, photoFor, stockPhoto } from './photos.mjs';
 import { liveServices, liveTowns, liveCategories } from '../site.config.mjs';
 import { dogMark, dogSprite } from './dog.mjs';
 
@@ -33,12 +33,10 @@ function wordmark(ctx) {
   return `<span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span>`;
 }
 
-const treelines = `<div class="hero-media">${forestScene()}${dogMark({ variant: 'color', className: 'hero-dog' })}</div>`;
-
 export function homeHero(ctx) {
   const { SITE } = ctx;
   return `<section class="hero" data-hero-slot="v0-placeholder">
-  ${treelines}
+  <div class="hero-media">${forestPhoto(ctx)}</div>
   <div class="wrap hero-inner">
     ${wordmark(ctx)}
     <h1>Mobile Fleet Service &amp; Backcountry Repair in Southwest Montana</h1>
@@ -256,7 +254,8 @@ export function faqSchema(faqs) {
 }
 
 export function pageHero(ctx, { kicker, h1, lead }) {
-  return `<section class="page-hero"><div class="wrap">
+  const photo = photoFor(ctx);
+  return `<section class="page-hero${photo ? ' has-photo' : ''}"><div class="wrap page-hero-grid"><div class="page-hero-copy">
     <p class="kicker">${esc(kicker)}</p>
     <h1>${h1}</h1>
     <p class="lead">${lead}</p>
@@ -264,7 +263,7 @@ export function pageHero(ctx, { kicker, h1, lead }) {
       <a class="btn btn-blaze" href="${ctx.link('schedule')}">Book a time</a>
       <a class="btn btn-ghost" href="${ctx.tel}">Call ${esc(ctx.SITE.phone.display)}</a>
     </div>
-  </div></section>`;
+  </div>${stockPhoto(ctx, photo, 'page-hero-photo', true)}</div></section>`;
 }
 
 export function ctaBand(ctx, title) {
