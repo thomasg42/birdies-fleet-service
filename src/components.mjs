@@ -59,17 +59,24 @@ export function routeMap(ctx) {
   const maxLat = Math.max(...lats);
   const minLng = Math.min(...lngs);
   const maxLng = Math.max(...lngs);
-  const W = 360;
-  const H = 280;
-  const pad = 36;
+  const W = 600;
+  const H = 430;
+  const pad = 70;
   const xOf = (lng) => pad + ((lng - minLng) / (maxLng - minLng)) * (W - pad * 2);
   const yOf = (lat) => pad + ((maxLat - lat) / (maxLat - minLat)) * (H - pad * 2);
   const pts = order.map((t) => ({ ...t, x: xOf(t.lng), y: yOf(t.lat) }));
   const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
   const last = Math.max(1, pts.length - 1);
+  const labelOffsets = {
+    'west-yellowstone': [12, 20, 'start'], 'big-sky': [12, 4, 'start'],
+    bozeman: [12, 22, 'start'], belgrade: [12, 4, 'start'],
+    manhattan: [-10, -14, 'end'], 'three-forks': [-10, -18, 'end'],
+    ennis: [12, 0, 'start'], gardiner: [12, -10, 'start'],
+    livingston: [12, -8, 'start'], 'big-timber': [-12, -14, 'end'],
+  };
   const dots = pts.map((p, i) => `<g>
     <circle class="route-dot" data-route-dot data-route-at="${(i / last).toFixed(3)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5"/>
-    <text class="route-label" x="${(p.x + 8).toFixed(1)}" y="${(p.y - 8).toFixed(1)}">${ctx.esc(p.name)}</text>
+    <text class="route-label" text-anchor="${labelOffsets[p.id][2]}" x="${(p.x + labelOffsets[p.id][0]).toFixed(1)}" y="${(p.y + labelOffsets[p.id][1]).toFixed(1)}">${ctx.esc(p.name)}</text>
   </g>`).join('');
   const links = ctx.towns.map((t) => `<li><a href="${ctx.link('service-area/' + t.slug)}">${ctx.esc(t.name)}</a></li>`).join('');
   return `<div class="map-layout">

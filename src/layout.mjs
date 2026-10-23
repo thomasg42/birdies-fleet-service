@@ -1,3 +1,4 @@
+import { forestScene } from './forest.mjs';
 import { liveServices, liveTowns, liveCategories } from '../site.config.mjs';
 import { dogMark, dogSprite } from './dog.mjs';
 
@@ -32,14 +33,7 @@ function wordmark(ctx) {
   return `<span class="wordmark">BIRDIES<small>Fleet Service &amp; Backcountry Repair</small></span>`;
 }
 
-const treelines = `<div class="hero-media">
-  <div aria-hidden="true">
-  <svg class="treeline treeline-back" viewBox="0 0 1440 160" preserveAspectRatio="none"><path fill="currentColor" d="M0 160 0 90 70 70 120 100 180 48 250 92 330 40 420 88 520 36 640 96 760 44 900 100 1040 50 1180 92 1320 42 1440 80 1440 160Z"/></svg>
-  <svg class="treeline treeline-mid" viewBox="0 0 1440 160" preserveAspectRatio="none"><path fill="currentColor" d="M0 160 0 110 60 78 130 112 200 60 280 104 360 54 470 108 580 48 700 112 830 58 960 116 1100 62 1240 108 1360 70 1440 100 1440 160Z"/></svg>
-  <svg class="treeline treeline-front" viewBox="0 0 1440 120" preserveAspectRatio="none"><path fill="currentColor" d="M0 120 0 70 80 48 150 78 230 36 320 74 430 40 540 82 670 34 800 78 940 42 1080 86 1220 46 1440 72 1440 120Z"/></svg>
-  </div>
-  ${dogMark({ variant: 'color', className: 'hero-dog' })}
-</div>`;
+const treelines = `<div class="hero-media">${forestScene()}${dogMark({ variant: 'color', className: 'hero-dog' })}</div>`;
 
 export function homeHero(ctx) {
   const { SITE } = ctx;
@@ -67,7 +61,7 @@ function header(ctx) {
   return `<a class="skip" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="wrap header-row">
-    <a class="brand" href="${ctx.link('')}" aria-label="${esc(ctx.SITE.name)}, home">${wordmark(ctx)}</a>
+    <a class="brand" href="${ctx.link('')}">${wordmark(ctx)}</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
     <nav id="nav-menu" class="nav-menu" aria-label="Main">
       <div class="nav-services">
@@ -299,7 +293,7 @@ export function renderPage(ctx, page) {
     : '';
   const sprite = NO_DOG.has(ctx.slug) ? '' : dogSprite();
   return `${head(ctx, page, schema)}
-<body class="${page.bodyClass || ''}">
+<body class="${page.bodyClass || (ctx.slug === '' ? 'page-home' : 'page-marketing')}">
 ${ribbon}
 ${sprite}
 ${header(ctx)}

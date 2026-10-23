@@ -1,3 +1,4 @@
+import { forestScene } from './forest.mjs';
 import { metaTitle, metaDescription, liveServices, liveTowns } from '../site.config.mjs';
 import {
   homeHero, pageHero, ctaBand, crumbs, businessSchema, webSiteSchema,
@@ -44,7 +45,7 @@ export const PAGES = [
         <p>A fleet account is a PIN and a board. Sign in to ask for a window sooner than the public line. Set the account up first.</p>
         <p><a class="btn btn-blaze" href="${ctx.link('contact')}?type=fleet-account">Set up a fleet account</a> <a class="btn btn-ghost" href="${ctx.link('fleet-login')}">Fleet client login</a></p>
       </div></section>
-      <section class="section band-pine"><div class="wrap reveal">
+      <section class="section band-pine forest-opening" data-forest-opening>${forestScene()}<div class="wrap reveal">
         <h2>Backcountry</h2>
         <p>Forest Service roads, trailheads, campsites, and hunting areas. Send a pin when there is no street.</p>
         ${textJ()}

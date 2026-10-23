@@ -58,7 +58,7 @@ function bootReveal(doc) {
       entry.target.classList.add('is-in');
       io.unobserve(entry.target);
     });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  }, { rootMargin: '0px 0px -24px 0px', threshold: 0 });
   nodes.forEach((el) => io.observe(el));
 }
 
@@ -258,6 +258,20 @@ export function bootChrome(doc, cfg = {}) {
   bootNav(doc);
   bootReveal(doc);
   bootMap(doc);
+  bootForest(doc);
   bootTextJ(doc, cfg || {});
   bootHeroScrub(doc);
+}
+
+// A single bounded scroll effect; content never depends on its progress.
+function bootForest(doc) {
+ const view=doc.defaultView;
+ const section=doc.querySelector('[data-forest-opening]');
+ if (!section || doc.body.classList.contains('page-tool')) return;
+ const media=view.matchMedia('(prefers-reduced-motion: reduce)');
+ let frame=0;
+ const draw=()=>{frame=0;const r=section.getBoundingClientRect();const p=media.matches ? 1 : Math.max(0,Math.min(1,((view.innerHeight||800)-r.top)/(Math.min(r.height,view.innerHeight||800)*.85)));section.style.setProperty('--forest-progress',p.toFixed(3));};
+ const tick=()=>{if(!frame)frame=view.requestAnimationFrame(draw);};
+ view.addEventListener('scroll',tick,{passive:true});view.addEventListener('resize',tick,{passive:true});
+ media.addEventListener?.('change',tick);draw();
 }
