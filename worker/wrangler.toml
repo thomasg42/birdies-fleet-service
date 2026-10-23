@@ -10,7 +10,7 @@ compatibility_date = "2026-10-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "birdies-booking"
-database_id = "SET_AFTER_wrangler_d1_create"
+database_id = "b7d8cb0d-a00c-4011-9868-02246f0062c3"
 
 [triggers]
 crons = ["*/5 * * * *"]

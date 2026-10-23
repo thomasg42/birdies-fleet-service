@@ -1,0 +1,6 @@
+---
+description: Birdies repo rules and the "push" protocol
+alwaysApply: true
+---
+
+Follow `AGENTS.md` in this repo root on every task. Its push protocol is mandatory: finish, test, commit, ask "Ready to push?", and push to `main` only when Thomas says "push" in his message, then confirm the live page shows the change.
