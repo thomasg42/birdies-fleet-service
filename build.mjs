@@ -1,12 +1,23 @@
 #!/usr/bin/env node
-import { mkdirSync, rmSync, writeFileSync, readdirSync, copyFileSync, statSync, existsSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync, readdirSync, readFileSync, copyFileSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { SITE, liveServices } from './site.config.mjs';
 import { PAGES } from './src/pages.mjs';
 import { makeCtx, renderPage } from './src/layout.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
+
+// The ?v= on every asset URL carries a hash of the CSS and JS sources, so a deploy that
+// changes styles or scripts can never leave visitors on a cached old copy. A hand-bumped
+// assetVersion was forgotten twice (Bridger 2026-10-03, Birdies 2026-10-22).
+const assetSrc = join(here, 'src/assets');
+const assetHash = createHash('sha1');
+for (const name of readdirSync(assetSrc).filter((n) => /\.(css|js)$/.test(n)).sort()) {
+  assetHash.update(name).update(readFileSync(join(assetSrc, name)));
+}
+SITE.assetVersion = `${SITE.assetVersion}-${assetHash.digest('hex').slice(0, 8)}`;
 const dev = process.argv.includes('--dev');
 const outArg = process.argv.indexOf('--out');
 const OUT = resolve(outArg > -1 ? process.argv[outArg + 1] : join(here, dev ? 'dev-build' : 'docs'));
