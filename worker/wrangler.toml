@@ -1,0 +1,23 @@
+# Birdies booking backend. Deploy from this folder: npx wrangler deploy
+# Never put secrets in this file. Set them with: npx wrangler secret put <NAME>
+#   ADMIN_KEY       admin routes (fleet accounts, blocks, outbox review)
+#   NOTIFY_WEBHOOK  n8n webhook that sends texts and emails (leave unset = dry run, nothing sent)
+#   NOTIFY_SECRET   shared secret the webhook checks
+name = "birdies-booking"
+main = "src/index.mjs"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "birdies-booking"
+database_id = "SET_AFTER_wrangler_d1_create"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+SITE_URL = "https://thomasg42.github.io/birdies-fleet-service"
+ALLOWED_ORIGINS = "https://thomasg42.github.io"
+ALLOW_LOCALHOST = "1"
+OWNER_NAME = "J"
+# OWNER_PHONE and OWNER_EMAIL: where J's alerts go. Set once J answers.
