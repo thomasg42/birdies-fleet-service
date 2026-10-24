@@ -38,7 +38,7 @@ export function homeHero(ctx) {
   return `<section class="hero" data-hero-slot="rescue-review" data-hero-cut="full-rescue">
   <div class="hero-media">
 <picture class="hero-poster"><source media="(orientation: portrait)" srcset="${ctx.asset('hero/rescue-full-poster.webp')}"><img src="${ctx.asset('hero/rescue-full-poster.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
-<video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-full-10s.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-full-10s.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
+<video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-direction-v2.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-direction-v2.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
 <canvas data-hero-canvas aria-hidden="true"></canvas>
 <div class="hero-finale" data-hero-finale aria-hidden="true">${wordmark(ctx)}</div>
 </div>
