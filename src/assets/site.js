@@ -1,3 +1,4 @@
+import { bootSeasons } from './seasons.js';
 import { bootChrome } from './chrome.js';
 
 window.__birdiesReady = true;
@@ -17,6 +18,7 @@ let now = new Date();
 if (params.get('now')) now = (await loadCore()).parseLocal(params.get('now'));
 
 bootChrome(document, cfg);
+bootSeasons(document);
 
 function opts() {
   return { config: cfg, core, now, search: window.location.search };

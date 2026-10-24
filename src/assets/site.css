@@ -537,3 +537,60 @@ html.js .google-map[data-google-map] { display: block; }
 .hero.is-finale .hero-inner h1, .hero.is-finale .hero-inner .tag { opacity:0; }
 .hero.is-finale .hero-inner.is-pinned { justify-content:flex-end; }
 @media(prefers-reduced-motion:reduce) { .hero-finale { transform:none; } }
+
+
+/* Calendar scenery lives in the open space, below every content surface. */
+body[data-season] { background-image:none; --season-dark:#211c14; --season-light:#f1e5cd; }
+body[data-season="winter"] { --season-dark:#14242c; --season-light:#e8f0ef; }
+body[data-season="spring"] { --season-dark:#17291b; --season-light:#e9efd9; }
+body[data-season="summer"] { --season-dark:#24231a; --season-light:#f2e7c9; }
+.seasonal-section { position:relative; isolation:isolate; overflow:clip; background:var(--season-dark); }
+.seasonal-section::before { display:none; }
+.page-home .hero + .seasonal-light { background:var(--season-light); }
+.seasonal-backdrop { position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.seasonal-backdrop::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,var(--season-dark) 28%,var(--season-dark) 72%,transparent); opacity:.65; pointer-events:none; }
+.seasonal-light .seasonal-backdrop::after { background:linear-gradient(90deg,transparent,#f2e8d044 28%,#f2e8d044 62%,transparent); opacity:.5; }
+.seasonal-panorama { position:absolute; bottom:-1px; left:0; width:100%; height:clamp(150px,24vw,350px); opacity:.32; transform:translateY(var(--season-scroll,0px)); }
+.seasonal-light .seasonal-panorama { opacity:.85; }
+.seasonal-vignette { position:absolute; bottom:0; width:clamp(160px,24vw,330px); height:auto; opacity:.55; }
+.seasonal-light .seasonal-vignette { opacity:.95; }
+.seasonal-left { left:0; }
+.seasonal-right { right:0; }
+.seasonal-leaf { position:absolute; height:auto; overflow:visible; transform:translate(-50%,-50%) rotate(var(--leaf-turn)); filter:drop-shadow(2px 5px 3px #100c0840); opacity:.58; }
+.seasonal-light .seasonal-leaf { opacity:.92; }
+.seasonal-leaf-motion { transform-origin:center; transform-box:fill-box; pointer-events:visiblePainted; cursor:pointer; animation:season-leaf-breeze 7s ease-in-out var(--leaf-delay) infinite alternate; animation-play-state:paused; }
+.seasonal-visible .seasonal-leaf-motion { animation-play-state:running; }
+.seasonal-ground-leaf .seasonal-leaf-motion { animation:none; }
+@keyframes season-leaf-breeze { from {transform:translateY(0) rotate(-3deg);} to {transform:translateY(-5px) rotate(5deg);} }
+.seasonal-weather { position:absolute; width:4px; height:4px; border-radius:50%; background:#e3eeee; opacity:.35; animation:season-snow 9s linear var(--weather-delay) infinite; animation-play-state:paused; }
+.seasonal-visible .seasonal-weather { animation-play-state:running; }
+body[data-season="spring"] .seasonal-weather { width:1px; height:22px; border-radius:0; background:#80b2ad; animation-name:season-rain; animation-duration:3s; }
+@keyframes season-snow { from {transform:translate(0,-12px);} to {transform:translate(26px,76px);} }
+@keyframes season-rain { from {transform:translate(0,-25px);opacity:0;} 15% {opacity:.3;} to {transform:translate(-18px,100px);opacity:0;} }
+/* Preserve the existing bone service-box surfaces against the seasonal canvas. */
+.seasonal-section .cards { background:var(--bone); }
+.seasonal-section .card { background:var(--bone); }
+.seasonal-section .panel { background:var(--char-900); }
+@media(max-width:700px) {
+ .seasonal-leaf { width:calc(var(--leaf-mobile-size,1) * 42px) !important; }
+ .seasonal-leaf:nth-of-type(3n) { display:none; }
+ .seasonal-vignette { width:150px; opacity:.4; }
+ .seasonal-light .seasonal-vignette { opacity:.8; }
+ .seasonal-weather:nth-of-type(2n) { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .seasonal-leaf-motion,.seasonal-weather { animation:none !important; }
+ .seasonal-panorama { transform:none; }
+}
+
+/* Give each season a readable vignette in the open space beside the service heading. */
+@media(min-width:1000px) {
+ .seasonal-light .seasonal-vignette { top:0; bottom:auto; width:220px; }
+ .seasonal-light .seasonal-left { left:auto; right:12%; }
+ .seasonal-light .seasonal-panorama { top:0; bottom:auto; left:auto; right:0; width:48%; height:230px; opacity:.5; }
+}
+@media(max-width:999px) {
+ .seasonal-light { padding-bottom:210px; }
+ .seasonal-light .seasonal-vignette { width:180px; }
+ .seasonal-light .seasonal-panorama { height:200px; }
+}
