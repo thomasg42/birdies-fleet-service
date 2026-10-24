@@ -153,10 +153,22 @@ export function bootHeroScrub(doc = document) {
     const h = Math.max(1, Math.round(heroCanvas.clientHeight * density));
     if (heroCanvas.width !== w) heroCanvas.width = w;
     if (heroCanvas.height !== h) heroCanvas.height = h;
-    const scale = Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
+    const portrait = h > w;
+    // Keep the shared wide shot above the copy on phones; never crop off a truck.
+    let availableHeight = h;
+    if (portrait && inner) {
+      const boxes = Array.from(inner.children).map((el) => el.getBoundingClientRect()).filter((r) => r.height > 0);
+      const copyHeight = boxes.length ? Math.max(...boxes.map((r) => r.bottom)) - Math.min(...boxes.map((r) => r.top)) : 0;
+      availableHeight = Math.max(1, h - (copyHeight + 32) * density);
+    }
+    const scale = portrait
+      ? Math.min(w / heroVideo.videoWidth, availableHeight / heroVideo.videoHeight)
+      : Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
     const vw = heroVideo.videoWidth * scale;
     const vh = heroVideo.videoHeight * scale;
-    heroCtx.drawImage(heroVideo, (w - vw) * 0.5, (h - vh) * 0.5, vw, vh);
+    heroCtx.fillStyle = '#0f0d0b';
+    heroCtx.fillRect(0, 0, w, h);
+    heroCtx.drawImage(heroVideo, (w - vw) * 0.5, portrait ? 0 : (h - vh) * 0.5, vw, vh);
     heroCanvas.classList.add('is-ready');
   };
   const videoProgress = (p) => (p >= holdFrom ? 1 : (holdFrom > 0 ? p / holdFrom : p));

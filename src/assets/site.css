@@ -504,3 +504,18 @@ html.js .google-map[data-google-map] { display: block; }
  .hero[data-hero-slot="rescue-review"] .help-line { margin-top:.7rem; }
  .hero[data-hero-slot="rescue-review"] .hero-inner { padding-block:1rem; }
 }
+
+/* One shared arrival/exit review master. Portrait shows the whole action. */
+.hero[data-hero-cut="arrival-exit-review"] .hero-media { background:#0f0d0b; }
+@media (orientation:portrait) {
+ .hero[data-hero-cut="arrival-exit-review"] .hero-poster img { object-fit:contain; object-position:center top; }
+}
+
+@media (min-width:900px) {
+ .hero[data-hero-cut="arrival-exit-review"] .hero-inner.is-pinned { justify-content:flex-start; padding-top:2rem; }
+}
+
+
+@media (min-width:900px) {
+ .hero[data-hero-cut="arrival-exit-review"] .hero-media::after { background:linear-gradient(90deg,#0f0d0bd9,#0f0d0b80 40%,transparent 65%),linear-gradient(0deg,#0f0d0b99,transparent 50%); }
+}
