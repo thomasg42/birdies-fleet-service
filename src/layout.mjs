@@ -35,11 +35,12 @@ function wordmark(ctx) {
 
 export function homeHero(ctx) {
   const { SITE } = ctx;
-  return `<section class="hero" data-hero-slot="rescue-review" data-hero-cut="arrival-exit-review">
+  return `<section class="hero" data-hero-slot="rescue-review" data-hero-cut="full-rescue">
   <div class="hero-media">
-<picture class="hero-poster"><source media="(orientation: portrait)" srcset="${ctx.asset('hero/arrival-exit-review.webp')}"><img src="${ctx.asset('hero/arrival-exit-review.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
-<video data-hero-video data-src-16x9="${ctx.asset('hero/arrival-exit-review.mp4')}" data-src-9x16="${ctx.asset('hero/arrival-exit-review.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
+<picture class="hero-poster"><source media="(orientation: portrait)" srcset="${ctx.asset('hero/rescue-full-poster.webp')}"><img src="${ctx.asset('hero/rescue-full-poster.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
+<video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-full-10s.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-full-10s.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
 <canvas data-hero-canvas aria-hidden="true"></canvas>
+<div class="hero-finale" data-hero-finale aria-hidden="true">${wordmark(ctx)}</div>
 </div>
   <div class="wrap hero-inner">
     ${wordmark(ctx)}

@@ -189,8 +189,8 @@ test('photographic surfaces replace all cartoon placeholders', () => {
       assert.ok(Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0);
     }
   }
-  assert.match(home, /hero\/arrival-exit-review.webp/);
-  assert.match(home, /hero\/arrival-exit-review.webp/);
+  assert.match(home, /hero\/rescue-full-poster.webp/);
+  assert.match(home, /hero\/rescue-full-poster.webp/);
   const photoFiles = walk(join(docs, 'assets/photos'));
   for (const file of photoFiles) assert.ok(statSync(file).size <= (file.includes('hero') || file.includes('forest-road') ? 200000 : 150000), file);
   assert.equal(readFileSync(join(docs, 'assets/og.png')).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');

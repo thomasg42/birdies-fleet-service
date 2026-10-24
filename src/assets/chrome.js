@@ -114,6 +114,12 @@ export function bootHeroScrub(doc = document) {
 
   function applyBeats(p, forceReveal) {
     hero.style.setProperty('--hero-p', String(p));
+    const finale = hero.querySelector('[data-hero-finale]');
+    if (finale) {
+      const brand = forceReveal ? 1 : Math.max(0, Math.min(1, (p - 0.79) / 0.08));
+      hero.style.setProperty('--hero-brand', String(brand));
+      hero.classList.toggle('is-finale', brand > 0);
+    }
     const b1 = hero.querySelector('[data-beat="1"]');
     const b2 = hero.querySelector('[data-beat="2"]');
     const b3 = hero.querySelector('[data-beat="3"]');
