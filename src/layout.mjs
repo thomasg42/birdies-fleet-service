@@ -35,8 +35,12 @@ function wordmark(ctx) {
 
 export function homeHero(ctx) {
   const { SITE } = ctx;
-  return `<section class="hero" data-hero-slot="v0-placeholder">
-  <div class="hero-media">${forestPhoto(ctx)}</div>
+  return `<section class="hero" data-hero-slot="rescue-review">
+  <div class="hero-media">
+<picture class="hero-poster"><source media="(orientation: portrait)" srcset="${ctx.asset('hero/sunset-phone.webp')}"><img src="${ctx.asset('hero/sunset-desktop.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
+<video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-desktop.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-phone.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
+<canvas data-hero-canvas aria-hidden="true"></canvas>
+</div>
   <div class="wrap hero-inner">
     ${wordmark(ctx)}
     <h1>Mobile Fleet Service &amp; Backcountry Repair in Southwest Montana</h1>

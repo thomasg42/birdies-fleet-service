@@ -485,3 +485,22 @@ picture.forest-photo > img { width: 100%; height: 100%; object-fit: cover; }
 .google-map[data-google-map] { display: none; }
 html.js .google-map[data-google-map] { display: block; }
 .map-viewport { min-width: 0; }
+/* Scroll rescue: shared timeline with native desktop and phone framing. */
+.hero[data-hero-slot="rescue-review"] { display:block; overflow:clip; }
+.hero-poster, .hero-poster img, [data-hero-canvas] { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+[data-hero-video] { display:none; }
+[data-hero-canvas] { opacity:0; }
+[data-hero-canvas].is-ready { opacity:1; }
+.hero.is-scrub { height:360svh; }
+.hero.is-scrub .hero-media { position:sticky; top:var(--header-h); height:calc(100svh - var(--header-h)); }
+.hero.is-scrub .hero-inner { margin-top:calc(-100svh + var(--header-h)); min-height:calc(100svh - var(--header-h)); padding-block:2rem; }
+.hero.is-scrub .hero-inner.is-pinned { position:sticky; top:var(--header-h); display:flex; flex-direction:column; justify-content:flex-end; }
+.hero[data-hero-slot="rescue-review"] .hero-media::after { background:linear-gradient(0deg,#0f0d0bf5,#0f0d0b99 28%,transparent 65%); }
+.hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(2rem,4vw,4rem); max-width:23ch; }
+@media(max-width:599px) {
+ .hero.is-scrub { height:400svh; }
+ .hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(1.65rem,7vw,2.3rem); max-width:23ch; }
+ .hero[data-hero-slot="rescue-review"] .tag { margin:.6rem 0; font-size:1.15rem; }
+ .hero[data-hero-slot="rescue-review"] .help-line { margin-top:.7rem; }
+ .hero[data-hero-slot="rescue-review"] .hero-inner { padding-block:1rem; }
+}

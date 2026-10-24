@@ -189,20 +189,20 @@ test('photographic surfaces replace all cartoon placeholders', () => {
       assert.ok(Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0);
     }
   }
-  assert.match(home, /photos\/forest-hero.webp/);
-  assert.match(home, /photos\/forest-hero-mobile.webp/);
+  assert.match(home, /hero\/sunset-desktop.webp/);
+  assert.match(home, /hero\/sunset-phone.webp/);
   const photoFiles = walk(join(docs, 'assets/photos'));
   for (const file of photoFiles) assert.ok(statSync(file).size <= (file.includes('hero') || file.includes('forest-road') ? 200000 : 150000), file);
   assert.equal(readFileSync(join(docs, 'assets/og.png')).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
 });
 
-test('photo hero stays static until an approved video is supplied', () => {
+test('hero supplies both scroll formats and a static poster', () => {
   const html = readFileSync(join(docs, 'index.html'), 'utf8');
-  assert.match(html, /data-hero-slot="v0-placeholder"/);
+  assert.match(html, /data-hero-slot="rescue-review"/);
   assert.match(html, /fetchpriority="high"/);
   assert.match(html, /<h1>[^<]*Southwest Montana[^<]*<\/h1>/);
   assert.match(html, /Book a time/);
-  assert.doesNotMatch(html, /<video|autoplay|data-hero-video/);
+  assert.match(html, /data-src-16x9=.*rescue-desktop/); assert.match(html, /data-src-9x16=.*rescue-phone/); assert.doesNotMatch(html, /autoplay/);
 });
 
 test('town and service copy length, doorway overlap, confirms', () => {
