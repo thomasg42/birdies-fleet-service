@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS outbox (
   created_at TEXT NOT NULL,
   delivered_at TEXT,
   attempts INTEGER NOT NULL DEFAULT 0,
-  error TEXT
+  error TEXT,
+  event TEXT
 );
 
 CREATE TABLE IF NOT EXISTS leads (

@@ -38,9 +38,9 @@ export const SITE = {
   url: 'https://thomasg42.github.io/birdies-fleet-service',
   customDomain: '',
   launched: false,
-  leadEndpoint: '',
+  leadEndpoint: 'https://birdies-booking.forevergoldai.workers.dev/leads',
   phone: { display: '435-531-4127', e164: '+14355314127', schema: '+1-435-531-4127' },
-  booking: { api: '', ...DEFAULT_RULES },
+  booking: { api: 'https://birdies-booking.forevergoldai.workers.dev', ...DEFAULT_RULES },
   logo: null,
   photos: {
   "forest": {

@@ -284,4 +284,6 @@ test('notifications: dry run sends nothing; with a webhook every draft is delive
   assert.equal(sent[0].secret, 'shh');
   assert.equal(sent[0].body.kind, 'NEW_BOOKING');
   assert.equal(sent[0].body.to.role, 'owner');
+  assert.equal(sent[0].body.event.start, '2026-10-26T08:00:00-06:00', 'calendar start rides along');
+  assert.match(sent[0].body.event.title, /^Birdie's: /);
 });

@@ -215,10 +215,11 @@ function owner(env) {
   return { role: 'owner', name: env.OWNER_NAME || 'Jay', phone: nil(env.OWNER_PHONE), email: nil(env.OWNER_EMAIL), smsOk: true };
 }
 
-function outbox(db, draft, to, nowIso) {
+// event: optional { start, end, title, where } so the webhook can put the job on Jay's calendar.
+function outbox(db, draft, to, nowIso, event = null) {
   return db
-    .prepare('INSERT INTO outbox (kind, to_role, to_name, to_phone, to_email, sms_ok, text, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-    .bind(draft.kind, to.role, nil(to.name), nil(to.phone), nil(to.email), to.smsOk ? 1 : 0, draft.text, nowIso);
+    .prepare('INSERT INTO outbox (kind, to_role, to_name, to_phone, to_email, sms_ok, text, created_at, event) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    .bind(draft.kind, to.role, nil(to.name), nil(to.phone), nil(to.email), to.smsOk ? 1 : 0, draft.text, nowIso, event ? JSON.stringify(event) : null);
 }
 
 function rescheduleUrl(env, token) {
@@ -262,7 +263,7 @@ async function bookPublic(env, now, body, ip) {
     await env.DB.batch([
       env.DB.prepare("INSERT INTO slots (window_id, booking_id, holder) VALUES (?, ?, 'public')").bind(win.id, row.id),
       insertBooking(env.DB, row),
-      outbox(env.DB, draft, owner(env), nowIso),
+      outbox(env.DB, draft, owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's: ${row.name}`, where: row.location }),
     ]);
   } catch (err) {
     if (isConflict(err)) return json(409, { ok: false, error: 'window_taken', availability: await availability(env.DB, now) });
@@ -359,7 +360,7 @@ async function bookFleet(request, env, now, body, ip) {
     stmts.push(
       db.prepare("INSERT INTO slots (window_id, booking_id, holder) VALUES (?, ?, 'fleet')").bind(win.id, row.id),
       insertBooking(db, row),
-      outbox(db, newBookingDraft({ who: acct.name, label: win.full, name: row.name, phone: row.phone, where: row.location }), owner(env), nowIso),
+      outbox(db, newBookingDraft({ who: acct.name, label: win.full, name: row.name, phone: row.phone, where: row.location }), owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's fleet: ${acct.name}`, where: row.location }),
     );
   } else {
     // A customer holds this window: move them out, hand them a reschedule link, tell Jay. All or nothing.
@@ -471,7 +472,7 @@ async function postReschedule(env, now, body) {
       guard(db),
       db.prepare('UPDATE reschedules SET used_at = ? WHERE token_hash = ? AND used_at IS NULL').bind(nowIso, row.token_hash),
       guard(db),
-      outbox(db, rescheduledDraft({ customerName: victim.name, fromLabel: row.original, toLabel: pick.full }), owner(env), nowIso),
+      outbox(db, rescheduledDraft({ customerName: victim.name, fromLabel: row.original, toLabel: pick.full }), owner(env), nowIso, { start: pick.start, end: pick.end, title: `Birdie's: ${victim.name} (moved)`, where: victim.location }),
     ]);
   } catch (err) {
     if (!isConflict(err)) throw err;
@@ -584,6 +585,7 @@ export async function deliverPending(env, fetchImpl = fetch) {
           kind: row.kind,
           to: { role: row.to_role, name: row.to_name, phone: row.to_phone, email: row.to_email, smsOk: !!row.sms_ok },
           text: row.text,
+          event: row.event ? JSON.parse(row.event) : null,
           createdAt: row.created_at,
         }),
       });

@@ -189,8 +189,8 @@ test('photographic surfaces replace all cartoon placeholders', () => {
       assert.ok(Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0);
     }
   }
-  assert.match(home, /hero\/rescue-full-poster.webp/);
-  assert.match(home, /hero\/rescue-full-poster.webp/);
+  assert.match(home, /hero\/sunset-desktop.webp/);
+  assert.match(home, /hero\/sunset-phone.webp/);
   const photoFiles = walk(join(docs, 'assets/photos'));
   for (const file of photoFiles) assert.ok(statSync(file).size <= (file.includes('hero') || file.includes('forest-road') ? 200000 : 150000), file);
   assert.equal(readFileSync(join(docs, 'assets/og.png')).subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
@@ -205,7 +205,8 @@ test('hero supplies both scroll formats and a static poster', () => {
   const { document } = parseHTML(html);
   const video = document.querySelector('[data-hero-video]');
   assert.ok(video.getAttribute('data-src-16x9'));
-  assert.equal(video.getAttribute('data-src-16x9'), video.getAttribute('data-src-9x16'));
+  assert.match(video.getAttribute('data-src-16x9'), /rescue-desktop\.mp4/);
+  assert.match(video.getAttribute('data-src-9x16'), /rescue-phone\.mp4/);
   assert.doesNotMatch(html, /autoplay/);
 });
 
