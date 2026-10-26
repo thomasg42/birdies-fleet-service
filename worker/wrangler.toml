@@ -20,4 +20,6 @@ SITE_URL = "https://thomasg42.github.io/birdies-fleet-service"
 ALLOWED_ORIGINS = "https://thomasg42.github.io"
 ALLOW_LOCALHOST = "1"
 OWNER_NAME = "Jay"
-# OWNER_PHONE and OWNER_EMAIL: where J's alerts go. Set once J answers.
+# Where Jay's alerts go (Jay, 2026-10-24 text).
+OWNER_PHONE = "4355314127"
+OWNER_EMAIL = "birdiesfleet@gmail.com"

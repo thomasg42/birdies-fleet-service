@@ -3,7 +3,7 @@ const TZ = 'America/Denver';
 
 export const DEFAULT_RULES = {
   timeZone: TZ,
-  workDays: [1, 2, 3, 4, 5, 6],
+  workDays: [1, 2, 3, 4, 5],
   windows: [
     { start: '08:00', end: '10:00' },
     { start: '10:00', end: '12:00' },

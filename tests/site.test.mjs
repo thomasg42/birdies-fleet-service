@@ -296,9 +296,9 @@ test('script budget and privacy and consent', () => {
 test('booking rules match the Denver cases', () => {
   const thu = core.parseLocal('2026-10-22T09:05');
   const sat = core.earliestPublicStart(thu);
-  assert.equal(core.toOffsetIso(sat).startsWith('2026-10-24T08:00:00-06'), true);
+  assert.equal(core.toOffsetIso(sat).startsWith('2026-10-26T08:00:00-06'), true);
   const late = core.parseLocal('2026-10-22T23:59');
-  assert.equal(core.toOffsetIso(core.earliestPublicStart(late)).startsWith('2026-10-24T08:00:00-06'), true);
+  assert.equal(core.toOffsetIso(core.earliestPublicStart(late)).startsWith('2026-10-26T08:00:00-06'), true);
   const fri = core.parseLocal('2026-10-23T00:01');
   assert.equal(core.toOffsetIso(core.earliestPublicStart(fri)).startsWith('2026-10-26T08:00:00-06'), true);
   const offset1 = core.earliestPublicStart(thu, { ...core.DEFAULT_RULES, publicFirstDayOffset: 1 });
@@ -321,7 +321,7 @@ test('mock books, bumps, locks, and reschedules', () => {
   const now = core.parseLocal('2026-10-22T09:05');
   const mock = createMock({ now, nowKey: 'case-a', fresh: true });
   const open = mock.handle('GET', '/api/availability', null, {}).body.days.flatMap((d) => d.windows).find((w) => w.state === 'open');
-  assert.equal(open.id, '2026-10-24T08:00');
+  assert.equal(open.id, '2026-10-26T08:00');
   const booked = mock.handle('POST', '/api/bookings', {
     service: 'mobile-repair', vehicle: 'tan pickup', windowId: open.id, location: 'Bozeman driveway',
     name: 'Casey Brooks', phone: '4065550142', email: '', smsConsent: false, website: '',
@@ -371,7 +371,7 @@ test('schedule request mode never says booked', async () => {
     core, now: core.parseLocal('2026-10-22T09:05'), search: '?service=mobile-repair', timers: false,
   });
   assert.equal(doc.getElementById('book-title').textContent, 'Request a time');
-  assert.match(doc.getElementById('book-intro').textContent, /Saturday, October 24/);
+  assert.match(doc.getElementById('book-intro').textContent, /Monday, October 26/);
   const form = doc.getElementById('book-form');
   assert.equal(val(form, 'service'), 'mobile-repair');
   const radio = form.querySelector('input[name="window"]:not([disabled])');
@@ -401,7 +401,7 @@ test('live schedule keeps fields on 409 and posts once', async () => {
     if (method === 'GET') {
       return new Response(JSON.stringify({
         ok: true,
-        days: [{ date: '2026-10-24', label: 'Saturday, October 24', windows: [{ id: '2026-10-24T08:00', label: '8 to 10 AM', full: 'Saturday, October 24, 8 to 10 AM', state: 'open', start: '2026-10-24T14:00:00.000Z', end: '2026-10-24T16:00:00.000Z' }] }],
+        days: [{ date: '2026-10-26', label: 'Monday, October 26', windows: [{ id: '2026-10-26T08:00', label: '8 to 10 AM', full: 'Monday, October 26, 8 to 10 AM', state: 'open', start: '2026-10-26T14:00:00.000Z', end: '2026-10-26T16:00:00.000Z' }] }],
       }), { status: 200 });
     }
     posts += 1;

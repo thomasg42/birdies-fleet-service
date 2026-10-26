@@ -10,7 +10,7 @@ Time math lives only in `src/assets/birdies-core.js`. Import that module from th
 
 ## Rules the page assumes
 
-Work days are Monday through Saturday. Sunday is not a work day.
+Work days are Monday through Friday (Jay, 2026-10-24). Saturday and Sunday are not work days.
 
 Windows, as an assumption until J says otherwise (do not print "J works 8 to 4" on the site):
 
