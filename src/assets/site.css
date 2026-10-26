@@ -485,45 +485,38 @@ picture.forest-photo > img { width: 100%; height: 100%; object-fit: cover; }
 .google-map[data-google-map] { display: none; }
 html.js .google-map[data-google-map] { display: block; }
 .map-viewport { min-width: 0; }
-/* Scroll rescue: shared timeline with native desktop and phone framing. */
-.hero[data-hero-slot="rescue-review"] { display:block; overflow:clip; }
+/* Scroll rescue. The stage holds the film and its copy together, so on scroll they pin to the
+   screen as ONE piece: the film fills it, the copy sits on the film, nothing floats or drifts. */
+.hero[data-hero-slot="rescue-review"] { display:block; overflow:visible; min-height:0; background:#0f0d0b; }
+.hero-stage { position:relative; overflow:hidden; display:grid; align-items:end; min-height:min(900px, calc(100svh - var(--header-h))); }
 .hero-poster, .hero-poster img, [data-hero-canvas] { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 [data-hero-video] { display:none; }
 [data-hero-canvas] { opacity:0; }
 [data-hero-canvas].is-ready { opacity:1; }
 .hero.is-scrub { height:360svh; }
-.hero.is-scrub .hero-media { position:sticky; top:var(--header-h); height:calc(100svh - var(--header-h)); }
-.hero.is-scrub .hero-inner { margin-top:calc(-100svh + var(--header-h)); min-height:calc(100svh - var(--header-h)); padding-block:2rem; }
-.hero.is-scrub .hero-inner.is-pinned { position:sticky; top:var(--header-h); display:flex; flex-direction:column; justify-content:flex-end; }
+.hero.is-scrub .hero-stage { position:sticky; top:var(--header-h); min-height:0; height:calc(100svh - var(--header-h)); height:calc(100dvh - var(--header-h)); }
+.hero.is-scrub .hero-media { position:absolute; inset:0; }
+.hero.is-scrub .hero-inner { position:absolute; inset:0; margin:0 auto; display:flex; flex-direction:column; justify-content:flex-end; padding-block:2rem; }
 .hero[data-hero-slot="rescue-review"] .hero-media::after { background:linear-gradient(0deg,#0f0d0bf5,#0f0d0b99 28%,transparent 65%); }
 .hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(2rem,4vw,4rem); max-width:23ch; }
-@media(max-width:599px) {
- .hero.is-scrub { height:260svh; background:#0f0d0b; }
- /* Phones: the film and its copy are one locked screen until the film ends. dvh tracks the
-    browser bar, so no strip of page background opens up under the film while scrolling. */
- .hero.is-scrub .hero-media { height:calc(100dvh - var(--header-h)); }
- .hero.is-scrub .hero-inner,
- .hero.is-scrub .hero-inner.is-pinned { position:sticky; top:var(--header-h); height:calc(100dvh - var(--header-h)); min-height:0; margin-top:calc(-100dvh + var(--header-h)); display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:max(1rem, env(safe-area-inset-bottom)); }
- .hero[data-hero-slot="rescue-review"] .hero-media::after { background:linear-gradient(0deg,#0f0d0be6,#0f0d0b66 30%,transparent 55%); }
- .hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(1.65rem,7vw,2.3rem); max-width:23ch; }
- .hero[data-hero-slot="rescue-review"] .tag { margin:.6rem 0; font-size:1.15rem; }
- .hero[data-hero-slot="rescue-review"] .help-line { margin-top:.7rem; }
- .hero[data-hero-slot="rescue-review"] .hero-inner { padding-block:1rem; }
-}
-
-/* One shared arrival/exit review master. Portrait shows the whole action. */
 .hero[data-hero-cut="full-rescue"] .hero-media { background:#0f0d0b; }
-@media (orientation:portrait) {
- .hero[data-hero-cut="full-rescue"] .hero-poster img { object-fit:cover; object-position:center; }
-}
-
 @media (min-width:900px) {
- .hero[data-hero-cut="full-rescue"] .hero-inner.is-pinned { justify-content:flex-start; padding-top:2rem; }
-}
-
-
-@media (min-width:900px) {
+ .hero.is-scrub .hero-inner { justify-content:flex-start; padding-top:2rem; }
  .hero[data-hero-cut="full-rescue"] .hero-media::after { background:linear-gradient(90deg,#0f0d0bd9,#0f0d0b80 40%,transparent 65%),linear-gradient(0deg,#0f0d0b99,transparent 50%); }
+}
+/* Phones: one locked screen. The film fills it; headline and tagline sit at the bottom, just above
+   the fixed Call / Text / Book bar, which is the only call-to-action and never moves. */
+@media(max-width:599px) {
+ .hero.is-scrub { height:300svh; }
+ .hero-stage { min-height:calc(100svh - var(--header-h)); }
+ .hero[data-hero-slot="rescue-review"] .hero-inner { padding:1rem 0 calc(55px + 1.25rem + env(safe-area-inset-bottom)); }
+ .hero[data-hero-slot="rescue-review"] .hero-inner > .wordmark,
+ .hero[data-hero-slot="rescue-review"] .btn-row,
+ .hero[data-hero-slot="rescue-review"] .help-line,
+ .hero[data-hero-slot="rescue-review"] .fleet-link { display:none; }
+ .hero[data-hero-slot="rescue-review"] .hero-media::after { background:linear-gradient(0deg,#0f0d0bf0,#0f0d0b80 26%,transparent 50%); }
+ .hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(1.75rem,7.6vw,2.4rem); max-width:20ch; margin:0; }
+ .hero[data-hero-slot="rescue-review"] .tag { margin:.5rem 0 0; font-size:1.15rem; }
 }
 
 /* Sharp existing wordmark revealed over the final hero stage. */
@@ -541,7 +534,6 @@ html.js .google-map[data-google-map] { display: block; }
 .hero-finale .wordmark small { margin-top:1.2rem; font-size:clamp(.65rem,1.9vw,1.5rem); line-height:1.35; letter-spacing:.13em; }
 .hero-finale .brand-logo { width:90%; max-height:55%; object-fit:contain; }
 .hero.is-finale .hero-inner h1, .hero.is-finale .hero-inner .tag { opacity:0; }
-.hero.is-finale .hero-inner.is-pinned { justify-content:flex-end; }
 @media(prefers-reduced-motion:reduce) { .hero-finale { transform:none; } }
 
 

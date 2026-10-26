@@ -36,6 +36,7 @@ function wordmark(ctx) {
 export function homeHero(ctx) {
   const { SITE } = ctx;
   return `<section class="hero" data-hero-slot="rescue-review" data-hero-cut="full-rescue">
+  <div class="hero-stage">
   <div class="hero-media">
 <picture class="hero-poster"><img src="${ctx.asset('hero/rescue-2026-10-24-poster.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
 <video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-2026-10-24-desktop.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-2026-10-24-phone.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
@@ -53,6 +54,7 @@ export function homeHero(ctx) {
     </div>
     <p class="help-line">Need help today or tomorrow? Call or text Jay.</p>
     <p><a class="fleet-link" href="${ctx.link('fleet-login')}">Fleet client login</a></p>
+  </div>
   </div>
 </section>`;
 }

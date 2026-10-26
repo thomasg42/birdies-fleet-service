@@ -137,11 +137,13 @@ export function bootHeroScrub(doc = document) {
 
   const media = hero.querySelector('.hero-media');
   const inner = hero.querySelector('.hero-inner');
+  // The stage holds the film AND its copy, so they pin to the screen as one piece.
+  const pin = hero.querySelector('.hero-stage') || media;
   const rmq = view.matchMedia('(prefers-reduced-motion: reduce)');
   const saveData = view.navigator.connection && view.navigator.connection.saveData;
   if (rmq.matches || saveData || !pickSrc()) {
     hero.classList.add('is-static');
-    applyBeats(1, true);
+    applyBeats(0, false);
     return;
   }
   const holdFrom = (CFG.hero && CFG.hero.holdFrom) || 0.88;
@@ -189,10 +191,10 @@ export function bootHeroScrub(doc = document) {
     if (!caughtUp) frame = view.requestAnimationFrame(seek);
   };
   const readScroll = () => {
-    if (!ready || !media) return;
+    if (!ready || !pin) return;
     const rect = hero.getBoundingClientRect();
-    const top = parseFloat(view.getComputedStyle(media).top) || 0;
-    const scrollable = hero.offsetHeight - media.offsetHeight;
+    const top = parseFloat(view.getComputedStyle(pin).top) || 0;
+    const scrollable = hero.offsetHeight - pin.offsetHeight;
     targetProgress = scrollable > 0 ? Math.min(1, Math.max(0, (top - rect.top) / scrollable)) : 0;
     if (!frame) frame = view.requestAnimationFrame(seek);
   };
@@ -203,7 +205,7 @@ export function bootHeroScrub(doc = document) {
     if (ready || !hero.classList.contains('is-scrub')) return;
     hero.classList.remove('is-scrub');
     hero.classList.add('is-static');
-    applyBeats(1, true);
+    applyBeats(0, false);
   };
   const markReady = () => {
     if (primed) return;
