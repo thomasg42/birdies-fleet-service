@@ -160,16 +160,9 @@ export function bootHeroScrub(doc = document) {
     if (heroCanvas.width !== w) heroCanvas.width = w;
     if (heroCanvas.height !== h) heroCanvas.height = h;
     const portrait = h > w;
-    // Keep the shared wide shot above the copy on phones; never crop off a truck.
-    let availableHeight = h;
-    if (portrait && inner) {
-      const boxes = Array.from(inner.children).map((el) => el.getBoundingClientRect()).filter((r) => r.height > 0);
-      const copyHeight = boxes.length ? Math.max(...boxes.map((r) => r.bottom)) - Math.min(...boxes.map((r) => r.top)) : 0;
-      availableHeight = Math.max(1, h - (copyHeight + 32) * density);
-    }
-    const scale = portrait
-      ? Math.min(w / heroVideo.videoWidth, availableHeight / heroVideo.videoHeight)
-      : Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
+    // Desktop and phone each get their own native take, so fill the screen (cover) and keep the
+    // top of the frame on phones; the copy sits on the clip under a light tint.
+    const scale = Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
     const vw = heroVideo.videoWidth * scale;
     const vh = heroVideo.videoHeight * scale;
     heroCtx.fillStyle = '#0f0d0b';

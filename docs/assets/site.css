@@ -508,7 +508,7 @@ html.js .google-map[data-google-map] { display: block; }
 /* One shared arrival/exit review master. Portrait shows the whole action. */
 .hero[data-hero-cut="full-rescue"] .hero-media { background:#0f0d0b; }
 @media (orientation:portrait) {
- .hero[data-hero-cut="full-rescue"] .hero-poster img { object-fit:contain; object-position:center top; }
+ .hero[data-hero-cut="full-rescue"] .hero-poster img { object-fit:cover; object-position:center top; }
 }
 
 @media (min-width:900px) {
@@ -567,6 +567,14 @@ body[data-season="summer"] { --season-dark:#24231a; --season-light:#f2e7c9; }
 body[data-season="spring"] .seasonal-weather { width:1px; height:22px; border-radius:0; background:#80b2ad; animation-name:season-rain; animation-duration:3s; }
 @keyframes season-snow { from {transform:translate(0,-12px);} to {transform:translate(26px,76px);} }
 @keyframes season-rain { from {transform:translate(0,-25px);opacity:0;} 15% {opacity:.3;} to {transform:translate(-18px,100px);opacity:0;} }
+/* Phones: fall leaves frame the edges only, smaller, so every line of copy stays clean. */
+@media (max-width:599px) {
+ .seasonal-mid-leaf { display:none; }
+ .seasonal-leaf { max-width:34px; opacity:.4; }
+ .seasonal-light .seasonal-leaf { opacity:.7; }
+ .seasonal-vignette { width:120px; opacity:.35; }
+ .seasonal-backdrop::after { opacity:.8; }
+}
 /* Preserve the existing bone service-box surfaces against the seasonal canvas. */
 .seasonal-section .cards { background:var(--bone); }
 .seasonal-section .card { background:var(--bone); }
