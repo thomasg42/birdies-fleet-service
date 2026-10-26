@@ -498,7 +498,12 @@ html.js .google-map[data-google-map] { display: block; }
 .hero[data-hero-slot="rescue-review"] .hero-media::after { background:linear-gradient(0deg,#0f0d0bf5,#0f0d0b99 28%,transparent 65%); }
 .hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(2rem,4vw,4rem); max-width:23ch; }
 @media(max-width:599px) {
- .hero.is-scrub { height:260svh; }
+ .hero.is-scrub { height:260svh; background:#0f0d0b; }
+ /* Phones: the film and its copy are one locked screen until the film ends. dvh tracks the
+    browser bar, so no strip of page background opens up under the film while scrolling. */
+ .hero.is-scrub .hero-media { height:calc(100dvh - var(--header-h)); }
+ .hero.is-scrub .hero-inner,
+ .hero.is-scrub .hero-inner.is-pinned { position:sticky; top:var(--header-h); height:calc(100dvh - var(--header-h)); min-height:0; margin-top:calc(-100dvh + var(--header-h)); display:flex; flex-direction:column; justify-content:flex-end; padding-bottom:max(1rem, env(safe-area-inset-bottom)); }
  .hero[data-hero-slot="rescue-review"] .hero-media::after { background:linear-gradient(0deg,#0f0d0be6,#0f0d0b66 30%,transparent 55%); }
  .hero[data-hero-slot="rescue-review"] h1 { font-size:clamp(1.65rem,7vw,2.3rem); max-width:23ch; }
  .hero[data-hero-slot="rescue-review"] .tag { margin:.6rem 0; font-size:1.15rem; }
