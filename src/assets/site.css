@@ -508,7 +508,7 @@ html.js .google-map[data-google-map] { display: block; }
 /* One shared arrival/exit review master. Portrait shows the whole action. */
 .hero[data-hero-cut="full-rescue"] .hero-media { background:#0f0d0b; }
 @media (orientation:portrait) {
- .hero[data-hero-cut="full-rescue"] .hero-poster img { object-fit:cover; object-position:center top; }
+ .hero[data-hero-cut="full-rescue"] .hero-poster img { object-fit:contain; object-position:center top; }
 }
 
 @media (min-width:900px) {

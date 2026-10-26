@@ -37,8 +37,8 @@ export function homeHero(ctx) {
   const { SITE } = ctx;
   return `<section class="hero" data-hero-slot="rescue-review" data-hero-cut="full-rescue">
   <div class="hero-media">
-<picture class="hero-poster"><source media="(orientation: portrait)" srcset="${ctx.asset('hero/sunset-phone.webp')}" width="720" height="1280"><img src="${ctx.asset('hero/sunset-desktop.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
-<video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-desktop.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-phone.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
+<picture class="hero-poster"><img src="${ctx.asset('hero/rescue-2026-10-24-poster.webp')}" width="1280" height="720" alt="" fetchpriority="high"></picture>
+<video data-hero-video data-src-16x9="${ctx.asset('hero/rescue-2026-10-24-desktop.mp4')}" data-src-9x16="${ctx.asset('hero/rescue-2026-10-24-phone.mp4')}" muted playsinline preload="none" aria-hidden="true"></video>
 <canvas data-hero-canvas aria-hidden="true"></canvas>
 <div class="hero-finale" data-hero-finale aria-hidden="true">${wordmark(ctx)}</div>
 </div>
