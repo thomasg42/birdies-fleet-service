@@ -160,23 +160,13 @@ export function bootHeroScrub(doc = document) {
     if (heroCanvas.width !== w) heroCanvas.width = w;
     if (heroCanvas.height !== h) heroCanvas.height = h;
     const portrait = h > w;
-    // A wide (16:9) film on a tall phone screen: show the WHOLE frame across the top, never crop a
-    // truck off. A tall take, or a wide screen, fills the screen instead.
-    const wideOnTall = portrait && heroVideo.videoWidth > heroVideo.videoHeight;
-    let availableHeight = h;
-    if (wideOnTall && inner) {
-      const boxes = Array.from(inner.children).map((el) => el.getBoundingClientRect()).filter((r) => r.height > 0);
-      const copyHeight = boxes.length ? Math.max(...boxes.map((r) => r.bottom)) - Math.min(...boxes.map((r) => r.top)) : 0;
-      availableHeight = Math.max(1, h - (copyHeight + 32) * density);
-    }
-    const scale = wideOnTall
-      ? Math.min(w / heroVideo.videoWidth, availableHeight / heroVideo.videoHeight)
-      : Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
+    // Fill the whole hero on every screen (cover), centred on the action; no black band.
+    const scale = Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
     const vw = heroVideo.videoWidth * scale;
     const vh = heroVideo.videoHeight * scale;
     heroCtx.fillStyle = '#0f0d0b';
     heroCtx.fillRect(0, 0, w, h);
-    heroCtx.drawImage(heroVideo, (w - vw) * 0.5, portrait ? 0 : (h - vh) * 0.5, vw, vh);
+    heroCtx.drawImage(heroVideo, (w - vw) * 0.5, (h - vh) * 0.5, vw, vh);
     heroCanvas.classList.add('is-ready');
   };
   const videoProgress = (p) => (p >= holdFrom ? 1 : (holdFrom > 0 ? p / holdFrom : p));
