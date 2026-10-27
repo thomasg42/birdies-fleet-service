@@ -165,6 +165,7 @@ export function contactForm(ctx) {
 export function ownerScreen(ctx) {
   return `<p id="owner-msg" class="form-msg" role="status"></p>
   <form id="owner-login" class="stack panel">
+    <input name="username" value="Jay" autocomplete="username" readonly hidden>
     <label>Owner PIN <input name="pin" type="password" required inputmode="numeric" autocomplete="current-password"></label>
     <button class="btn btn-blaze" type="submit">Sign in</button>
   </form>
@@ -193,8 +194,8 @@ export function ownerScreen(ctx) {
 export function fleetScreen(ctx) {
   return `<p id="fleet-msg" class="form-msg" role="status"></p>
   <form id="fleet-login" class="stack panel">
-    <label>Fleet ID <input name="fleetId" required autocomplete="username"></label>
-    <label>PIN <input name="pin" required inputmode="numeric" autocomplete="current-password"></label>
+    <label>Fleet ID <input name="fleetId" required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></label>
+    <label>PIN <input name="pin" type="password" required inputmode="numeric" autocomplete="current-password"></label>
     <button class="btn btn-blaze" type="submit">Sign in</button>
     <p><a class="btn btn-ghost" href="${ctx.tel}">Emergency right now? Call Jay</a></p>
   </form>

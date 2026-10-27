@@ -586,3 +586,45 @@ test('fleet sign-in: the form really hides, welcome popup, VIP heading, sign out
   assert.equal(doc.getElementById('fleet-title').textContent, 'Fleet client login');
   assert.match(doc.getElementById('fleet-lead').textContent, /Sign in to see the board/);
 });
+
+test('fleet and owner sign-ins can be saved by the phone', async () => {
+  const doc = dom('fleet-login/index.html');
+  const fid = doc.querySelector('#fleet-login [name="fleetId"]');
+  const pin = doc.querySelector('#fleet-login [name="pin"]');
+  assert.equal(fid.getAttribute('autocomplete'), 'username');
+  assert.equal(pin.getAttribute('type'), 'password');
+  assert.equal(pin.getAttribute('autocomplete'), 'current-password');
+  assert.match(doc.getElementById('fleet-lead').textContent, /save your Fleet ID and PIN/);
+  const owner = dom('fleet-admin/index.html');
+  const user = owner.querySelector('#owner-login [name="username"]');
+  assert.equal(user.getAttribute('autocomplete'), 'username');
+  assert.equal(user.getAttribute('value'), 'Jay');
+  assert.equal(owner.querySelector('#owner-login [name="pin"]').getAttribute('autocomplete'), 'current-password');
+
+  // The password manager is offered the sign-in after a good sign-in only.
+  const stored = [];
+  const W = doc.defaultView;
+  const saveLogin = (id, password, name) => stored.push({ id, password, name });
+  const now = core.parseLocal('2026-10-22T09:05');
+  const mock = createMock({ now, nowKey: 'ui-save', fresh: true });
+  const fetchImpl = async (url, init = {}) => {
+    const result = mock.handle((init.method || 'GET').toUpperCase(), String(url), init.body ? JSON.parse(init.body) : null, init.headers || {});
+    return new Response(JSON.stringify(result.body), { status: result.status });
+  };
+  await bootFleet(doc, { config: { api: '/api', phoneE164: SITE.phone.e164, rules: SITE.booking }, core, now, search: '', fetchImpl, saveLogin });
+  const login = doc.getElementById('fleet-login');
+  const fire = () => login.dispatchEvent(new W.Event('submit', { bubbles: true, cancelable: true }));
+  fid.value = 'demo';
+  pin.value = '9999';
+  fire();
+  await new Promise((r) => setTimeout(r, 10));
+  assert.equal(stored.length, 0);
+  assert.equal(pin.value, '');
+  pin.value = '1111';
+  fire();
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(stored.length, 1);
+  assert.deepEqual(stored[0], { id: 'demo', password: '1111', name: 'Demo Fleet' });
+  assert.equal(pin.value, '');
+  assert.equal(login.hidden, true);
+});

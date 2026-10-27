@@ -2,6 +2,18 @@ import { createClient } from './booking-api.js';
 
 // Jay's fleet list: sign in with the owner PIN, add fleet clients, hand out new PINs, turn logins off.
 // The sign-in token lives in memory only; closing the tab signs Jay out.
+
+// Offers the sign-in to the phone's password manager where the browser supports it (Chrome,
+// Android). Safari and the rest offer it on their own when the form hides after a good sign-in.
+function offerToSave(doc, id, password, name) {
+  const W = doc.defaultView;
+  try {
+    if (id && password && W && W.PasswordCredential && W.navigator && W.navigator.credentials) {
+      W.navigator.credentials.store(new W.PasswordCredential({ id, password, name })).catch(() => {});
+    }
+  } catch (err) { /* the browser said no; the sign-in itself still worked */ }
+}
+
 export async function bootOwner(doc, opts) {
   const login = doc.getElementById('owner-login');
   if (!login) return;
@@ -120,13 +132,15 @@ export async function bootOwner(doc, opts) {
     const input = login.querySelector('[name="pin"]');
     busy = true;
     say('Checking…');
-    const res = await client.ownerLogin({ pin: input.value.trim() });
+    const pin = input.value.trim();
+    const res = await client.ownerLogin({ pin });
     busy = false;
-    input.value = '';
-    if (!res.ok) return say(res.status === 401 ? 'That PIN didn\'t match.' : problem(res));
+    if (!res.ok) { input.value = ''; return say(res.status === 401 ? 'That PIN didn\'t match.' : problem(res)); }
     token = res.data.token;
     login.hidden = true;
     app.hidden = false;
+    offerToSave(doc, 'Jay', pin, 'Birdie\'s fleet list');
+    input.value = '';
     say('');
     resetForm();
     await load();

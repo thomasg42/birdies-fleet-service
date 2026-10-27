@@ -214,7 +214,7 @@ PAGES.push(page({
   body: (ctx) => `${crumbs(ctx, [{ name: 'Home', path: '' }, { name: 'Fleet login', path: 'fleet-login' }])}
     <section class="page-hero"><div class="wrap">
       <h1 id="fleet-title">Fleet client login</h1>
-      <p id="fleet-lead">Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
+      <p id="fleet-lead">Sign in to see the board. Your phone can offer to save your Fleet ID and PIN.</p>
     </div></section>
     <section class="section"><div class="wrap">${fleetScreen(ctx)}</div></section>`,
 }));

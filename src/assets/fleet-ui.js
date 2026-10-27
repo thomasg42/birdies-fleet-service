@@ -4,6 +4,11 @@ import { val, mark, flattenDays, weekHeading } from './booking-dom.js';
 const VIP_TITLE = 'Welcome to the VIP section';
 const BUMP_BODY = 'If you take it, they\'re told something came up and get the next two openings, and Jay is told right away.';
 
+// A good sign-in goes to the phone's password manager (Chrome, Android; Safari offers on its own).
+function offerToSave(W, id, password, name) {
+  try { W.navigator.credentials.store(new W.PasswordCredential({ id, password, name })).catch(() => {}); } catch (e) { /* unsupported */ }
+}
+
 export async function bootFleet(doc, opts) {
   const login = doc.getElementById('fleet-login');
   if (!login) return;
@@ -71,11 +76,9 @@ export async function bootFleet(doc, opts) {
   }
   function openWelcome(name) {
     if (!welcome) return;
-    const h = doc.getElementById('fleet-welcome-title');
-    if (h) h.textContent = `Welcome, ${name}`;
+    doc.getElementById('fleet-welcome-title').textContent = `Welcome, ${name}`;
     show(welcome);
-    const go = doc.getElementById('fleet-welcome-go');
-    if (go && go.focus) go.focus();
+    doc.getElementById('fleet-welcome-go').focus?.();
   }
   function openDialog(label, trigger) {
     lastFocus = trigger || doc.activeElement;
@@ -136,10 +139,12 @@ export async function bootFleet(doc, opts) {
     event.preventDefault();
     if (pending) return;
     pending = true;
-    const res = await client().fleetLogin({ fleetId: val(login, 'fleetId'), pin: val(login, 'pin') });
+    const fleetId = val(login, 'fleetId');
+    const pinValue = val(login, 'pin');
+    const res = await client().fleetLogin({ fleetId, pin: pinValue });
     pending = false;
     const pin = login.querySelector('[name="pin"]');
-    if (pin) pin.value = '';
+    if (!res.ok && pin) pin.value = '';
     if (res.status === 429) {
       const mins = res.data && res.data.retryAfter;
       say(`Too many tries. Try again in ${mins} minutes.`);
@@ -153,6 +158,8 @@ export async function bootFleet(doc, opts) {
     login.hidden = true;
     board.hidden = false;
     const name = res.data.accountName || 'fleet client';
+    (opts.saveLogin || ((...a) => offerToSave(doc.defaultView, ...a)))(fleetId, pinValue, name);
+    if (pin) pin.value = '';
     signedIn(name);
     say('Sign-in successful.');
     openWelcome(name);

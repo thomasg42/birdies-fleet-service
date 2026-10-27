@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0F0D0B">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/fonts/big-shoulders-display-latin-800.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/site.css?v=20261022-v0-62bef023">
+<link rel="stylesheet" href="../assets/site.css?v=20261022-v0-c231c548">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Birdie’s Fleet Service &amp; Backcountry Repair">
 <meta property="og:title" content="Fleet Client Login">
@@ -64,12 +64,12 @@
 <nav class="crumbs wrap" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Fleet login</li></ol></nav>
     <section class="page-hero"><div class="wrap">
       <h1 id="fleet-title">Fleet client login</h1>
-      <p id="fleet-lead">Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
+      <p id="fleet-lead">Sign in to see the board. Your phone can offer to save your Fleet ID and PIN.</p>
     </div></section>
     <section class="section"><div class="wrap"><p id="fleet-msg" class="form-msg" role="status"></p>
   <form id="fleet-login" class="stack panel">
-    <label>Fleet ID <input name="fleetId" required autocomplete="username"></label>
-    <label>PIN <input name="pin" required inputmode="numeric" autocomplete="current-password"></label>
+    <label>Fleet ID <input name="fleetId" required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"></label>
+    <label>PIN <input name="pin" type="password" required inputmode="numeric" autocomplete="current-password"></label>
     <button class="btn btn-blaze" type="submit">Sign in</button>
     <p><a class="btn btn-ghost" href="tel:+14355314127">Emergency right now? Call Jay</a></p>
   </form>
@@ -136,6 +136,6 @@
   <a class="tap-book" href="../schedule/">Book</a>
 </nav>
 <script src="../assets/config.js"></script>
-<script type="module" src="../assets/site.js?v=20261022-v0-62bef023"></script>
+<script type="module" src="../assets/site.js?v=20261022-v0-c231c548"></script>
 </body>
 </html>
