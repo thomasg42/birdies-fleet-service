@@ -11,7 +11,7 @@ export const DEFAULT_RULES = {
     { start: '14:00', end: '16:00' },
   ],
   publicFirstDayOffset: 2,
-  fleetLeadMinutes: 30,
+  fleetLeadMinutes: 60, // fleet can take any window that starts at least an hour out, same day included
   bumpLeadHours: 2,
   bumpOptionCount: 2,
   horizonDays: 21,
@@ -384,13 +384,29 @@ export function firstName(name) {
   return bit || 'there';
 }
 
-export function bumpDrafts({ accountName, label, customerName, customerPhone, options, rescheduleUrl }) {
+// A fleet bump tells Jay twice (the emergency, then who got moved) and hands the customer new times.
+export function bumpDrafts({ accountName, label, customerName, customerPhone, customerEmailed, unit, location, contactName, contactPhone, details, options, rescheduleUrl }) {
   const openings = (options || []).map((o) => o.full || o.label).join('; ');
+  const onSite = [contactName, contactPhone].filter(Boolean).join(' ');
+  const who = [customerName, customerPhone].filter(Boolean).join(' ');
   return [
     {
       to: 'Jay',
       kind: 'FLEET_OVERRIDE',
-      text: `Birdie's fleet: ${accountName} took ${label}. Bumped ${customerName} ${customerPhone}. They have a reschedule link.`,
+      text: [
+        `Birdie's fleet EMERGENCY: ${accountName} skipped the line for ${label}.`,
+        onSite ? `On site: ${onSite}.` : '',
+        unit ? `Unit: ${unit}.` : '',
+        location ? `Where: ${location}.` : '',
+        details ? `Details: ${details}` : '',
+      ].filter(Boolean).join(' '),
+    },
+    {
+      to: 'Jay',
+      kind: 'BUMP_NOTICE',
+      text: `Birdie's: ${accountName} bumped ${who} from ${label}. ${customerEmailed
+        ? `We're emailing them the next openings (${openings}) with a link to pick one.`
+        : 'They left no email, so text them the message in the next email.'} Call them if you like.`,
     },
     {
       to: 'customer',

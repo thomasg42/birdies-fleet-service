@@ -29,7 +29,7 @@ Verified against Thursday 2026-10-22:
 
 `publicFirstDayOffset <= 1` is inferred, because the test suite has one case and the contract file was absent. Same clock time that many calendar days ahead. If that date is not a work day, use the next work day's first window. Otherwise use the next window start at or after that instant. Offset 1 on Thursday 09:05 → Friday 2026-10-23 10:00 `-06:00`.
 
-`fleetLeadMinutes` 30. Fleet earliest start is now plus 30 minutes, then the next window start at or after that instant. Thursday 07:20 → 08:00. Thursday 07:45 → 10:00.
+`fleetLeadMinutes` 60 (Thomas, 2026-10-27: fleet can take any window, same day included, that starts at least an hour out). Fleet earliest start is now plus 60 minutes, then the next window start at or after that instant. Thursday 07:00 → 08:00. Thursday 07:01 → 10:00.
 
 `bumpLeadHours` 2. `bumpOptionCount` 2. Bump options are windows whose start is at or after now plus 2 hours, skipping the taken id and any occupied id. The public lock does not apply. The "more" list is the next 8 after those two. From Thursday 09:05, bumping `2026-10-22T12:00` offers `2026-10-22T14:00` then `2026-10-23T08:00`.
 
@@ -158,13 +158,22 @@ Not wired. `leadEndpoint` is `''`. When it is set, the contact page posts the le
 
 These are drafts for J to approve. The dev outbox shows them. Nothing is sent.
 
-- J, `FLEET_OVERRIDE`: `Birdies fleet: ${accountName} took ${label}. Bumped ${customerName} ${customerPhone}. They have a reschedule link.`
+- J, `FLEET_OVERRIDE` (calendar: adds the fleet job, removes the bumped booking's entry): `Birdie's fleet EMERGENCY: ${accountName} skipped the line for ${label}. On site: ${contactName} ${contactPhone}. Unit: ${unit}. Where: ${location}. Details: ${details}`
+- J, `BUMP_NOTICE` (right after): `Birdie's: ${accountName} bumped ${customerName} ${customerPhone} from ${label}. We're emailing them the next openings (${openings}) with a link to pick one. Call them if you like.` When the customer left no email: `They left no email, so text them the message in the next email.`
 - Customer, `BUMP`: `Birdies: Something came up and J needs to move your ${label} appointment. J will reach out to you in a little bit. Next openings: ${openings}. Pick one: ${rescheduleUrl}`
 - J, `RESCHEDULED`: `Birdies RESCHEDULED: ${customerName} moved from ${fromLabel} to ${toLabel}.`
 - J, `NEW_BOOKING`: `Birdies booking: ${who} booked ${label}. ${name} ${phone}. Where: ${where}.`
 - J, `CALLBACK`: `Birdies: ${firstName} will wait for your call about ${original}.`
 
 `rescheduleUrl` is `{origin}/reschedule/?t={token}` plus `&now=` when the dev clock is pinned.
+
+Calendar: rows that put a job on Jay's calendar carry `event { start, end, title, where, bookingId }`; n8n writes `Booking ref: {bookingId}` into the entry. A `FLEET_OVERRIDE` event also carries `cancelBookingId`, and n8n deletes the entry with that ref in the same window.
+
+## Jay's fleet list (owner PIN, page `/fleet-admin/`)
+
+- `POST /owner/login` `{ pin }` → `{ ok, token }`. Checks the Worker secret `OWNER_PIN`; 503 `not_set_up` without it. Five wrong PINs lock it for 15 minutes. The token lasts 12 hours and only works on `/owner/*`.
+- `GET /owner/fleet` → `{ ok, accounts: [{ id, name, active, createdAt }] }`. Never returns PINs or hashes.
+- `POST /owner/fleet` `{ id, name, pin?, active? }`: a new fleet client needs a PIN (4 to 8 digits). An existing one can be renamed or turned on/off without one. A new PIN or turning off signs that fleet out everywhere and clears its lockout.
 
 ## Page obligations
 

@@ -600,3 +600,10 @@ body[data-season="spring"] .seasonal-weather { width:1px; height:22px; border-ra
  .seasonal-light .seasonal-vignette { width:180px; }
  .seasonal-light .seasonal-panorama { height:200px; }
 }
+
+/* Jay's fleet list */
+.owner-list { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: .5rem; }
+.owner-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .75rem; border: 1px solid rgba(127, 127, 127, .35); border-radius: 8px; }
+.owner-row > span { flex: 1 1 14rem; }
+.owner-row.is-off { opacity: .6; }
+#owner-share-text { width: 100%; }

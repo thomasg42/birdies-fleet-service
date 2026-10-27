@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fleet Client List</title>
+<meta name="description" content="Jay’s page for fleet client logins: add a fleet client, give someone a new PIN, or turn a login off. Signing in takes the owner PIN.">
+<link rel="canonical" href="https://thomasg42.github.io/birdies-fleet-service/fleet-admin/">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F0D0B">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/big-shoulders-display-latin-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/site.css?v=20261022-v0-a00ebaab">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Birdie’s Fleet Service &amp; Backcountry Repair">
+<meta property="og:title" content="Fleet Client List">
+<meta property="og:description" content="Jay’s page for fleet client logins: add a fleet client, give someone a new PIN, or turn a login off. Signing in takes the owner PIN.">
+<meta property="og:url" content="https://thomasg42.github.io/birdies-fleet-service/fleet-admin/">
+<meta property="og:image" content="https://thomasg42.github.io/birdies-fleet-service/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Birdie’s wordmark over a dark pine treeline">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fleet Client List">
+<meta name="twitter:description" content="Jay’s page for fleet client logins: add a fleet client, give someone a new PIN, or turn a login off. Signing in takes the owner PIN.">
+<meta name="twitter:image" content="https://thomasg42.github.io/birdies-fleet-service/assets/og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://thomasg42.github.io/birdies-fleet-service/"},{"@type":"ListItem","position":2,"name":"Fleet list","item":"https://thomasg42.github.io/birdies-fleet-service/fleet-admin/"}]}</script>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var motion = false, save = false;
+  try { motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches; } catch (e) {}
+  try { save = !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
+  if (motion && !save) document.documentElement.classList.add('js-motion');
+  setTimeout(function(){ if (!window.__birdiesReady) document.documentElement.classList.remove('js'); }, 3000);
+})();
+</script>
+</head>
+<body class="page-tool">
+
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header" data-header>
+  <div class="wrap header-row">
+    <a class="brand" href="../"><span class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair</small></span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+    <nav id="nav-menu" class="nav-menu" aria-label="Main">
+      <div class="nav-services">
+        <button class="nav-services-btn" type="button" aria-expanded="false" aria-controls="nav-services-list">Services</button>
+        <ul id="nav-services-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment</a></li><li><a href="../backcountry-repair/">Backcountry</a></li></ul>
+      </div>
+      <a href="../service-area/">Service Area</a>
+      <a href="../faq/">FAQ</a>
+      <a href="../about/">About</a>
+      <a href="../contact/">Contact</a>
+      <a class="header-phone" href="tel:+14355314127">435-531-4127</a>
+      <a class="btn btn-blaze" href="../schedule/">Book a time</a>
+      <a class="fleet-link" href="../fleet-login/">Fleet login</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<section class="page-hero"><div class="wrap">
+      <h1>Fleet client list</h1>
+      <p>Add a fleet client, give someone a new PIN, or turn a login off. Everyone on this list can book any window that starts at least an hour out, even one a customer holds.</p>
+    </div></section>
+    <section class="section"><div class="wrap"><p id="owner-msg" class="form-msg" role="status"></p>
+  <form id="owner-login" class="stack panel">
+    <label>Owner PIN <input name="pin" type="password" required inputmode="numeric" autocomplete="current-password"></label>
+    <button class="btn btn-blaze" type="submit">Sign in</button>
+  </form>
+  <div id="owner-app" data-login-url="https://thomasg42.github.io/birdies-fleet-service/fleet-login/" hidden>
+    <p><button id="owner-signout" class="btn btn-ghost" type="button">Sign out</button></p>
+    <h2>Fleet clients</h2>
+    <ul id="owner-list" class="owner-list"></ul>
+    <form id="owner-add" class="stack panel">
+      <h2 id="owner-form-title">Add a fleet client</h2>
+      <label>Company or name <input name="name" required maxlength="80" autocomplete="off"></label>
+      <label>Fleet ID (what they type to sign in) <input name="id" required maxlength="40" autocapitalize="none" autocomplete="off" spellcheck="false"></label>
+      <label>PIN, 4 to 8 digits <input name="pin" required inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" autocomplete="off"></label>
+      <div class="btn-row">
+        <button class="btn btn-blaze" type="submit">Save</button>
+        <button id="owner-cancel" class="btn btn-ghost" type="button" hidden>Cancel</button>
+      </div>
+    </form>
+    <div id="owner-share" class="panel" hidden>
+      <p>Send them this. It's the only time the PIN shows.</p>
+      <textarea id="owner-share-text" readonly rows="3"></textarea>
+      <p><a id="owner-share-sms" class="btn btn-ghost" href="#">Text it</a></p>
+    </div>
+  </div></div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div>
+      <p class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair</small></p>
+      <p class="foot-signoff"><span class="foot-mark"><!-- mascot asset slot --></span><span>Keep Exploring</span></p>
+      <p><a href="tel:+14355314127">435-531-4127</a></p>
+    </div>
+    <div>
+      <p class="foot-title">Services</p>
+      <ul class="link-list"><li><a href="../fleet-maintenance/">Fleet maintenance</a></li><li><a href="../dot-inspections/">DOT inspections</a></li><li><a href="../mobile-repair/">Mobile repair</a></li><li><a href="../diesel-repair/">Diesel repair</a></li><li><a href="../heavy-equipment-repair/">Heavy equipment repair</a></li><li><a href="../backcountry-repair/">Backcountry repair</a></li></ul>
+    </div>
+    <div>
+      <p class="foot-title">Towns</p>
+      <ul class="link-list"><li><a href="../service-area/bozeman/">Bozeman</a></li><li><a href="../service-area/belgrade/">Belgrade</a></li><li><a href="../service-area/big-sky/">Big Sky</a></li><li><a href="../service-area/livingston/">Livingston</a></li><li><a href="../service-area/manhattan/">Manhattan</a></li><li><a href="../service-area/three-forks/">Three Forks</a></li><li><a href="../service-area/ennis/">Ennis</a></li><li><a href="../service-area/west-yellowstone/">West Yellowstone</a></li><li><a href="../service-area/gardiner/">Gardiner</a></li><li><a href="../service-area/big-timber/">Big Timber</a></li></ul>
+      <p><a href="../fleet-login/">Fleet login</a></p>
+      <p><a href="../privacy/">Privacy</a></p>
+    </div>
+  </div>
+</footer>
+<nav class="tap-bar" aria-label="Call, text, or book">
+  <a href="tel:+14355314127">Call</a>
+  <a href="sms:+14355314127?&body=Jay%2C%20I%20need%20help.">Text</a>
+  <a class="tap-book" href="../schedule/">Book</a>
+</nav>
+<script src="../assets/config.js"></script>
+<script type="module" src="../assets/site.js?v=20261022-v0-a00ebaab"></script>
+</body>
+</html>

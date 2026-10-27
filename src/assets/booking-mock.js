@@ -314,6 +314,12 @@ export function createMock(opts = {}) {
         label: win.full,
         customerName: victim.name,
         customerPhone: victim.phone,
+        customerEmailed: !!victim.email,
+        unit: body.unit,
+        location: body.location,
+        contactName: body.contactName,
+        contactPhone: body.contactPhone,
+        details: body.details,
         options,
         rescheduleUrl: rescheduleUrl(token),
       }));

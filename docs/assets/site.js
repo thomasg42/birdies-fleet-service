@@ -34,6 +34,10 @@ if (document.getElementById('fleet-login')) {
   const { bootFleet } = await import('./fleet-ui.js');
   await bootFleet(document, opts());
 }
+if (document.getElementById('owner-login')) {
+  const { bootOwner } = await import('./owner-ui.js');
+  await bootOwner(document, opts());
+}
 if (document.getElementById('reschedule-app')) {
   await loadCore();
   const { bootReschedule } = await import('./reschedule-ui.js');

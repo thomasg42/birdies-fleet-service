@@ -6,7 +6,7 @@ import {
 } from './layout.mjs';
 import {
   serviceCards, howSteps, textJ, routeMap, serviceLinks, townLinks,
-  neighborLinks, scheduleForm, contactForm, fleetScreen,
+  neighborLinks, scheduleForm, contactForm, fleetScreen, ownerScreen,
 } from './components.mjs';
 import { FAQS, ABOUT_HTML, AREA_HTML, PRIVACY_HTML, SERVICE_COPY, TOWN_COPY } from './copy.mjs';
 import { dogMark } from './dog.mjs';
@@ -217,6 +217,21 @@ PAGES.push(page({
       <p>Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
     </div></section>
     <section class="section"><div class="wrap">${fleetScreen(ctx)}</div></section>`,
+}));
+
+PAGES.push(page({
+  slug: 'fleet-admin',
+  bodyClass: 'page-tool',
+  noindex: true,
+  inSitemap: false,
+  title: 'Fleet Client List',
+  description: 'Jay’s page for fleet client logins: add a fleet client, give someone a new PIN, or turn a login off. Signing in takes the owner PIN.',
+  schema: (ctx) => [breadcrumbSchema(ctx, [homeCrumb, { name: 'Fleet list', path: 'fleet-admin' }])],
+  body: (ctx) => `<section class="page-hero"><div class="wrap">
+      <h1>Fleet client list</h1>
+      <p>Add a fleet client, give someone a new PIN, or turn a login off. Everyone on this list can book any window that starts at least an hour out, even one a customer holds.</p>
+    </div></section>
+    <section class="section"><div class="wrap">${ownerScreen(ctx)}</div></section>`,
 }));
 
 PAGES.push(page({

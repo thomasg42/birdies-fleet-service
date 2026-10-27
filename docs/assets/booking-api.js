@@ -62,6 +62,9 @@ export function createClient({ base, fetchImpl, token } = {}) {
     fleetBook(authToken, body) { return request('POST', '/fleet/bookings', { auth: true, body, token: authToken }); },
     rescheduleGet(t) { return request('GET', '/reschedule', { query: { t } }); },
     reschedulePost(body) { return request('POST', '/reschedule', { body }); },
+    ownerLogin(body) { return request('POST', '/owner/login', { body }); },
+    ownerFleet(authToken) { return request('GET', '/owner/fleet', { auth: true, token: authToken }); },
+    ownerSave(authToken, body) { return request('POST', '/owner/fleet', { auth: true, body, token: authToken }); },
   };
 }
 

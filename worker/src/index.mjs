@@ -215,7 +215,8 @@ function owner(env) {
   return { role: 'owner', name: env.OWNER_NAME || 'Jay', phone: nil(env.OWNER_PHONE), email: nil(env.OWNER_EMAIL), smsOk: true };
 }
 
-// event: optional { start, end, title, where } so the webhook can put the job on Jay's calendar.
+// event: optional { start, end, title, where, bookingId, cancelBookingId } so the webhook can put the job on
+// Jay's calendar (tagged with bookingId) and take a bumped booking's entry off it (cancelBookingId).
 function outbox(db, draft, to, nowIso, event = null) {
   return db
     .prepare('INSERT INTO outbox (kind, to_role, to_name, to_phone, to_email, sms_ok, text, created_at, event) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
@@ -263,7 +264,7 @@ async function bookPublic(env, now, body, ip) {
     await env.DB.batch([
       env.DB.prepare("INSERT INTO slots (window_id, booking_id, holder) VALUES (?, ?, 'public')").bind(win.id, row.id),
       insertBooking(env.DB, row),
-      outbox(env.DB, draft, owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's: ${row.name}`, where: row.location }),
+      outbox(env.DB, draft, owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's: ${row.name}`, where: row.location, bookingId: row.id }),
     ]);
   } catch (err) {
     if (isConflict(err)) return json(409, { ok: false, error: 'window_taken', availability: await availability(env.DB, now) });
@@ -286,22 +287,25 @@ async function login(env, body, ip) {
     : null;
   // Hash even when the account is unknown, so response time doesn't reveal which Fleet IDs exist.
   const hashed = await pinHash(pin || '-', acct ? acct.pin_salt : 'no-such-account');
-  if (!acct || !sameString(hashed, acct.pin_hash)) {
-    const expired = fails && fails.locked_until && fails.locked_until <= now;
-    const count = (fails && !expired ? fails.count : 0) + 1;
-    const lockedUntil = count >= 5 ? now + LOCK_MS : 0;
-    await env.DB
-      .prepare('INSERT INTO login_fails (fleet_id, count, locked_until) VALUES (?, ?, ?) ON CONFLICT(fleet_id) DO UPDATE SET count = excluded.count, locked_until = excluded.locked_until')
-      .bind(fleetId || '(blank)', count, lockedUntil)
-      .run();
-    return lockedUntil ? json(429, { ok: false, error: 'locked', retryAfter: 15 }) : json(401, { ok: false, error: 'bad_login' });
-  }
+  if (!acct || !sameString(hashed, acct.pin_hash)) return failedLogin(env.DB, fleetId || '(blank)', fails, now);
   const token = randomToken();
   await env.DB.batch([
     env.DB.prepare('DELETE FROM login_fails WHERE fleet_id = ?').bind(fleetId),
     env.DB.prepare('INSERT INTO sessions (token_hash, fleet_id, expires_at) VALUES (?, ?, ?)').bind(await sha256(token), acct.id, now + SESSION_MS),
   ]);
   return json(200, { ok: true, token, accountName: acct.name });
+}
+
+// Five wrong PINs in a row lock that login for 15 minutes.
+async function failedLogin(db, key, fails, now) {
+  const expired = fails && fails.locked_until && fails.locked_until <= now;
+  const count = (fails && !expired ? fails.count : 0) + 1;
+  const lockedUntil = count >= 5 ? now + LOCK_MS : 0;
+  await db
+    .prepare('INSERT INTO login_fails (fleet_id, count, locked_until) VALUES (?, ?, ?) ON CONFLICT(fleet_id) DO UPDATE SET count = excluded.count, locked_until = excluded.locked_until')
+    .bind(key, count, lockedUntil)
+    .run();
+  return lockedUntil ? json(429, { ok: false, error: 'locked', retryAfter: 15 }) : json(401, { ok: false, error: 'bad_login' });
 }
 
 async function session(request, env) {
@@ -360,7 +364,7 @@ async function bookFleet(request, env, now, body, ip) {
     stmts.push(
       db.prepare("INSERT INTO slots (window_id, booking_id, holder) VALUES (?, ?, 'fleet')").bind(win.id, row.id),
       insertBooking(db, row),
-      outbox(db, newBookingDraft({ who: acct.name, label: win.full, name: row.name, phone: row.phone, where: row.location }), owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's fleet: ${acct.name}`, where: row.location }),
+      outbox(db, newBookingDraft({ who: acct.name, label: win.full, name: row.name, phone: row.phone, where: row.location }), owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's fleet: ${acct.name}`, where: row.location, bookingId: row.id }),
     );
   } else {
     // A customer holds this window: move them out, hand them a reschedule link, tell Jay. All or nothing.
@@ -368,11 +372,17 @@ async function bookFleet(request, env, now, body, ip) {
     const options = bumpOptions(now, RULES, win.id, occupied);
     const more = moreOptions(now, win.id, occupied, options);
     const token = randomToken();
-    const [toJ, toCustomer] = bumpDrafts({
+    const [toJ, toJMoved, toCustomer] = bumpDrafts({
       accountName: acct.name,
       label: win.full,
       customerName: slot.name,
       customerPhone: slot.phone,
+      customerEmailed: !!slot.email,
+      unit: row.vehicle,
+      location: row.location,
+      contactName: row.name,
+      contactPhone: row.phone,
+      details: row.details,
       options,
       rescheduleUrl: rescheduleUrl(env, token),
     });
@@ -386,7 +396,9 @@ async function bookFleet(request, env, now, body, ip) {
       db
         .prepare('INSERT INTO reschedules (token_hash, booking_id, first_name, original, original_window, options, more, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
         .bind(await sha256(token), slot.booking_id, firstName(slot.name), slot.full_label || win.full, win.id, JSON.stringify(options.map(slim)), JSON.stringify(more.map(slim)), nowIso, Date.now() + RESCHEDULE_MS),
-      outbox(db, toJ, owner(env), nowIso),
+      // The fleet job goes on Jay's calendar and the bumped customer's entry comes off it.
+      outbox(db, toJ, owner(env), nowIso, { start: win.start, end: win.end, title: `Birdie's fleet EMERGENCY: ${acct.name}`, where: row.location, bookingId: row.id, cancelBookingId: slot.booking_id }),
+      outbox(db, toJMoved, owner(env), nowIso),
       outbox(db, toCustomer, { role: 'customer', name: slot.name, phone: slot.phone, email: slot.email, smsOk: !!slot.sms_consent }, nowIso),
     );
   }
@@ -472,7 +484,7 @@ async function postReschedule(env, now, body) {
       guard(db),
       db.prepare('UPDATE reschedules SET used_at = ? WHERE token_hash = ? AND used_at IS NULL').bind(nowIso, row.token_hash),
       guard(db),
-      outbox(db, rescheduledDraft({ customerName: victim.name, fromLabel: row.original, toLabel: pick.full }), owner(env), nowIso, { start: pick.start, end: pick.end, title: `Birdie's: ${victim.name} (moved)`, where: victim.location }),
+      outbox(db, rescheduledDraft({ customerName: victim.name, fromLabel: row.original, toLabel: pick.full }), owner(env), nowIso, { start: pick.start, end: pick.end, title: `Birdie's: ${victim.name} (moved)`, where: victim.location, bookingId: moved.id }),
     ]);
   } catch (err) {
     if (!isConflict(err)) throw err;
@@ -530,24 +542,7 @@ async function admin(request, env, path, body) {
     const { results } = await db.prepare("SELECT * FROM bookings ORDER BY window_id LIMIT 500").all();
     return json(200, { ok: true, bookings: results });
   }
-  if (request.method === 'POST' && path === '/admin/fleet-accounts') {
-    const id = str(body.id, 40).toLowerCase();
-    const name = str(body.name, 80);
-    const pin = str(body.pin, 8);
-    if (!/^[a-z0-9-]{2,40}$/.test(id) || !name || !/^\d{4,8}$/.test(pin)) {
-      return json(422, { ok: false, error: 'invalid', fields: { id: 'a-z, 0-9, dashes', name: 'required', pin: '4 to 8 digits' } });
-    }
-    const salt = randomToken();
-    await db
-      .prepare(
-        `INSERT INTO fleet_accounts (id, name, pin_salt, pin_hash, active, created_at) VALUES (?, ?, ?, ?, ?, ?)
-         ON CONFLICT(id) DO UPDATE SET name = excluded.name, pin_salt = excluded.pin_salt, pin_hash = excluded.pin_hash, active = excluded.active`,
-      )
-      .bind(id, name, salt, await pinHash(pin, salt), body.active === false ? 0 : 1, new Date().toISOString())
-      .run();
-    await db.prepare('DELETE FROM sessions WHERE fleet_id = ?').bind(id).run();
-    return json(200, { ok: true, id, name, active: body.active !== false });
-  }
+  if (request.method === 'POST' && path === '/admin/fleet-accounts') return saveFleetAccount(db, body);
   if (request.method === 'POST' && path === '/admin/blocks') {
     const windowId = str(body.windowId, 20);
     if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(windowId)) return json(422, { ok: false, error: 'invalid', fields: { windowId: 'YYYY-MM-DDTHH:MM' } });
@@ -563,6 +558,74 @@ async function admin(request, env, path, body) {
     }
     return json(200, { ok: true, windowId, blocked: true });
   }
+  return json(404, { ok: false, error: 'not_found' });
+}
+
+// Creates or updates a fleet login. A new PIN or turning a login off signs that fleet out everywhere.
+// pinOptional: an existing account can be renamed or switched on/off without a new PIN (Jay's page).
+async function saveFleetAccount(db, body, { pinOptional = false } = {}) {
+  const id = str(body.id, 40).toLowerCase();
+  const name = str(body.name, 80);
+  const pin = str(body.pin, 8);
+  const existing = /^[a-z0-9-]{2,40}$/.test(id) ? await db.prepare('SELECT id FROM fleet_accounts WHERE id = ?').bind(id).first() : null;
+  const fields = {};
+  if (!/^[a-z0-9-]{2,40}$/.test(id)) fields.id = 'a-z, 0-9, dashes';
+  if (!name) fields.name = 'required';
+  if (pin ? !/^\d{4,8}$/.test(pin) : !(pinOptional && existing)) fields.pin = '4 to 8 digits';
+  if (Object.keys(fields).length) return json(422, { ok: false, error: 'invalid', fields });
+  const active = body.active === false ? 0 : 1;
+  if (pin) {
+    const salt = randomToken();
+    await db
+      .prepare(
+        `INSERT INTO fleet_accounts (id, name, pin_salt, pin_hash, active, created_at) VALUES (?, ?, ?, ?, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET name = excluded.name, pin_salt = excluded.pin_salt, pin_hash = excluded.pin_hash, active = excluded.active`,
+      )
+      .bind(id, name, salt, await pinHash(pin, salt), active, new Date().toISOString())
+      .run();
+    await db.prepare('DELETE FROM login_fails WHERE fleet_id = ?').bind(id).run();
+  } else {
+    await db.prepare('UPDATE fleet_accounts SET name = ?, active = ? WHERE id = ?').bind(name, active, id).run();
+  }
+  if (pin || !active) await db.prepare('DELETE FROM sessions WHERE fleet_id = ?').bind(id).run();
+  return json(200, { ok: true, id, name, active: !!active });
+}
+
+// ---------- Jay's fleet list (owner PIN) ----------
+
+// Owner sessions share the sessions table under an id no fleet login can have (ids are a-z, 0-9, dashes).
+const OWNER_ID = '!owner';
+
+async function ownerLogin(env, body, ip) {
+  if (!env.OWNER_PIN) return json(503, { ok: false, error: 'not_set_up' });
+  const now = Date.now();
+  if (await overLimit(env.DB, `owner:${ip}`, 30, HOUR_MS)) return json(429, { ok: false, error: 'locked', retryAfter: 60 });
+  const fails = await env.DB.prepare('SELECT count, locked_until FROM login_fails WHERE fleet_id = ?').bind(OWNER_ID).first();
+  if (fails && fails.locked_until > now) {
+    return json(429, { ok: false, error: 'locked', retryAfter: Math.max(1, Math.ceil((fails.locked_until - now) / 60000)) });
+  }
+  const pin = str(body.pin, 12);
+  if (!pin || !sameString(await sha256(pin), await sha256(String(env.OWNER_PIN)))) return failedLogin(env.DB, OWNER_ID, fails, now);
+  const token = randomToken();
+  await env.DB.batch([
+    env.DB.prepare('DELETE FROM login_fails WHERE fleet_id = ?').bind(OWNER_ID),
+    env.DB.prepare('INSERT INTO sessions (token_hash, fleet_id, expires_at) VALUES (?, ?, ?)').bind(await sha256(token), OWNER_ID, now + SESSION_MS),
+  ]);
+  return json(200, { ok: true, token });
+}
+
+async function ownerRoutes(request, env, path, body) {
+  const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  const row = env.OWNER_PIN && token
+    ? await env.DB.prepare('SELECT expires_at FROM sessions WHERE token_hash = ? AND fleet_id = ?').bind(await sha256(token), OWNER_ID).first()
+    : null;
+  if (!row || row.expires_at <= Date.now()) return json(401, { ok: false, error: 'unauthorized' });
+  const db = env.DB;
+  if (request.method === 'GET' && path === '/owner/fleet') {
+    const { results } = await db.prepare('SELECT id, name, active, created_at FROM fleet_accounts ORDER BY active DESC, name').all();
+    return json(200, { ok: true, accounts: results.map((r) => ({ id: r.id, name: r.name, active: !!r.active, createdAt: r.created_at })) });
+  }
+  if (request.method === 'POST' && path === '/owner/fleet') return saveFleetAccount(db, body, { pinOptional: true });
   return json(404, { ok: false, error: 'not_found' });
 }
 
@@ -638,6 +701,8 @@ async function route(request, env) {
   if (method === 'GET' && path === '/reschedule') return getReschedule(env, now, url.searchParams.get('t'));
   if (method === 'POST' && path === '/reschedule') return postReschedule(env, now, body);
   if (method === 'POST' && path === '/leads') return postLead(env, body, ip);
+  if (method === 'POST' && path === '/owner/login') return ownerLogin(env, body, ip);
+  if (path.startsWith('/owner/')) return ownerRoutes(request, env, path, body);
   return json(404, { ok: false, error: 'not_found' });
 }
 

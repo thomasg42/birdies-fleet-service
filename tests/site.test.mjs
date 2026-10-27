@@ -13,6 +13,7 @@ import { setControl, val } from '../src/assets/booking-dom.js';
 import { bootSchedule } from '../src/assets/schedule-ui.js';
 import { bootFleet } from '../src/assets/fleet-ui.js';
 import { bootReschedule } from '../src/assets/reschedule-ui.js';
+import { bootOwner } from '../src/assets/owner-ui.js';
 import { loadLinkedom } from '../tools/dev-deps.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -288,7 +289,7 @@ test('script budget and privacy and consent', () => {
   assert.match(robots, /Disallow: \//);
   const sitemap = readFileSync(join(docs, 'sitemap.xml'), 'utf8');
   assert.match(sitemap, /privacy\//);
-  assert.doesNotMatch(sitemap, /fleet-login|reschedule|404/);
+  assert.doesNotMatch(sitemap, /fleet-login|fleet-admin|reschedule|404/);
   const indexable = PAGES.filter((p) => p.inSitemap !== false && !p.noindex).length;
   assert.equal((sitemap.match(/<loc>/g) || []).length, indexable);
 });
@@ -305,7 +306,11 @@ test('booking rules match the Denver cases', () => {
   assert.equal(core.toOffsetIso(offset1).startsWith('2026-10-23T10:00:00-06'), true);
   assert.equal(core.toOffsetIso(core.zonedTime(2026, 10, 31, 8, 0)).includes('-06:00'), true);
   assert.equal(core.toOffsetIso(core.zonedTime(2026, 11, 2, 8, 0)).includes('-07:00'), true);
-  assert.equal(core.toOffsetIso(core.fleetEarliestStart(core.parseLocal('2026-10-22T07:20'))).startsWith('2026-10-22T08:00:00-06'), true);
+  // Fleet: any window starting at least an hour out, same day included.
+  assert.equal(core.DEFAULT_RULES.fleetLeadMinutes, 60);
+  assert.equal(core.toOffsetIso(core.fleetEarliestStart(core.parseLocal('2026-10-22T06:55'))).startsWith('2026-10-22T08:00:00-06'), true);
+  assert.equal(core.toOffsetIso(core.fleetEarliestStart(core.parseLocal('2026-10-22T07:00'))).startsWith('2026-10-22T08:00:00-06'), true);
+  assert.equal(core.toOffsetIso(core.fleetEarliestStart(core.parseLocal('2026-10-22T07:01'))).startsWith('2026-10-22T10:00:00-06'), true);
   assert.equal(core.toOffsetIso(core.fleetEarliestStart(core.parseLocal('2026-10-22T07:45'))).startsWith('2026-10-22T10:00:00-06'), true);
   assert.equal(core.labelWindow(8, 10), '8 to 10 AM');
   assert.equal(core.labelWindow(10, 12), '10 AM to 12 PM');
@@ -462,4 +467,77 @@ test('fleet dialog and reschedule fail closed', async () => {
   const res = dom('reschedule/index.html');
   await bootReschedule(res, { config: { api: '', phoneE164: SITE.phone.e164, phoneDisplay: SITE.phone.display }, core, now, search: '' });
   assert.match(res.getElementById('reschedule-view').textContent, /Call or text Jay/);
+});
+
+test("Jay's fleet list page: PIN, add with a suggested Fleet ID, share text, new PIN, turn off", async () => {
+  const accounts = [];
+  const posts = [];
+  const reply = (status, body) => new Response(JSON.stringify(body), { status });
+  const fetchImpl = async (url, init = {}) => {
+    const path = String(url).replace(/^.*\/api/, '');
+    const body = init.body ? JSON.parse(init.body) : null;
+    const authed = (init.headers || {}).Authorization === 'Bearer owner-token';
+    if (path === '/owner/login') return body.pin === '246810' ? reply(200, { ok: true, token: 'owner-token' }) : reply(401, { ok: false, error: 'bad_login' });
+    if (!authed) return reply(401, { ok: false, error: 'unauthorized' });
+    if (path === '/owner/fleet' && !body) return reply(200, { ok: true, accounts: accounts.map((a) => ({ ...a })) });
+    posts.push(body);
+    const found = accounts.find((a) => a.id === body.id);
+    if (found) Object.assign(found, { name: body.name, active: body.active !== false });
+    else accounts.push({ id: body.id, name: body.name, active: true });
+    return reply(200, { ok: true, id: body.id, name: body.name, active: body.active !== false });
+  };
+  const doc = dom('fleet-admin/index.html');
+  assert.match(doc.querySelector('meta[name="robots"]').getAttribute('content'), /noindex/);
+  await bootOwner(doc, { config: { api: '/api' }, core, now: new Date(), search: '', fetchImpl });
+  const tick = () => new Promise((r) => setTimeout(r, 10));
+  const fire = (el, type) => el.dispatchEvent(new doc.defaultView.Event(type, { bubbles: true, cancelable: true }));
+  const login = doc.getElementById('owner-login');
+  login.querySelector('[name="pin"]').value = '000000';
+  fire(login, 'submit');
+  await tick();
+  assert.match(doc.getElementById('owner-msg').textContent, /didn't match/);
+  assert.equal(doc.getElementById('owner-app').hidden, true);
+  login.querySelector('[name="pin"]').value = '246810';
+  fire(login, 'submit');
+  await tick();
+  assert.equal(doc.getElementById('owner-app').hidden, false);
+  assert.equal(login.querySelector('[name="pin"]').value, '', 'the PIN is cleared from the field');
+  assert.match(doc.getElementById('owner-list').textContent, /No fleet clients yet/);
+
+  const form = doc.getElementById('owner-add');
+  form.querySelector('[name="name"]').value = 'Gallatin Gravel Co.';
+  fire(form.querySelector('[name="name"]'), 'input');
+  assert.equal(form.querySelector('[name="id"]').value, 'gallatin-gravel-co');
+  form.querySelector('[name="pin"]').value = '1357';
+  fire(form, 'submit');
+  await tick();
+  assert.deepEqual(posts[0], { id: 'gallatin-gravel-co', name: 'Gallatin Gravel Co.', pin: '1357' });
+  assert.equal(doc.getElementById('owner-share').hidden, false);
+  assert.equal(doc.getElementById('owner-share-text').value, `Birdie's fleet login: ${SITE.url}/fleet-login/ Fleet ID: gallatin-gravel-co PIN: 1357`);
+  assert.match(doc.getElementById('owner-share-sms').getAttribute('href'), /^sms:\?&body=Birdie/);
+  assert.match(doc.getElementById('owner-list').textContent, /Gallatin Gravel Co\. · Fleet ID gallatin-gravel-co/);
+  assert.equal(form.querySelector('[name="pin"]').value, '', 'form is cleared after saving');
+
+  form.querySelector('[name="name"]').value = 'Copycat';
+  form.querySelector('[name="id"]').value = 'gallatin-gravel-co';
+  form.querySelector('[name="pin"]').value = '9999';
+  fire(form, 'submit');
+  await tick();
+  assert.match(doc.getElementById('owner-msg').textContent, /already taken/);
+  assert.equal(posts.length, 1, 'never overwrites another fleet client');
+
+  fire(doc.querySelector('[data-pin="gallatin-gravel-co"]'), 'click');
+  assert.match(doc.getElementById('owner-form-title').textContent, /New PIN for Gallatin Gravel Co\./);
+  assert.equal(form.querySelector('[name="id"]').hasAttribute('readonly'), true);
+  form.querySelector('[name="pin"]').value = '2468';
+  fire(form, 'submit');
+  await tick();
+  assert.deepEqual(posts[1], { id: 'gallatin-gravel-co', name: 'Gallatin Gravel Co.', pin: '2468', active: true });
+  assert.match(doc.getElementById('owner-msg').textContent, /old PIN no longer works/);
+
+  fire(doc.querySelector('[data-toggle="gallatin-gravel-co"]'), 'click');
+  await tick();
+  assert.deepEqual(posts[2], { id: 'gallatin-gravel-co', name: 'Gallatin Gravel Co.', active: false });
+  assert.match(doc.getElementById('owner-list').textContent, /OFF/);
+  assert.match(doc.querySelector('[data-toggle="gallatin-gravel-co"]').textContent, /Turn on/);
 });

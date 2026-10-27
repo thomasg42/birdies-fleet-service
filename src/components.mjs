@@ -161,6 +161,35 @@ export function contactForm(ctx) {
   </form>`;
 }
 
+// Jay's fleet list. The owner PIN is checked by the booking desk; nothing is kept in the browser.
+export function ownerScreen(ctx) {
+  return `<p id="owner-msg" class="form-msg" role="status"></p>
+  <form id="owner-login" class="stack panel">
+    <label>Owner PIN <input name="pin" type="password" required inputmode="numeric" autocomplete="current-password"></label>
+    <button class="btn btn-blaze" type="submit">Sign in</button>
+  </form>
+  <div id="owner-app" data-login-url="${ctx.abs('fleet-login/')}" hidden>
+    <p><button id="owner-signout" class="btn btn-ghost" type="button">Sign out</button></p>
+    <h2>Fleet clients</h2>
+    <ul id="owner-list" class="owner-list"></ul>
+    <form id="owner-add" class="stack panel">
+      <h2 id="owner-form-title">Add a fleet client</h2>
+      <label>Company or name <input name="name" required maxlength="80" autocomplete="off"></label>
+      <label>Fleet ID (what they type to sign in) <input name="id" required maxlength="40" autocapitalize="none" autocomplete="off" spellcheck="false"></label>
+      <label>PIN, 4 to 8 digits <input name="pin" required inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" autocomplete="off"></label>
+      <div class="btn-row">
+        <button class="btn btn-blaze" type="submit">Save</button>
+        <button id="owner-cancel" class="btn btn-ghost" type="button" hidden>Cancel</button>
+      </div>
+    </form>
+    <div id="owner-share" class="panel" hidden>
+      <p>Send them this. It's the only time the PIN shows.</p>
+      <textarea id="owner-share-text" readonly rows="3"></textarea>
+      <p><a id="owner-share-sms" class="btn btn-ghost" href="#">Text it</a></p>
+    </div>
+  </div>`;
+}
+
 export function fleetScreen(ctx) {
   return `<p id="fleet-msg" class="form-msg" role="status"></p>
   <form id="fleet-login" class="stack panel">

@@ -164,7 +164,8 @@ test('fleet board shows open, booked, yours, fleet and blocked; anonymous gets 4
   assert.equal(res.status, 200);
   assert.equal(res.body.accountName, 'Acme Fleet');
   const days = res.body.windows;
-  assert.equal(windowState(days, '2026-10-22T10:00'), 'open');
+  assert.equal(windowState(days, '2026-10-22T10:00'), undefined, '55 minutes out: inside the one-hour notice');
+  assert.equal(windowState(days, '2026-10-22T12:00'), 'open', 'same day is fine with an hour of notice');
   assert.equal(windowState(days, '2026-10-26T08:00'), 'booked');
   assert.equal(windowState(days, '2026-10-23T08:00'), 'fleet');
   assert.equal(windowState(days, '2026-10-23T10:00'), 'yours');
@@ -193,6 +194,21 @@ test('the full bump story: confirm, bump, link, callback, reschedule, link used 
 
   const box = t.rows("SELECT kind, to_role, to_phone, sms_ok, text FROM outbox WHERE kind IN ('FLEET_OVERRIDE', 'BUMP')");
   assert.deepEqual(box.map((r) => r.kind).sort(), ['BUMP', 'FLEET_OVERRIDE']);
+  // Jay hears twice, in order: the emergency, then who got moved; the customer's message comes last.
+  const toJay = t.rows("SELECT kind, text, event FROM outbox WHERE kind IN ('FLEET_OVERRIDE', 'BUMP_NOTICE', 'BUMP') ORDER BY id");
+  assert.deepEqual(toJay.map((r) => r.kind), ['FLEET_OVERRIDE', 'BUMP_NOTICE', 'BUMP']);
+  assert.match(toJay[0].text, /^Birdie's fleet EMERGENCY: Acme Fleet skipped the line for Monday, October 26, 8 to 10 AM\. On site: Lou 406-555-0123\. Unit: Truck 12\. Where: Belgrade yard\./);
+  assert.match(toJay[1].text, /^Birdie's: Acme Fleet bumped Sam Lee 406-555-0100 from Monday, October 26, 8 to 10 AM\. We're emailing them the next openings \(.+\) with a link to pick one\. Call them if you like\.$/);
+  // Calendar: the fleet job goes on, tagged with its id, and the customer's entry is named for removal.
+  const custId = t.rows("SELECT id FROM bookings WHERE holder = 'public' AND status = 'bumped'")[0].id;
+  const fleetId = t.rows("SELECT id FROM bookings WHERE holder = 'fleet'")[0].id;
+  assert.equal(JSON.parse(t.rows("SELECT event FROM outbox WHERE kind = 'NEW_BOOKING'")[0].event).bookingId, custId);
+  const swap = JSON.parse(toJay[0].event);
+  assert.equal(swap.bookingId, fleetId);
+  assert.equal(swap.cancelBookingId, custId);
+  assert.equal(swap.start, '2026-10-26T08:00:00-06:00');
+  assert.match(swap.title, /EMERGENCY: Acme Fleet/);
+  assert.equal(toJay[1].event, null, 'the notice is email only');
   const bump = box.find((r) => r.kind === 'BUMP');
   assert.equal(bump.to_role, 'customer');
   assert.equal(bump.to_phone, '406-555-0100');
@@ -219,6 +235,8 @@ test('the full bump story: confirm, bump, link, callback, reschedule, link used 
   assert.equal(pick.status, 200);
   assert.equal(pick.body.state, 'done');
   assert.match(t.rows("SELECT text FROM outbox WHERE kind = 'RESCHEDULED'")[0].text, /Sam Lee moved from Monday, October 26, 8 to 10 AM to/);
+  const movedId = t.rows("SELECT id FROM bookings WHERE rescheduled_from = ?", custId)[0].id;
+  assert.equal(JSON.parse(t.rows("SELECT event FROM outbox WHERE kind = 'RESCHEDULED'")[0].event).bookingId, movedId);
   assert.equal(t.rows("SELECT COUNT(*) AS n FROM bookings WHERE status = 'active' AND holder = 'public'")[0].n, 1);
 
   const again = await t.call('POST', '/reschedule', { body: { token, windowId: open.body.more[0].id } });
@@ -286,4 +304,77 @@ test('notifications: dry run sends nothing; with a webhook every draft is delive
   assert.equal(sent[0].body.to.role, 'owner');
   assert.equal(sent[0].body.event.start, '2026-10-26T08:00:00-06:00', 'calendar start rides along');
   assert.match(sent[0].body.event.title, /^Birdie's: /);
+  assert.match(sent[0].body.event.bookingId, /^bk_/, 'the calendar entry carries its booking id');
+});
+
+test('fleet can book later the same day with an hour of notice, not less', async () => {
+  const t = setup();
+  const acme = await fleetLogin(t);
+  const job = { service: 'fleet-maintenance', unit: 'Truck 7', location: 'Shop', contactName: 'Lou', contactPhone: '406-555-0123' };
+  const tooSoon = await t.call('POST', '/fleet/bookings', { token: acme, now: '2026-10-22T09:05', body: { ...job, windowId: '2026-10-22T10:00' } });
+  assert.equal(tooSoon.status, 409);
+  assert.equal(tooSoon.body.reason, 'closed');
+  const onTime = await t.call('POST', '/fleet/bookings', { token: acme, now: '2026-10-22T09:00', body: { ...job, windowId: '2026-10-22T10:00' } });
+  assert.equal(onTime.status, 201);
+});
+
+test('bumping a customer who left no email tells Jay to text them', async () => {
+  const t = setup();
+  await t.call('POST', '/bookings', { body: customer('2026-10-26T08:00', { email: '' }) });
+  const acme = await fleetLogin(t);
+  const take = await t.call('POST', '/fleet/bookings', { token: acme, body: { windowId: '2026-10-26T08:00', service: 'fleet-maintenance', unit: 'Truck 12', location: 'Belgrade yard', contactName: 'Lou', contactPhone: '406-555-0123', override: true } });
+  assert.equal(take.status, 201);
+  const notice = t.rows("SELECT text FROM outbox WHERE kind = 'BUMP_NOTICE'")[0].text;
+  assert.match(notice, /They left no email, so text them the message in the next email\. Call them if you like\.$/);
+  const bump = t.rows("SELECT to_role, to_email FROM outbox WHERE kind = 'BUMP'")[0];
+  assert.equal(bump.to_role, 'customer');
+  assert.equal(bump.to_email, null);
+});
+
+test("Jay's fleet list: owner PIN, add, new PIN, turn off and on", async () => {
+  const unset = setup();
+  assert.equal((await unset.call('POST', '/owner/login', { body: { pin: '246810' } })).status, 503, 'no OWNER_PIN, no owner page');
+
+  const t = setup({ OWNER_PIN: '246810' });
+  assert.equal((await t.call('POST', '/owner/login', { body: { pin: '111111' } })).status, 401);
+  assert.equal((await t.call('GET', '/owner/fleet')).status, 401);
+  const acme = await fleetLogin(t);
+  assert.equal((await t.call('GET', '/owner/fleet', { token: acme })).status, 401, 'a fleet login is not the owner');
+
+  const signIn = await t.call('POST', '/owner/login', { body: { pin: '246810' } });
+  assert.equal(signIn.status, 200);
+  const owner = signIn.body.token;
+  assert.equal((await t.call('GET', '/fleet/windows', { token: owner })).status, 401, 'the owner token is not a fleet login');
+
+  const noPin = await t.call('POST', '/owner/fleet', { token: owner, body: { id: 'demo-fleet', name: 'Demo Fleet' } });
+  assert.equal(noPin.status, 422, 'a new fleet client needs a PIN');
+  assert.ok(noPin.body.fields.pin);
+  const added = await t.call('POST', '/owner/fleet', { token: owner, body: { id: 'demo-fleet', name: 'Demo Fleet', pin: '1357' } });
+  assert.deepEqual(added.body, { ok: true, id: 'demo-fleet', name: 'Demo Fleet', active: true });
+  const list = await t.call('GET', '/owner/fleet', { token: owner });
+  assert.deepEqual(list.body.accounts.map((a) => [a.id, a.active]), [['acme', true], ['demo-fleet', true]]);
+  assert.equal(JSON.stringify(list.body).includes('pin'), false, 'PIN hashes never leave the server');
+
+  const demo = await t.call('POST', '/fleet/login', { body: { fleetId: 'demo-fleet', pin: '1357' } });
+  assert.equal(demo.status, 200);
+  const renewed = await t.call('POST', '/owner/fleet', { token: owner, body: { id: 'demo-fleet', name: 'Demo Fleet', pin: '2468' } });
+  assert.equal(renewed.status, 200);
+  assert.equal((await t.call('GET', '/fleet/windows', { token: demo.body.token })).status, 401, 'a new PIN signs them out');
+  assert.equal((await t.call('POST', '/fleet/login', { body: { fleetId: 'demo-fleet', pin: '1357' } })).status, 401);
+  const again = await t.call('POST', '/fleet/login', { body: { fleetId: 'demo-fleet', pin: '2468' } });
+  assert.equal(again.status, 200);
+
+  const off = await t.call('POST', '/owner/fleet', { token: owner, body: { id: 'demo-fleet', name: 'Demo Fleet', active: false } });
+  assert.equal(off.body.active, false);
+  assert.equal((await t.call('GET', '/fleet/windows', { token: again.body.token })).status, 401, 'turning off signs them out');
+  assert.equal((await t.call('POST', '/fleet/login', { body: { fleetId: 'demo-fleet', pin: '2468' } })).status, 401);
+  const on = await t.call('POST', '/owner/fleet', { token: owner, body: { id: 'demo-fleet', name: 'Demo Fleet', active: true } });
+  assert.equal(on.body.active, true);
+  assert.equal((await t.call('POST', '/fleet/login', { body: { fleetId: 'demo-fleet', pin: '2468' } })).status, 200, 'back on with the same PIN');
+
+  for (let i = 0; i < 4; i++) assert.equal((await t.call('POST', '/owner/login', { body: { pin: '000000' } })).status, 401);
+  const fifth = await t.call('POST', '/owner/login', { body: { pin: '000000' } });
+  assert.equal(fifth.status, 429, 'five wrong owner PINs lock it for 15 minutes');
+  assert.equal((await t.call('POST', '/owner/login', { body: { pin: '246810' } })).status, 429, 'even the right PIN waits out the lock');
+  assert.equal((await t.call('POST', '/fleet/login', { body: { fleetId: 'demo-fleet', pin: '2468' } })).status, 200, 'the owner lock does not lock fleet clients');
 });

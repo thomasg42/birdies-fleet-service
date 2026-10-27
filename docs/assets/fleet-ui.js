@@ -1,7 +1,7 @@
 import { createClient } from './booking-api.js';
 import { val, mark, flattenDays, weekHeading } from './booking-dom.js';
 
-const BUMP_BODY = 'If you take it, they\'ll get a text that something came up, with the next two openings, and Jay is told right away.';
+const BUMP_BODY = 'If you take it, they\'re told something came up and get the next two openings, and Jay is told right away.';
 
 export async function bootFleet(doc, opts) {
   const login = doc.getElementById('fleet-login');

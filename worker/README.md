@@ -27,7 +27,7 @@ From `worker/`:
 4. `npx wrangler secret put ADMIN_KEY` (random; keep it out of the repo, wiki and logs).
 5. `npx wrangler deploy`, note the `workers.dev` URL.
 6. Smoke test the live URL on a window weeks out, then delete the test rows.
-7. Fleet accounts (PINs from J, a credential action): `POST /admin/fleet-accounts` with `{ "id", "name", "pin" }` and the admin key.
+7. Fleet accounts: `npx wrangler secret put OWNER_PIN` (6 to 8 digits Jay can remember; a credential action), then Jay adds them himself at `/fleet-admin/`. `POST /admin/fleet-accounts` with the admin key still works.
 8. Notifications: point `NOTIFY_WEBHOOK` and `NOTIFY_SECRET` at the n8n workflow, set `OWNER_EMAIL` and `OWNER_PHONE` in `wrangler.toml`.
 9. Only then set `booking.api` (and `leadEndpoint` to `<api>/leads`) in `site.config.mjs`, rebuild, push, and run the site-qa gate. Never connect the site before J's alerts work: a booking J never hears about is worse than no booking.
 
