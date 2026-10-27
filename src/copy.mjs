@@ -36,12 +36,18 @@ export const ABOUT_HTML = `<p>Jay Smith is the owner and mobile mechanic at Bird
 export const AREA_HTML = `<p>Birdie’s works across Southwest Montana. The line on the map is a picture of the towns, drawn from their real relative positions. It is not a driving route and it does not guess how long a trip takes.</p>
 <p>Open a town page for the roads and the kinds of places vehicles sit there. Open a service page for the work on the card. If the unit is already down, call or text Jay.</p>`;
 
-export const PRIVACY_HTML = `<p>A draft for Jay to approve before the public copy goes out. It describes how a booking note, a fleet sign-in, and a text to Jay are handled.</p>
-<p>If you book a window or send a request, the note includes the service, the vehicle, where it is parked, your name, and your phone. Email is optional. A map pin is added only if you tap Use my location.</p>
-<p>Text me about this appointment, including schedule changes. Msg &amp; data rates may apply. Reply STOP to opt out. Reply HELP for help.</p>
-<p>We do not sell or share your mobile number or text-message consent with third parties or affiliates for marketing.</p>
-<p>A fleet PIN is checked on the server, not stored in the browser. The form is not connected to a live desk yet. Until that desk is connected, the schedule asks you to text the note to Jay yourself.</p>
-<p>Questions about this draft go to Jay at 435-531-4127.</p>`;
+export const PRIVACY_HTML = `<p>Here is what Birdie’s Fleet Service does with the details you give when you book a window, send a request, or sign in as a fleet customer.</p>
+<h2>What a booking includes</h2>
+<p>A booking or request includes the service, the vehicle, where it is parked, your name, and your phone. Email is optional. A map pin is added only if you tap Use my location.</p>
+<p>Those details go to Jay by email and onto his work calendar so he can find the vehicle and keep the day in order.</p>
+<h2>Text messages</h2>
+<p>If you tick the box on the booking form, Birdie’s Fleet Service texts you about that appointment: the confirmation and any schedule change. How many texts you get depends on your bookings. Msg &amp; data rates may apply. Reply STOP to opt out. Reply HELP for help.</p>
+<p>Texts are optional. You can book without ticking the box.</p>
+<p>We do not sell or share your mobile number or text-message consent with third parties or affiliates for marketing. Text-message opt-in data and consent are not shared with any third party. Texts go out through a messaging provider that uses your number only to deliver them.</p>
+<h2>Fleet sign-in</h2>
+<p>A fleet PIN is checked on the server, not stored in the browser.</p>
+<h2>Questions</h2>
+<p>Call or text Jay at 435-531-4127.</p>`;
 
 const SERVICES = {
   'fleet-maintenance': {

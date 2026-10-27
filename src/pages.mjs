@@ -192,14 +192,14 @@ PAGES.push(page({
 
 PAGES.push(page({
   slug: 'privacy',
-  title: 'Privacy Draft for Birdie’s Texts',
-  description: 'Draft privacy notes for booking texts, fleet sign-in, and location pins. Message rates, STOP, and HELP are spelled out for Jay to approve.',
+  title: 'Privacy and Appointment Texts',
+  description: 'What Birdie’s Fleet Service does with booking details, appointment texts, fleet sign-in, and location pins. Reply STOP to opt out, HELP for help.',
   schema: (ctx) => [
     { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Privacy', url: ctx.abs('privacy/') },
     breadcrumbSchema(ctx, [homeCrumb, { name: 'Privacy', path: 'privacy' }]),
   ],
   body: (ctx) => `${crumbs(ctx, [{ name: 'Home', path: '' }, { name: 'Privacy', path: 'privacy' }])}
-    ${pageHero(ctx, { kicker: 'Draft', h1: 'Privacy', lead: 'A draft for Jay to approve before the public copy goes out.' })}
+    ${pageHero(ctx, { kicker: 'Birdie’s Fleet Service', h1: 'Privacy', lead: 'Booking details, appointment texts, and fleet sign-in.' })}
     <section class="section"><div class="wrap prose">${PRIVACY_HTML}</div></section>`,
 }));
 
