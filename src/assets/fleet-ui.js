@@ -1,6 +1,7 @@
 import { createClient } from './booking-api.js';
 import { val, mark, flattenDays, weekHeading } from './booking-dom.js';
 
+const VIP_TITLE = 'Welcome to the VIP section';
 const BUMP_BODY = 'If you take it, they\'re told something came up and get the next two openings, and Jay is told right away.';
 
 export async function bootFleet(doc, opts) {
@@ -12,6 +13,9 @@ export async function bootFleet(doc, opts) {
   const windows = doc.getElementById('fleet-windows');
   const msg = doc.getElementById('fleet-msg');
   const title = doc.getElementById('fleet-title');
+  const lead = doc.getElementById('fleet-lead');
+  const leadText = lead ? lead.textContent : '';
+  const welcome = doc.getElementById('fleet-welcome');
   const dialog = doc.getElementById('bump-dialog');
   const done = doc.getElementById('fleet-done');
   let token = '';
@@ -45,16 +49,42 @@ export async function bootFleet(doc, opts) {
   function dialogOpen() {
     return !!(dialog && (dialog.open || dialog.hasAttribute('open')));
   }
+  function show(d) {
+    if (d.showModal) d.showModal();
+    else { d.setAttribute('open', ''); d.open = true; }
+  }
+  function hide(d) {
+    if (d.close) d.close();
+    else { d.removeAttribute('open'); d.open = false; }
+  }
+  function signedIn(name) {
+    if (title) title.textContent = VIP_TITLE;
+    if (lead) lead.textContent = `Signed in as ${name}. Pick a time below.`;
+  }
+  function signedOut(text) {
+    token = '';
+    board.hidden = true;
+    login.hidden = false;
+    if (title) title.textContent = 'Fleet client login';
+    if (lead) lead.textContent = leadText;
+    say(text);
+  }
+  function openWelcome(name) {
+    if (!welcome) return;
+    const h = doc.getElementById('fleet-welcome-title');
+    if (h) h.textContent = `Welcome, ${name}`;
+    show(welcome);
+    const go = doc.getElementById('fleet-welcome-go');
+    if (go && go.focus) go.focus();
+  }
   function openDialog(label, trigger) {
     lastFocus = trigger || doc.activeElement;
     const copy = doc.getElementById('bump-copy');
     if (copy) copy.textContent = `Another customer has ${label}. ${BUMP_BODY}`;
-    if (dialog.showModal) dialog.showModal();
-    else { dialog.setAttribute('open', ''); dialog.open = true; }
+    show(dialog);
   }
   function closeDialog() {
-    if (dialog.close) dialog.close();
-    else { dialog.removeAttribute('open'); dialog.open = false; }
+    hide(dialog);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function paintWindows(days) {
@@ -94,16 +124,12 @@ export async function bootFleet(doc, opts) {
     const res = await client().fleetWindows(token);
     if (res.status === 401) return backToLogin('That sign-in expired. Sign in again. Your fleet form is still here.');
     if (!res.ok || !res.data) { say('The board did not load. Call or text Jay.'); return; }
-    if (title) title.textContent = res.data.accountName || 'Fleet';
+    signedIn(res.data.accountName || 'fleet client');
     paintWindows(res.data.windows || res.data.days || []);
   }
   function backToLogin(text) {
     savedDraft = readDraft();
-    token = '';
-    board.hidden = true;
-    login.hidden = false;
-    if (title) title.textContent = 'Fleet client login';
-    say(text);
+    signedOut(text);
   }
 
   login.addEventListener('submit', async (event) => {
@@ -126,10 +152,20 @@ export async function bootFleet(doc, opts) {
     token = res.data.token;
     login.hidden = true;
     board.hidden = false;
-    say('');
+    const name = res.data.accountName || 'fleet client';
+    signedIn(name);
+    say('Sign-in successful.');
+    openWelcome(name);
     writeDraft(savedDraft);
     await loadBoard();
   });
+
+  if (welcome) {
+    doc.getElementById('fleet-welcome-go').addEventListener('click', () => {
+      hide(welcome);
+      if (windows && windows.focus) { windows.setAttribute('tabindex', '-1'); windows.focus(); }
+    });
+  }
 
   windows.addEventListener('click', (event) => {
     const btn = event.target && event.target.closest ? event.target.closest('[data-window-id]') : null;
@@ -234,12 +270,8 @@ export async function bootFleet(doc, opts) {
   const signOut = doc.getElementById('fleet-signout');
   if (signOut) {
     signOut.addEventListener('click', () => {
-      token = '';
       savedDraft = null;
-      board.hidden = true;
-      login.hidden = false;
-      if (title) title.textContent = 'Fleet client login';
-      say('');
+      signedOut('');
     });
   }
 

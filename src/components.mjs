@@ -219,6 +219,14 @@ export function fleetScreen(ctx) {
     </form>
     <p id="fleet-done" hidden></p>
   </div>
+  <dialog id="fleet-welcome" class="welcome-dialog" aria-labelledby="fleet-welcome-title">
+    <p class="welcome-ok">Sign-in successful</p>
+    <div class="welcome-body">
+      <h2 id="fleet-welcome-title">Welcome</h2>
+      <p>Welcome to the VIP section.</p>
+      <button id="fleet-welcome-go" class="btn btn-blaze" type="button">Start booking</button>
+    </div>
+  </dialog>
   <dialog id="bump-dialog" aria-labelledby="bump-title">
     <h2 id="bump-title">Are you sure?</h2>
     <p id="bump-copy"></p>

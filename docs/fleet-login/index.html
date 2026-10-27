@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0F0D0B">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/fonts/big-shoulders-display-latin-800.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/site.css?v=20261022-v0-a00ebaab">
+<link rel="stylesheet" href="../assets/site.css?v=20261022-v0-62bef023">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Birdie’s Fleet Service &amp; Backcountry Repair">
 <meta property="og:title" content="Fleet Client Login">
@@ -64,7 +64,7 @@
 <nav class="crumbs wrap" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Fleet login</li></ol></nav>
     <section class="page-hero"><div class="wrap">
       <h1 id="fleet-title">Fleet client login</h1>
-      <p>Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
+      <p id="fleet-lead">Sign in to see the board. The PIN is checked by the desk and is not saved in the browser.</p>
     </div></section>
     <section class="section"><div class="wrap"><p id="fleet-msg" class="form-msg" role="status"></p>
   <form id="fleet-login" class="stack panel">
@@ -94,6 +94,14 @@
     </form>
     <p id="fleet-done" hidden></p>
   </div>
+  <dialog id="fleet-welcome" class="welcome-dialog" aria-labelledby="fleet-welcome-title">
+    <p class="welcome-ok">Sign-in successful</p>
+    <div class="welcome-body">
+      <h2 id="fleet-welcome-title">Welcome</h2>
+      <p>Welcome to the VIP section.</p>
+      <button id="fleet-welcome-go" class="btn btn-blaze" type="button">Start booking</button>
+    </div>
+  </dialog>
   <dialog id="bump-dialog" aria-labelledby="bump-title">
     <h2 id="bump-title">Are you sure?</h2>
     <p id="bump-copy"></p>
@@ -128,6 +136,6 @@
   <a class="tap-book" href="../schedule/">Book</a>
 </nav>
 <script src="../assets/config.js"></script>
-<script type="module" src="../assets/site.js?v=20261022-v0-a00ebaab"></script>
+<script type="module" src="../assets/site.js?v=20261022-v0-62bef023"></script>
 </body>
 </html>

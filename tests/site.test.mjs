@@ -541,3 +541,48 @@ test("Jay's fleet list page: PIN, add with a suggested Fleet ID, share text, new
   assert.match(doc.getElementById('owner-list').textContent, /OFF/);
   assert.match(doc.querySelector('[data-toggle="gallatin-gravel-co"]').textContent, /Turn on/);
 });
+
+test('fleet sign-in: the form really hides, welcome popup, VIP heading, sign out resets', async () => {
+  // form/.stack/.btn set display, which beats the hidden attribute unless this rule exists.
+  assert.match(readFileSync(join(root, 'src', 'assets', 'site.css'), 'utf8'), /\[hidden\] \{ display: none !important; \}/);
+  const now = core.parseLocal('2026-10-22T09:05');
+  const mock = createMock({ now, nowKey: 'ui-welcome', fresh: true });
+  const fetchImpl = async (url, init = {}) => {
+    const result = mock.handle((init.method || 'GET').toUpperCase(), String(url), init.body ? JSON.parse(init.body) : null, init.headers || {});
+    return new Response(JSON.stringify(result.body), { status: result.status });
+  };
+  const doc = dom('fleet-login/index.html');
+  await bootFleet(doc, { config: { api: '/api', phoneE164: SITE.phone.e164, rules: SITE.booking }, core, now, search: '', fetchImpl });
+  const fire = (el, type) => el.dispatchEvent(new doc.defaultView.Event(type, { bubbles: true, cancelable: true }));
+  const isOpen = (d) => d.hasAttribute('open') || d.open === true;
+  const login = doc.getElementById('fleet-login');
+  const welcome = doc.getElementById('fleet-welcome');
+  assert.equal(isOpen(welcome), false);
+  login.querySelector('[name="fleetId"]').value = 'nope';
+  login.querySelector('[name="pin"]').value = '0000';
+  fire(login, 'submit');
+  await new Promise((r) => setTimeout(r, 10));
+  assert.equal(isOpen(welcome), false);
+  assert.equal(doc.getElementById('fleet-title').textContent, 'Fleet client login');
+  login.querySelector('[name="fleetId"]').value = 'demo';
+  login.querySelector('[name="pin"]').value = '1111';
+  fire(login, 'submit');
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(login.hidden, true);
+  assert.equal(doc.getElementById('fleet-board').hidden, false);
+  assert.equal(isOpen(welcome), true);
+  assert.match(welcome.textContent, /Sign-in successful/);
+  assert.equal(doc.getElementById('fleet-welcome-title').textContent, 'Welcome, Demo Fleet');
+  assert.match(welcome.textContent, /Welcome to the VIP section\./);
+  assert.equal(doc.getElementById('fleet-title').textContent, 'Welcome to the VIP section');
+  assert.match(doc.getElementById('fleet-lead').textContent, /Signed in as Demo Fleet\. Pick a time below\./);
+  assert.match(doc.getElementById('fleet-msg').textContent, /Sign-in successful/);
+  assert.ok(doc.querySelectorAll('[data-window-id]').length > 0);
+  fire(doc.getElementById('fleet-welcome-go'), 'click');
+  assert.equal(isOpen(welcome), false);
+  fire(doc.getElementById('fleet-signout'), 'click');
+  assert.equal(login.hidden, false);
+  assert.equal(doc.getElementById('fleet-board').hidden, true);
+  assert.equal(doc.getElementById('fleet-title').textContent, 'Fleet client login');
+  assert.match(doc.getElementById('fleet-lead').textContent, /Sign in to see the board/);
+});
