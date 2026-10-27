@@ -84,4 +84,6 @@ writeFileSync(join(OUT, 'robots.txt'), SITE.launched
   ? `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`
   : `User-agent: *\nDisallow: /\n`);
 writeFileSync(join(OUT, '.nojekyll'), '');
+// docs/ is wiped on every build, so GitHub Pages' CNAME has to come from the config or the domain drops.
+if (SITE.customDomain) writeFileSync(join(OUT, 'CNAME'), `${SITE.customDomain}\n`);
 console.log(`Built ${PAGES.length} pages into ${OUT} (${dev ? 'DEV' : 'production'}, ${SITE.launched ? 'launched' : 'not launched'}).`);

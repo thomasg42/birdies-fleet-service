@@ -16,8 +16,9 @@ database_id = "b7d8cb0d-a00c-4011-9868-02246f0062c3"
 crons = ["*/5 * * * *"]
 
 [vars]
-SITE_URL = "https://thomasg42.github.io/birdies-fleet-service"
-ALLOWED_ORIGINS = "https://thomasg42.github.io"
+SITE_URL = "https://birdiesfleet.com"
+# http://birdiesfleet.com covers the hour before GitHub issues the HTTPS certificate; drop it once Enforce HTTPS is on.
+ALLOWED_ORIGINS = "https://birdiesfleet.com,https://www.birdiesfleet.com,http://birdiesfleet.com,https://thomasg42.github.io"
 ALLOW_LOCALHOST = "1"
 OWNER_NAME = "Jay"
 # Where Jay's alerts go (Jay, 2026-10-24 text).

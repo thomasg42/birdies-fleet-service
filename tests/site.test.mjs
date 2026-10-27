@@ -111,7 +111,7 @@ test('seo contract, one h1, launched noindex, links and assets', () => {
     assert.match(html, /rel="canonical"/);
     assert.match(html, /property="og:image"/);
     assert.match(html, /name="twitter:card"/);
-    assert.match(html, /noindex, nofollow/);
+    assert.match(html, SITE.launched ? /content="index, follow"/ : /noindex, nofollow/);
     const h1s = html.match(/<h1\b/g) || [];
     assert.equal(h1s.length, 1, file);
     assert.match(html, /tel:\+14355314127/);
@@ -130,7 +130,7 @@ test('seo contract, one h1, launched noindex, links and assets', () => {
         if (Object.values(SITE.photos).some((photo) => photo.source === decoded)) continue;
         const external = new URL(decoded);
         if (external.protocol === 'https:' && external.hostname === 'www.google.com' && external.pathname === '/maps/embed') continue;
-        assert.match(href, /^https:\/\/thomasg42\.github\.io\/birdies-fleet-service/);
+        assert.ok(href.startsWith(`${SITE.url}/`), href);
         continue;
       }
       const clean = href.split('#')[0].split('?')[0];
@@ -286,7 +286,18 @@ test('script budget and privacy and consent', () => {
   assert.match(schedule, /name="smsConsent"[^>]*type="checkbox"/);
   assert.doesNotMatch(schedule, /name="smsConsent"[^>]*checked/);
   const robots = readFileSync(join(docs, 'robots.txt'), 'utf8');
-  assert.match(robots, /Disallow: \//);
+  if (SITE.launched) {
+    assert.match(robots, /Allow: \//);
+    assert.ok(robots.includes(`Sitemap: ${SITE.url}/sitemap.xml`));
+  } else {
+    assert.match(robots, /Disallow: \//);
+  }
+  if (SITE.customDomain) {
+    assert.equal(readFileSync(join(docs, 'CNAME'), 'utf8').trim(), SITE.customDomain);
+    assert.equal(SITE.url, `https://${SITE.customDomain}`);
+  } else {
+    assert.equal(existsSync(join(docs, 'CNAME')), false);
+  }
   const sitemap = readFileSync(join(docs, 'sitemap.xml'), 'utf8');
   assert.match(sitemap, /privacy\//);
   assert.doesNotMatch(sitemap, /fleet-login|fleet-admin|reschedule|404/);
