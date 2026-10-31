@@ -162,7 +162,7 @@ export function bootHeroScrub(doc = document) {
     if (heroCanvas.width !== w) heroCanvas.width = w;
     if (heroCanvas.height !== h) heroCanvas.height = h;
     const portrait = h > w;
-    // Fill the whole hero on every screen (cover), centred on the action; no black band.
+    // Cover the hero on every screen; no black band.
     const scale = Math.max(w / heroVideo.videoWidth, h / heroVideo.videoHeight);
     const vw = heroVideo.videoWidth * scale;
     const vh = heroVideo.videoHeight * scale;

@@ -186,7 +186,7 @@ test('every page footer shows LLC name, hours, and social slots', () => {
     if (!html.includes('class="site-footer"')) continue;
     const rel = relPosix(docs, file);
     assert.match(html, /Backcountry Repair LLC<\/small>/, rel);
-    assert.match(html, /Monday to Friday, 8 AM to 4 PM/, rel);
+    assert.match(html, /Monday to Friday, 8 AM to 4 PM<br>Saturday: fleet clients only/, rel);
     assert.match(html, /class="wrap foot-legal">© Birdie’s Fleet Service &amp; Backcountry Repair LLC</, rel);
     if (SITE.social.facebook) assert.ok(html.includes(`href="${SITE.social.facebook}"`), rel);
     else assert.doesNotMatch(html, />Facebook</, rel);
@@ -356,6 +356,14 @@ test('booking rules match the Denver cases', () => {
   assert.match(bump[0].label, /2 to 4 PM/);
   assert.equal(bump[1].id, '2026-10-23T08:00');
   assert.equal(core.isWorkDay(core.parseLocal('2026-10-25T12:00')), false);
+  // Saturday is fleet only: fleet sees Sat 10-24, the public and bump offers skip it.
+  const friLate = core.parseLocal('2026-10-23T15:00');
+  assert.equal(core.toOffsetIso(core.fleetEarliestStart(friLate)).startsWith('2026-10-24T08:00:00-06'), true);
+  const fleetSat = core.fleetWindows(friLate).filter((w) => w.date === '2026-10-24');
+  assert.deepEqual(fleetSat.map((w) => w.id.slice(11)), ['08:00', '10:00', '12:00', '14:00']);
+  assert.equal(core.fleetWindows(friLate).some((w) => w.date === '2026-10-25'), false);
+  assert.equal(core.publicWindows(thu).some((w) => w.date.endsWith('-24') || w.date.endsWith('-31')), false);
+  assert.equal(core.bumpOptions(friLate, core.DEFAULT_RULES, '2026-10-26T08:00')[0].id, '2026-10-26T10:00');
 });
 
 test('mock books, bumps, locks, and reschedules', () => {

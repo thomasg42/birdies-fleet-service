@@ -4,7 +4,7 @@ import { val, mark, flattenDays, weekHeading } from './booking-dom.js';
 const VIP_TITLE = 'Welcome to the VIP section';
 const BUMP_BODY = 'If you take it, they\'re told something came up and get the next two openings, and Jay is told right away.';
 
-// A good sign-in goes to the phone's password manager (Chrome, Android; Safari offers on its own).
+// Good sign-ins go to the phone's password manager.
 function offerToSave(W, id, password, name) {
   try { W.navigator.credentials.store(new W.PasswordCredential({ id, password, name })).catch(() => {}); } catch (e) { /* unsupported */ }
 }

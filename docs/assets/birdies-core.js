@@ -4,6 +4,7 @@ const TZ = 'America/Denver';
 export const DEFAULT_RULES = {
   timeZone: TZ,
   workDays: [1, 2, 3, 4, 5],
+  fleetWorkDays: [1, 2, 3, 4, 5, 6], // Sat is fleet only
   windows: [
     { start: '08:00', end: '10:00' },
     { start: '10:00', end: '12:00' },
@@ -11,7 +12,7 @@ export const DEFAULT_RULES = {
     { start: '14:00', end: '16:00' },
   ],
   publicFirstDayOffset: 2,
-  fleetLeadMinutes: 60, // fleet can take any window that starts at least an hour out, same day included
+  fleetLeadMinutes: 60, // an hour out, same day OK
   bumpLeadHours: 2,
   bumpOptionCount: 2,
   horizonDays: 21,
@@ -207,9 +208,12 @@ export function earliestPublicStart(now, rules = DEFAULT_RULES) {
   return atFirstWindow(rollWorkDate(addDays(p.year, p.month, p.day, offset), rules), rules);
 }
 
+// Bumps stay on public days.
+const fleetRules = (r) => (r.fleetWorkDays ? { ...r, workDays: r.fleetWorkDays } : r);
+
 export function fleetEarliestStart(now, rules = DEFAULT_RULES) {
   const lead = (rules.fleetLeadMinutes ?? 30) * 60 * 1000;
-  return nextWindowStart(new Date(now.getTime() + lead), rules);
+  return nextWindowStart(new Date(now.getTime() + lead), fleetRules(rules));
 }
 
 function horizonEnd(now, rules) {
@@ -221,7 +225,7 @@ export function publicWindows(now, rules = DEFAULT_RULES) {
 }
 
 export function fleetWindows(now, rules = DEFAULT_RULES) {
-  return generateWindows(fleetEarliestStart(now, rules), horizonEnd(now, rules), rules);
+  return generateWindows(fleetEarliestStart(now, rules), horizonEnd(now, rules), fleetRules(rules));
 }
 
 export function bumpOptions(now, rules = DEFAULT_RULES, takenId, occupiedIds = []) {
@@ -384,7 +388,7 @@ export function firstName(name) {
   return bit || 'there';
 }
 
-// A fleet bump tells Jay twice (the emergency, then who got moved) and hands the customer new times.
+// Fleet bump: two notes to Jay, new times to the customer.
 export function bumpDrafts({ accountName, label, customerName, customerPhone, customerEmailed, unit, location, contactName, contactPhone, details, options, rescheduleUrl }) {
   const openings = (options || []).map((o) => o.full || o.label).join('; ');
   const onSite = [contactName, contactPhone].filter(Boolean).join(' ');

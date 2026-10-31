@@ -175,7 +175,7 @@ PAGES.push(page({
     <section class="page-hero"><div class="wrap">
       <h1>Contact</h1>
       <p>Call or text ${ctx.esc(ctx.SITE.phone.display)}. Or send the note below.</p>
-      <p>Hours: ${ctx.esc(ctx.SITE.hours.display)}.</p>
+      <p>Hours: ${ctx.esc(ctx.SITE.hours.display)}.${ctx.SITE.hours.fleetOnly ? ` ${ctx.esc(ctx.SITE.hours.fleetOnly)}.` : ''}</p>
       ${textJ()}
     </div></section>
     <section class="section"><div class="wrap">${contactForm(ctx)}</div></section>`,

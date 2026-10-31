@@ -44,7 +44,7 @@ export const SITE = {
   phone: { display: '435-531-4127', e164: '+14355314127', schema: '+1-435-531-4127' },
   booking: { api: 'https://birdies-booking.forevergoldai.workers.dev', ...DEFAULT_RULES },
   // Printed hours come from the booking rules, so the site and the calendar never disagree.
-  // Jay's text 2026-10-24: Monday to Friday, 8 to 4.
+  // Jay's text 2026-10-24: Monday to Friday, 8 to 4. Thomas 2026-10-31: Saturday is fleet only.
   hours: hoursFrom(DEFAULT_RULES),
   // Paste the full https:// page link to turn one on. null = Facebook hidden, Instagram shows "coming soon".
   social: {
@@ -178,9 +178,11 @@ function hoursFrom(rules) {
   const dayText = days.length === 1 ? names[days[0]]
     : run ? `${names[days[0]]} to ${names[days[days.length - 1]]}`
     : days.map((d) => names[d]).join(', ');
+  const fleetOnly = (rules.fleetWorkDays || []).filter((d) => !days.includes(d)).map((d) => names[d]);
   return {
     status: 'STATED',
     days: days.map((d) => names[d]),
+    fleetOnly: fleetOnly.length ? `${fleetOnly.join(' and ')}: fleet clients only` : '',
     opens,
     closes,
     display: `${dayText}, ${clock(opens)} to ${clock(closes)}`,

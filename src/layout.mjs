@@ -107,7 +107,7 @@ function footer(ctx) {
       <p class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair LLC</small></p>
       <p class="foot-signoff">${signoff}</p>
       <p><a href="${ctx.tel}">${esc(ctx.SITE.phone.display)}</a></p>
-      <p class="foot-hours"><span class="foot-title">Hours</span> ${esc(ctx.SITE.hours.display)}</p>
+      <p class="foot-hours"><span class="foot-title">Hours</span> ${esc(ctx.SITE.hours.display)}${ctx.SITE.hours.fleetOnly ? `<br>${esc(ctx.SITE.hours.fleetOnly)}` : ''}</p>
       ${socialLinks(ctx)}
     </div>
     <div>
