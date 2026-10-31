@@ -130,6 +130,7 @@ test('seo contract, one h1, launched noindex, links and assets', () => {
         if (Object.values(SITE.photos).some((photo) => photo.source === decoded)) continue;
         const external = new URL(decoded);
         if (external.protocol === 'https:' && external.hostname === 'www.google.com' && external.pathname === '/maps/embed') continue;
+        if (Object.values(SITE.social || {}).includes(decoded)) continue;
         assert.ok(href.startsWith(`${SITE.url}/`), href);
         continue;
       }
@@ -163,11 +164,34 @@ test('AutoRepair schema stays inside confirmed fields', () => {
       assert.equal(node.address.addressCountry, 'US');
       assert.equal(node.address.streetAddress, undefined);
       assert.deepEqual(node.areaServed.map((t) => t.name).sort(), towns);
-      for (const key of ['priceRange', 'openingHours', 'aggregateRating', 'review', 'geo', 'sameAs', 'logo', 'image']) {
+      for (const key of ['priceRange', 'openingHours', 'aggregateRating', 'review', 'geo', 'logo', 'image']) {
         assert.equal(node[key], undefined, key);
       }
+      assert.equal(node.legalName, 'Birdie’s Fleet Service & Backcountry Repair LLC');
+      assert.deepEqual(node.openingHoursSpecification, [{
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '08:00',
+        closes: '16:00',
+      }]);
+      assert.deepEqual(node.sameAs, Object.values(SITE.social).filter(Boolean).length ? Object.values(SITE.social).filter(Boolean) : undefined);
       assert.equal(node.hasOfferCatalog.itemListElement.length, 4);
     }
+  }
+});
+
+test('every page footer shows LLC name, hours, and social slots', () => {
+  for (const file of htmlFiles()) {
+    const html = readFileSync(file, 'utf8');
+    if (!html.includes('class="site-footer"')) continue;
+    const rel = relPosix(docs, file);
+    assert.match(html, /Backcountry Repair LLC<\/small>/, rel);
+    assert.match(html, /Monday to Friday, 8 AM to 4 PM/, rel);
+    assert.match(html, /class="wrap foot-legal">© Birdie’s Fleet Service &amp; Backcountry Repair LLC</, rel);
+    if (SITE.social.facebook) assert.ok(html.includes(`href="${SITE.social.facebook}"`), rel);
+    else assert.doesNotMatch(html, />Facebook</, rel);
+    if (SITE.social.instagram) assert.ok(html.includes(`href="${SITE.social.instagram}"`), rel);
+    else assert.match(html, /Instagram: coming soon/, rel);
   }
 });
 
@@ -248,8 +272,9 @@ test('visitor text does not explain the website', () => {
   }
 });
 
+// Hours left this list 2026-10-31: Jay confirmed Mon to Fri, 8 to 4 by text (product-facts.md).
 test('claims, phones, and dashes stay out of visitor text', () => {
-  const banned = /\b(24\/7|same-day|guarantee|guaranteed|warranty|certified|licensed|\base\b|bonded|towing|\btow\b|best|top-rated|testimonial|testimonials|\breviews?\b|\bstars?\b|ford|f-350|f350|\bprice\b|\bprices\b|\bhours\b|\$)\b/i;
+  const banned = /\b(24\/7|same-day|guarantee|guaranteed|warranty|certified|licensed|\base\b|bonded|towing|\btow\b|best|top-rated|testimonial|testimonials|\breviews?\b|\bstars?\b|ford|f-350|f350|\bprice\b|\bprices\b|\$)\b/i;
   for (const file of htmlFiles()) {
     const text = visible(readFileSync(file, 'utf8'));
     assert.equal(banned.test(text), false, `${file} ${text.match(banned)}`);

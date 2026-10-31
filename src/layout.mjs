@@ -85,6 +85,16 @@ function header(ctx) {
 </header>`;
 }
 
+function socialLinks(ctx) {
+  const { facebook, instagram } = ctx.SITE.social || {};
+  const items = [];
+  if (facebook) items.push(`<li><a href="${esc(facebook)}" rel="noopener" target="_blank">Facebook</a></li>`);
+  items.push(instagram
+    ? `<li><a href="${esc(instagram)}" rel="noopener" target="_blank">Instagram</a></li>`
+    : '<li><span class="soon">Instagram: coming soon</span></li>');
+  return `<ul class="link-list social-list" aria-label="Social">${items.join('')}</ul>`;
+}
+
 function footer(ctx) {
   const services = ctx.services.map((s) => `<li><a href="${ctx.link(s.slug)}">${esc(s.name)}</a></li>`).join('');
   const towns = ctx.towns.map((t) => `<li><a href="${ctx.link('service-area/' + t.slug)}">${esc(t.name)}</a></li>`).join('');
@@ -94,9 +104,11 @@ function footer(ctx) {
   return `<footer class="site-footer">
   <div class="wrap foot-grid">
     <div>
-      <p class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair</small></p>
+      <p class="wordmark">BIRDIE’S<small>Fleet Service &amp; Backcountry Repair LLC</small></p>
       <p class="foot-signoff">${signoff}</p>
       <p><a href="${ctx.tel}">${esc(ctx.SITE.phone.display)}</a></p>
+      <p class="foot-hours"><span class="foot-title">Hours</span> ${esc(ctx.SITE.hours.display)}</p>
+      ${socialLinks(ctx)}
     </div>
     <div>
       <p class="foot-title">Services</p>
@@ -109,6 +121,7 @@ function footer(ctx) {
       <p><a href="${ctx.link('privacy')}">Privacy</a></p>
     </div>
   </div>
+  <p class="wrap foot-legal">© ${esc(ctx.SITE.legalName)}</p>
 </footer>
 <nav class="tap-bar" aria-label="Call, text, or book">
   <a href="${ctx.tel}">Call</a>
@@ -176,6 +189,8 @@ export function crumbs(ctx, items) {
   return `<nav class="crumbs wrap" aria-label="Breadcrumb"><ol>${lis}</ol></nav>`;
 }
 
+const sameAs = (SITE) => Object.values(SITE.social || {}).filter(Boolean);
+
 export function businessSchema(ctx) {
   const { SITE } = ctx;
   return {
@@ -183,9 +198,17 @@ export function businessSchema(ctx) {
     '@type': 'AutoRepair',
     '@id': ctx.abs('#business'),
     name: SITE.name,
+    legalName: SITE.legalName,
     alternateName: SITE.shortName,
     url: SITE.url,
     telephone: SITE.phone.schema,
+    openingHoursSpecification: [{
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: SITE.hours.days,
+      opens: SITE.hours.opens,
+      closes: SITE.hours.closes,
+    }],
+    ...(sameAs(SITE).length ? { sameAs: sameAs(SITE) } : {}),
     slogan: SITE.slogan,
     founder: { '@type': 'Person', name: SITE.owner },
     address: { '@type': 'PostalAddress', addressRegion: 'MT', addressCountry: 'US' },

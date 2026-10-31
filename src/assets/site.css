@@ -217,6 +217,9 @@ dialog::backdrop { background: rgba(15, 13, 11, .72); }
 .site-footer { background: var(--char-900); padding: 2rem 0 1rem; border-top: 1px solid var(--bark-700); }
 .foot-grid { display: grid; gap: 1rem; }
 .foot-title { color: var(--tan-300); font-weight: 600; margin-bottom: .3rem; }
+.foot-hours .foot-title { display: block; }
+.social-list .soon { min-height: 48px; display: inline-flex; align-items: center; color: var(--tan-300); }
+.foot-legal { margin-top: 2rem; font-size: .85rem; color: var(--tan-300); }
 .dev-ribbon { margin: 0; padding: .45rem 1rem; background: var(--blaze); color: var(--char-950); font-weight: 600; }
 .outbox-list { background: var(--char-800); color: var(--bone); margin: 0; padding: .6rem 1.2rem 1rem; }
 html.js.js-motion .reveal { opacity: 0; transform: translateY(12px); }

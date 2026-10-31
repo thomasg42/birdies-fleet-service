@@ -23,8 +23,10 @@ export const PAIRS = [
 ];
 
 export const SITE = {
-  name: 'Birdie’s Fleet Service & Backcountry Repair',
+  name: 'Birdie’s Fleet Service & Backcountry Repair LLC',
   shortName: 'Birdie’s',
+  // Card: "INSURED • LOCALLY OWNED • LLC". Thomas 2026-10-31: show LLC with the name.
+  legalName: 'Birdie’s Fleet Service & Backcountry Repair LLC',
   owner: 'Jay Smith',
   tagline: 'We come to you.',
   slogan: 'Keep Exploring',
@@ -41,6 +43,14 @@ export const SITE = {
   leadEndpoint: 'https://birdies-booking.forevergoldai.workers.dev/leads',
   phone: { display: '435-531-4127', e164: '+14355314127', schema: '+1-435-531-4127' },
   booking: { api: 'https://birdies-booking.forevergoldai.workers.dev', ...DEFAULT_RULES },
+  // Printed hours come from the booking rules, so the site and the calendar never disagree.
+  // Jay's text 2026-10-24: Monday to Friday, 8 to 4.
+  hours: hoursFrom(DEFAULT_RULES),
+  // Paste the full https:// page link to turn one on. null = Facebook hidden, Instagram shows "coming soon".
+  social: {
+    facebook: null,
+    instagram: null,
+  },
   logo: null,
   photos: {
   "forest": {
@@ -154,6 +164,28 @@ export const SITE = {
   ],
   routeOrder: ['west-yellowstone', 'big-sky', 'bozeman', 'belgrade', 'manhattan', 'three-forks', 'ennis', 'gardiner', 'livingston', 'big-timber'],
 };
+
+function hoursFrom(rules) {
+  const names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const days = [...rules.workDays].sort((a, b) => a - b);
+  const opens = rules.windows[0].start;
+  const closes = rules.windows[rules.windows.length - 1].end;
+  const clock = (hhmm) => {
+    const [h, m] = hhmm.split(':').map(Number);
+    return `${h % 12 || 12}${m ? ':' + String(m).padStart(2, '0') : ''} ${h < 12 ? 'AM' : 'PM'}`;
+  };
+  const run = days.every((d, i) => i === 0 || d === days[i - 1] + 1);
+  const dayText = days.length === 1 ? names[days[0]]
+    : run ? `${names[days[0]]} to ${names[days[days.length - 1]]}`
+    : days.map((d) => names[d]).join(', ');
+  return {
+    status: 'STATED',
+    days: days.map((d) => names[d]),
+    opens,
+    closes,
+    display: `${dayText}, ${clock(opens)} to ${clock(closes)}`,
+  };
+}
 
 export function liveServices(site = SITE) {
   return site.services.filter((s) => LIVE_STATUSES.has(s.status) && s.slug);
