@@ -165,7 +165,7 @@ PAGES.push(page({
   slug: 'contact',
   bodyClass: 'page-tool',
   title: 'Contact Jay Smith at Birdie’s',
-  description: 'Request service, ask about a fleet account, or get a quote from Jay Smith. Call or text 435-531-4127 in Southwest Montana.',
+  description: 'Request service, set up a fleet account, or book a visit with Jay Smith. Call or text 435-531-4127 in Southwest Montana.',
   schema: (ctx) => [
     businessSchema(ctx),
     { '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact Birdie’s', url: ctx.abs('contact/'), mainEntity: { '@id': ctx.abs('#business') } },

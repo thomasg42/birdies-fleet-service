@@ -138,7 +138,7 @@ export function contactForm(ctx) {
         <option value="">Select one</option>
         <option value="request-service">Request service</option>
         <option value="fleet-account">Set up a fleet account</option>
-        <option value="quote">Get a quote</option>
+        <option value="quote">Ask about pricing</option>
         <option value="something-else">Something else</option>
       </select>
     </label>
