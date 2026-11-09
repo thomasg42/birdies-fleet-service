@@ -312,7 +312,8 @@ function scripts(ctx) {
     ? `\n<script type="module" src="${ctx.root}assets/dev-boot.js"></script>`
     : '';
   return `<script src="${ctx.root}assets/config.js"></script>${dev}
-<script type="module" src="${ctx.asset('site.js')}"></script>`;
+<script type="module" src="${ctx.asset('site.js')}"></script>
+<script src="${ctx.asset('fg-collect.js')}" data-business="birdies-fleet-service" defer></script>`;
 }
 
 export function renderPage(ctx, page) {
